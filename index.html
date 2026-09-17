@@ -1346,13 +1346,18 @@
   ];
 
   var addBadgeDetails = document.getElementById('addBadgeDetails');
+  var isCatalogOwner = false;
   (function checkOwnerForAddBadge(){
     if (!window.claude || typeof window.claude.use !== 'function') return;
     window.claude.use('user').then(function(cap){
       if (!cap) return false;
       return cap.isOwner();
     }).then(function(isOwner){
-      if (isOwner) addBadgeDetails.hidden = false;
+      if (isOwner){
+        isCatalogOwner = true;
+        addBadgeDetails.hidden = false;
+        renderCatalog();
+      }
     }).catch(function(){});
   })();
 
@@ -1459,32 +1464,36 @@
       '<div class="badge-icon">' + (a.icon || ICONS[a.type] || '🏅') + '</div>' +
       '<div class="info"><div class="name"></div><div class="desc"></div></div>' +
       '<span class="pill pill-' + tier + '">' + RARITY_LABEL[tier] + '</span>' +
-      '<button class="copy" title="Duplicate badge" aria-label="Duplicate ' + a.name.replace(/"/g,'') + '">⧉</button>' +
-      '<button class="edit" title="Edit badge" aria-label="Edit ' + a.name.replace(/"/g,'') + '">✎</button>' +
-      '<button class="del" title="Remove badge" aria-label="Remove ' + a.name.replace(/"/g,'') + '">×</button>';
+      (isCatalogOwner ? (
+        '<button class="copy" title="Duplicate badge" aria-label="Duplicate ' + a.name.replace(/"/g,'') + '">⧉</button>' +
+        '<button class="edit" title="Edit badge" aria-label="Edit ' + a.name.replace(/"/g,'') + '">✎</button>' +
+        '<button class="del" title="Remove badge" aria-label="Remove ' + a.name.replace(/"/g,'') + '">×</button>'
+      ) : '');
     row.querySelector('.name').textContent = a.name + ' · ' + a.points + ' EP';
     row.querySelector('.desc').textContent = a.desc || describe(a);
-    row.querySelector('.copy').addEventListener('click', function(){
-      var clone = JSON.parse(JSON.stringify(a));
-      clone.id = uid();
-      clone.name = a.name + ' copy';
-      clone.discovered = false;
-      delete clone.wasDiscoveredBeforeThisRoll;
-      var i = achievements.indexOf(a);
-      achievements.splice(i + 1, 0, clone);
-      editingId = clone.id;
-      renderCatalog();
-      recalcScore();
-    });
-    row.querySelector('.edit').addEventListener('click', function(){
-      editingId = a.id;
-      renderCatalog();
-    });
-    row.querySelector('.del').addEventListener('click', function(){
-      achievements = achievements.filter(function(x){ return x.id !== a.id; });
-      renderCatalog();
-      recalcScore();
-    });
+    if (isCatalogOwner){
+      row.querySelector('.copy').addEventListener('click', function(){
+        var clone = JSON.parse(JSON.stringify(a));
+        clone.id = uid();
+        clone.name = a.name + ' copy';
+        clone.discovered = false;
+        delete clone.wasDiscoveredBeforeThisRoll;
+        var i = achievements.indexOf(a);
+        achievements.splice(i + 1, 0, clone);
+        editingId = clone.id;
+        renderCatalog();
+        recalcScore();
+      });
+      row.querySelector('.edit').addEventListener('click', function(){
+        editingId = a.id;
+        renderCatalog();
+      });
+      row.querySelector('.del').addEventListener('click', function(){
+        achievements = achievements.filter(function(x){ return x.id !== a.id; });
+        renderCatalog();
+        recalcScore();
+      });
+    }
     return row;
   }
 

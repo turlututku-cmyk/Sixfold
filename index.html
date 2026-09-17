@@ -1051,76 +1051,76 @@
 
   function defaultAchievements(){
     return [
-      {id:uid(), name:'Six Digits', type:'digitCount', params:{n:6}, points:100, rarity:'common', icon:'🎲', discovered:false},
-      {id:uid(), name:'Void', type:'notContainsSequence', params:{value:'0'}, points:100, rarity:'common', icon:'🚫', discovered:false},
-      {id:uid(), name:'EZ Straight', type:'straightRange', params:{start:-1,length:2}, points:100, rarity:'common', icon:'📶', discovered:false},
-      {id:uid(), name:'Odd', type:'lastDigitParity', params:{parity:'odd'}, points:150, rarity:'common', icon:'🔸', discovered:false},
-      {id:uid(), name:'Even', type:'lastDigitParity', params:{parity:'even'}, points:150, rarity:'common', icon:'🔹', discovered:false},
-      {id:uid(), name:'Ghost', type:'valueCountExact', params:{value:0,count:1}, points:150, rarity:'common', icon:'👻', discovered:false, desc:'Contains exactly one "0"'},
-      {id:uid(), name:'One One', type:'valueCountExact', params:{value:1,count:1}, points:150, rarity:'common', icon:'💧', discovered:false, desc:'Contains exactly one "1"'},
-      {id:uid(), name:'Twice', type:'valueCountExact', params:{value:2,count:1}, points:150, rarity:'common', icon:'🎈', discovered:false, desc:'Contains exactly one "2"'},
-      {id:uid(), name:'Thrice', type:'valueCountExact', params:{value:3,count:1}, points:150, rarity:'common', icon:'🪫', discovered:false, desc:'Contains exactly one "3"'},
-      {id:uid(), name:'Four', type:'valueCountExact', params:{value:4,count:1}, points:150, rarity:'common', icon:'🪨', discovered:false, desc:'Contains exactly one "4".'},
-      {id:uid(), name:'Five', type:'valueCountExact', params:{value:5,count:1}, points:150, rarity:'common', icon:'🖐️', discovered:false, desc:'Contains exactly one "5"'},
-      {id:uid(), name:'6', type:'valueCountExact', params:{value:6,count:1}, points:150, rarity:'common', icon:'✏️', discovered:false, desc:'Contains exactly one "6"'},
-      {id:uid(), name:'Lone Seven', type:'valueCountExact', params:{value:7,count:1}, points:150, rarity:'common', icon:'❄️', discovered:false, desc:'Contains exactly one "7"'},
-      {id:uid(), name:'Lone Eight', type:'valueCountExact', params:{value:8,count:1}, points:150, rarity:'common', icon:'💨', discovered:false, desc:'Contains exactly one "8"'},
-      {id:uid(), name:'Circles', type:'valueCountExact', params:{value:9,count:1}, points:150, rarity:'common', icon:'🦷', discovered:false, desc:'Contains exactly one "9"'},
-      {id:uid(), name:'Divisible by 3', type:'divisibleBy', params:{n:3}, points:150, rarity:'common', icon:'➗', discovered:false},
-      {id:uid(), name:'Divisible by 4', type:'divisibleBy', params:{n:4}, points:150, rarity:'common', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 4'},
-      {id:uid(), name:'Lucky Seven', type:'valueCount', params:{value:7,count:1}, points:200, rarity:'common', icon:'🍀', discovered:false, desc:'Contains the number "7"'},
-      {id:uid(), name:'Divisible by 5', type:'divisibleBy', params:{n:5}, points:200, rarity:'common', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 5'},
-      {id:uid(), name:'Straight', type:'straightRange', params:{start:-1,length:3}, points:250, rarity:'common', icon:'📶', discovered:false, desc:'3 consecutive values in a row, starting anywhere'},
-      {id:uid(), name:'Pair', type:'adjacentPair', params:{}, points:300, rarity:'common', icon:'👯', discovered:false, desc:'Contains a pair (2 of the same number together)'},
-      {id:uid(), name:'Deep Void', type:'containsSequence', params:{value:'00'}, points:500, rarity:'common', icon:'🔎', discovered:false},
-      {id:uid(), name:'Three of a Kind', type:'adjacentTriple', params:{}, points:700, rarity:'common', icon:'👨‍👩‍👦', discovered:false, desc:'Contains a ToaK (3 of the same number together)'},
-      {id:uid(), name:'Difference', type:'allDifferent', params:{}, points:750, rarity:'common', icon:'🌈', discovered:false},
-      {id:uid(), name:'Everything Aligns', type:'divisibleBy', params:{n:999}, points:67250, rarity:'common', icon:'➗', discovered:false},
-      {id:uid(), name:'Difficult Straight', type:'straightRange', params:{start:-1,length:4}, points:1000, rarity:'uncommon', icon:'📶', discovered:false, desc:'4 consecutive values in a row, starting anywhere'},
-      {id:uid(), name:'Five Digits', type:'digitCount', params:{n:5}, points:1000, rarity:'uncommon', icon:'🎲', discovered:false, desc:'The roll has exactly 5 digits'},
-      {id:uid(), name:'Bookends', type:'firstEqualsLast', params:{}, points:1000, rarity:'uncommon', icon:'📖', discovered:false},
-      {id:uid(), name:'Nice!', type:'distinctCount', params:{n:4}, points:1000, rarity:'uncommon', icon:'🎨', discovered:false, desc:'Exactly 4 unique digit value(s) appear in the roll'},
-      {id:uid(), name:'86', type:'containsSequence', params:{value:'86'}, points:1050, rarity:'uncommon', icon:'🍔', discovered:false, desc:'The roll contains the number 86 (Slang for the word "Out Of" used in restaurants)'},
-      {id:uid(), name:'67', type:'containsSequence', params:{value:'67'}, points:1050, rarity:'uncommon', icon:'🤣', discovered:false, desc:'The roll contains the number 67 (the Meme)'},
-      {id:uid(), name:'69', type:'containsSequence', params:{value:'69'}, points:1050, rarity:'uncommon', icon:'😯', discovered:false, desc:'The roll contains the number 69 (Slang for the word "S3x")'},
-      {id:uid(), name:'31', type:'containsSequence', params:{value:'31'}, points:1050, rarity:'uncommon', icon:'🥛', discovered:false, desc:'The roll contains the number 31'},
-      {id:uid(), name:'Its Over 900000!', type:'numberGreaterThan', params:{n:900000}, points:1050, rarity:'uncommon', icon:'📊', discovered:false, desc:'The roll, read as a number, is greater than 900000'},
-      {id:uid(), name:'Mr Greedy Prime 2008', type:'isPrime', params:{}, points:1080, rarity:'uncommon', icon:'💎', discovered:false, desc:'The digits read as a prime number'},
-      {id:uid(), name:'21', type:'containsSequence', params:{value:'21'}, points:1100, rarity:'uncommon', icon:'➕', discovered:false, desc:'The roll contains the number 21 (the Meme)'},
-      {id:uid(), name:'92', type:'containsSequence', params:{value:'92'}, points:1100, rarity:'uncommon', icon:'🤪', discovered:false, desc:'The roll contains the number 92 (Phobos 92%)'},
-      {id:uid(), name:'55', type:'containsSequence', params:{value:'55'}, points:1100, rarity:'uncommon', icon:'🤪', discovered:false, desc:'The roll contains the number 55 (B A N E 55%)'},
-      {id:uid(), name:'Close Luck', type:'containsSequence', params:{value:'77'}, points:1100, rarity:'uncommon', icon:'🤪', discovered:false, desc:'The roll contains the number 77'},
-      {id:uid(), name:'Double Pair', type:'nAdjacentPairs', params:{count:2}, points:3000, rarity:'uncommon', icon:'👯', discovered:false, desc:'Contains a 2 pair (2 of the same number together but 2 times)'},
-      {id:uid(), name:'Long 67', type:'startsAndEndsWith', params:{startValue:'6',endValue:'7'}, points:3240, rarity:'uncommon', icon:'🔖', discovered:false},
-      {id:uid(), name:'Divisible by 7', type:'divisibleBy', params:{n:7}, points:3500, rarity:'uncommon', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 7'},
-      {id:uid(), name:'Rare!', type:'distinctCount', params:{n:3}, points:4300, rarity:'uncommon', icon:'🎨', discovered:false, desc:'Exactly 3 unique digit value(s) appear in the roll'},
-      {id:uid(), name:'Four Digits', type:'digitCount', params:{n:4}, points:5000, rarity:'rare', icon:'🎲', discovered:false, desc:'The roll has exactly 4 digits'},
-      {id:uid(), name:'Straighter', type:'straightRange', params:{start:-1,length:5}, points:5000, rarity:'rare', icon:'📶', discovered:false, desc:'5 consecutive values in a row, starting anywhere'},
-      {id:uid(), name:'ILY Too', type:'containsSequence', params:{value:'143'}, points:5000, rarity:'rare', icon:'❤️', discovered:false, desc:'The roll contains the number 143 (Slang for the word "I Love You")'},
-      {id:uid(), name:'Century', type:'lastDigits', params:{value:'00'}, points:5000, rarity:'rare', icon:'🏁', discovered:false},
-      {id:uid(), name:'Unlucky Lucky', type:'valueCount', params:{value:7,count:3}, points:5000, rarity:'rare', icon:'🍀', discovered:false},
-      {id:uid(), name:'911', type:'containsSequence', params:{value:'911'}, points:5050, rarity:'rare', icon:'🚑', discovered:false, desc:'The roll contains the number 911'},
-      {id:uid(), name:'a101', type:'containsSequence', params:{value:'101'}, points:5050, rarity:'rare', icon:'🏪', discovered:false, desc:'The roll contains the number 101 (a101)'},
-      {id:uid(), name:'1 better', type:'firstExceedsLastBy', params:{diff:1}, points:6200, rarity:'rare', icon:'⛷️', discovered:false, desc:'The first digit is exactly 1 more than the last digit'},
-      {id:uid(), name:'Full House', type:'fullHouse', params:{}, points:6700, rarity:'rare', icon:'🏠', discovered:false},
-      {id:uid(), name:'Nothingness..', type:'containsSequence', params:{value:'000'}, points:7680, rarity:'rare', icon:'👀', discovered:false, desc:'The roll contains the number 000'},
-      {id:uid(), name:'Bigger and Bigger!', type:'numberGreaterThan', params:{n:990000}, points:8750, rarity:'rare', icon:'📊', discovered:false, desc:'The roll, read as a number, is greater than 990000'},
-      {id:uid(), name:'2 Pattern Repeater', type:'customRepeatingPattern', params:{blockLength:2}, points:10000, rarity:'epic', icon:'♻️', discovered:false, desc:'The roll is a short pattern repeated to fill all the digits (like 1212)'},
-      {id:uid(), name:'Divisible by 32', type:'divisibleBy', params:{n:32}, points:10000, rarity:'epic', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 32'},
-      {id:uid(), name:'Palindrome', type:'isPalindrome', params:{}, points:10000, rarity:'epic', icon:'🪞', discovered:false},
-      {id:uid(), name:'Millenium', type:'lastDigits', params:{value:'000'}, points:12500, rarity:'epic', icon:'🏁', discovered:false, desc:'The roll ends with 000'},
-      {id:uid(), name:'Three Digits', type:'digitCount', params:{n:3}, points:15000, rarity:'epic', icon:'🎲', discovered:false, desc:'The roll has exactly 3 digits'},
-      {id:uid(), name:'JACKPOT!', type:'containsSequence', params:{value:'777'}, points:15000, rarity:'epic', icon:'🍀', discovered:false},
-      {id:uid(), name:'Unique!', type:'distinctCount', params:{n:2}, points:17000, rarity:'legendary', icon:'🎨', discovered:false, desc:'Exactly 2 unique digit value(s) appear in the roll'},
-      {id:uid(), name:'Ascending', type:'orderedSequence', params:{direction:'asc'}, points:25000, rarity:'legendary', icon:'🎢', discovered:false},
-      {id:uid(), name:'Descending', type:'orderedSequence', params:{direction:'desc'}, points:25000, rarity:'legendary', icon:'🎢', discovered:false},
-      {id:uid(), name:'Full Send', type:'straightRange', params:{start:-1,length:6}, points:50000, rarity:'legendary', icon:'🔥', discovered:false, desc:'6 consecutive values in a row, starting anywhere'},
-      {id:uid(), name:'3 Pattern Repeater', type:'customRepeatingPattern', params:{blockLength:3}, points:50000, rarity:'legendary', icon:'♻️', discovered:false, desc:'The roll is a short pattern repeated to fill all the digits (like 123123)'},
-      {id:uid(), name:'Two Digits', type:'digitCount', params:{n:2}, points:55000, rarity:'legendary', icon:'🎲', discovered:false, desc:'The roll has exactly 2 digits'},
-      {id:uid(), name:'Single Digit', type:'digitCount', params:{n:1}, points:100000, rarity:'mythic', icon:'🎲', discovered:false, desc:'The roll has exactly single digit'},
-      {id:uid(), name:'ONE.', type:'exactNumber', params:{value:'000001'}, points:100000, rarity:'mythic', icon:'💯', discovered:false, desc:'The roll is exactly the number 000001'},
-      {id:uid(), name:'Everything Aligns', type:'divisibleBy', params:{n:999}, points:65000, rarity:'mythic', icon:'🏅', discovered:false, desc:'The roll, read as a number, is divisible by 999'},
-      {id:uid(), name:'6 of a Kind', type:'allSame', params:{}, points:120000, rarity:'mythic', icon:'🌟', discovered:false}
+      {key:'six-digits', id:uid(), name:'Six Digits', type:'digitCount', params:{n:6}, points:100, rarity:'common', icon:'🎲', discovered:false},
+      {key:'void', id:uid(), name:'Void', type:'notContainsSequence', params:{value:'0'}, points:100, rarity:'common', icon:'🚫', discovered:false},
+      {key:'ez-straight', id:uid(), name:'EZ Straight', type:'straightRange', params:{start:-1,length:2}, points:100, rarity:'common', icon:'📶', discovered:false},
+      {key:'odd', id:uid(), name:'Odd', type:'lastDigitParity', params:{parity:'odd'}, points:150, rarity:'common', icon:'🔸', discovered:false},
+      {key:'even', id:uid(), name:'Even', type:'lastDigitParity', params:{parity:'even'}, points:150, rarity:'common', icon:'🔹', discovered:false},
+      {key:'ghost', id:uid(), name:'Ghost', type:'valueCountExact', params:{value:0,count:1}, points:150, rarity:'common', icon:'👻', discovered:false, desc:'Contains exactly one "0"'},
+      {key:'lone-1', id:uid(), name:'One One', type:'valueCountExact', params:{value:1,count:1}, points:150, rarity:'common', icon:'💧', discovered:false, desc:'Contains exactly one "1"'},
+      {key:'lone-2', id:uid(), name:'Twice', type:'valueCountExact', params:{value:2,count:1}, points:150, rarity:'common', icon:'🎈', discovered:false, desc:'Contains exactly one "2"'},
+      {key:'lone-3', id:uid(), name:'Thrice', type:'valueCountExact', params:{value:3,count:1}, points:150, rarity:'common', icon:'🪫', discovered:false, desc:'Contains exactly one "3"'},
+      {key:'lone-4', id:uid(), name:'Four', type:'valueCountExact', params:{value:4,count:1}, points:150, rarity:'common', icon:'🪨', discovered:false, desc:'Contains exactly one "4".'},
+      {key:'lone-5', id:uid(), name:'Five', type:'valueCountExact', params:{value:5,count:1}, points:150, rarity:'common', icon:'🖐️', discovered:false, desc:'Contains exactly one "5"'},
+      {key:'lone-6', id:uid(), name:'6', type:'valueCountExact', params:{value:6,count:1}, points:150, rarity:'common', icon:'✏️', discovered:false, desc:'Contains exactly one "6"'},
+      {key:'lone-7', id:uid(), name:'Lone Seven', type:'valueCountExact', params:{value:7,count:1}, points:150, rarity:'common', icon:'❄️', discovered:false, desc:'Contains exactly one "7"'},
+      {key:'lone-8', id:uid(), name:'Lone Eight', type:'valueCountExact', params:{value:8,count:1}, points:150, rarity:'common', icon:'💨', discovered:false, desc:'Contains exactly one "8"'},
+      {key:'lone-9', id:uid(), name:'Circles', type:'valueCountExact', params:{value:9,count:1}, points:150, rarity:'common', icon:'🦷', discovered:false, desc:'Contains exactly one "9"'},
+      {key:'div-3', id:uid(), name:'Divisible by 3', type:'divisibleBy', params:{n:3}, points:150, rarity:'common', icon:'➗', discovered:false},
+      {key:'div-4', id:uid(), name:'Divisible by 4', type:'divisibleBy', params:{n:4}, points:150, rarity:'common', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 4'},
+      {key:'lucky-seven', id:uid(), name:'Lucky Seven', type:'valueCount', params:{value:7,count:1}, points:200, rarity:'common', icon:'🍀', discovered:false, desc:'Contains the number "7"'},
+      {key:'div-5', id:uid(), name:'Divisible by 5', type:'divisibleBy', params:{n:5}, points:200, rarity:'common', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 5'},
+      {key:'straight-3', id:uid(), name:'Straight', type:'straightRange', params:{start:-1,length:3}, points:250, rarity:'common', icon:'📶', discovered:false, desc:'3 consecutive values in a row, starting anywhere'},
+      {key:'pair', id:uid(), name:'Pair', type:'adjacentPair', params:{}, points:300, rarity:'common', icon:'👯', discovered:false, desc:'Contains a pair (2 of the same number together)'},
+      {key:'deep-void', id:uid(), name:'Deep Void', type:'containsSequence', params:{value:'00'}, points:500, rarity:'common', icon:'🔎', discovered:false},
+      {key:'triple', id:uid(), name:'Three of a Kind', type:'adjacentTriple', params:{}, points:700, rarity:'common', icon:'👨‍👩‍👦', discovered:false, desc:'Contains a ToaK (3 of the same number together)'},
+      {key:'all-different', id:uid(), name:'Difference', type:'allDifferent', params:{}, points:750, rarity:'common', icon:'🌈', discovered:false},
+      {key:'div-999-common', id:uid(), name:'Everything Aligns', type:'divisibleBy', params:{n:999}, points:67250, rarity:'common', icon:'➗', discovered:false},
+      {key:'straight-4', id:uid(), name:'Difficult Straight', type:'straightRange', params:{start:-1,length:4}, points:1000, rarity:'uncommon', icon:'📶', discovered:false, desc:'4 consecutive values in a row, starting anywhere'},
+      {key:'five-digits', id:uid(), name:'Five Digits', type:'digitCount', params:{n:5}, points:1000, rarity:'uncommon', icon:'🎲', discovered:false, desc:'The roll has exactly 5 digits'},
+      {key:'bookends', id:uid(), name:'Bookends', type:'firstEqualsLast', params:{}, points:1000, rarity:'uncommon', icon:'📖', discovered:false},
+      {key:'distinct-4', id:uid(), name:'Nice!', type:'distinctCount', params:{n:4}, points:1000, rarity:'uncommon', icon:'🎨', discovered:false, desc:'Exactly 4 unique digit value(s) appear in the roll'},
+      {key:'num-86', id:uid(), name:'86', type:'containsSequence', params:{value:'86'}, points:1050, rarity:'uncommon', icon:'🍔', discovered:false, desc:'The roll contains the number 86 (Slang for the word "Out Of" used in restaurants)'},
+      {key:'num-67', id:uid(), name:'67', type:'containsSequence', params:{value:'67'}, points:1050, rarity:'uncommon', icon:'🤣', discovered:false, desc:'The roll contains the number 67 (the Meme)'},
+      {key:'num-69', id:uid(), name:'69', type:'containsSequence', params:{value:'69'}, points:1050, rarity:'uncommon', icon:'😯', discovered:false, desc:'The roll contains the number 69 (Slang for the word "S3x")'},
+      {key:'num-31', id:uid(), name:'31', type:'containsSequence', params:{value:'31'}, points:1050, rarity:'uncommon', icon:'🥛', discovered:false, desc:'The roll contains the number 31'},
+      {key:'gt-900000', id:uid(), name:'Its Over 900000!', type:'numberGreaterThan', params:{n:900000}, points:1050, rarity:'uncommon', icon:'📊', discovered:false, desc:'The roll, read as a number, is greater than 900000'},
+      {key:'is-prime', id:uid(), name:'Mr Greedy Prime 2008', type:'isPrime', params:{}, points:1080, rarity:'uncommon', icon:'💎', discovered:false, desc:'The digits read as a prime number'},
+      {key:'num-21', id:uid(), name:'21', type:'containsSequence', params:{value:'21'}, points:1100, rarity:'uncommon', icon:'➕', discovered:false, desc:'The roll contains the number 21 (the Meme)'},
+      {key:'num-92', id:uid(), name:'92', type:'containsSequence', params:{value:'92'}, points:1100, rarity:'uncommon', icon:'🤪', discovered:false, desc:'The roll contains the number 92 (Phobos 92%)'},
+      {key:'num-55', id:uid(), name:'55', type:'containsSequence', params:{value:'55'}, points:1100, rarity:'uncommon', icon:'🤪', discovered:false, desc:'The roll contains the number 55 (B A N E 55%)'},
+      {key:'num-77', id:uid(), name:'Close Luck', type:'containsSequence', params:{value:'77'}, points:1100, rarity:'uncommon', icon:'🤪', discovered:false, desc:'The roll contains the number 77'},
+      {key:'double-pair', id:uid(), name:'Double Pair', type:'nAdjacentPairs', params:{count:2}, points:3000, rarity:'uncommon', icon:'👯', discovered:false, desc:'Contains a 2 pair (2 of the same number together but 2 times)'},
+      {key:'starts6-ends7', id:uid(), name:'Long 67', type:'startsAndEndsWith', params:{startValue:'6',endValue:'7'}, points:3240, rarity:'uncommon', icon:'🔖', discovered:false},
+      {key:'div-7', id:uid(), name:'Divisible by 7', type:'divisibleBy', params:{n:7}, points:3500, rarity:'uncommon', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 7'},
+      {key:'distinct-3', id:uid(), name:'Rare!', type:'distinctCount', params:{n:3}, points:4300, rarity:'uncommon', icon:'🎨', discovered:false, desc:'Exactly 3 unique digit value(s) appear in the roll'},
+      {key:'four-digits', id:uid(), name:'Four Digits', type:'digitCount', params:{n:4}, points:5000, rarity:'rare', icon:'🎲', discovered:false, desc:'The roll has exactly 4 digits'},
+      {key:'straight-5', id:uid(), name:'Straighter', type:'straightRange', params:{start:-1,length:5}, points:5000, rarity:'rare', icon:'📶', discovered:false, desc:'5 consecutive values in a row, starting anywhere'},
+      {key:'num-143', id:uid(), name:'ILY Too', type:'containsSequence', params:{value:'143'}, points:5000, rarity:'rare', icon:'❤️', discovered:false, desc:'The roll contains the number 143 (Slang for the word "I Love You")'},
+      {key:'ends-00', id:uid(), name:'Century', type:'lastDigits', params:{value:'00'}, points:5000, rarity:'rare', icon:'🏁', discovered:false},
+      {key:'triple-7', id:uid(), name:'Unlucky Lucky', type:'valueCount', params:{value:7,count:3}, points:5000, rarity:'rare', icon:'🍀', discovered:false},
+      {key:'num-911', id:uid(), name:'911', type:'containsSequence', params:{value:'911'}, points:5050, rarity:'rare', icon:'🚑', discovered:false, desc:'The roll contains the number 911'},
+      {key:'num-101', id:uid(), name:'a101', type:'containsSequence', params:{value:'101'}, points:5050, rarity:'rare', icon:'🏪', discovered:false, desc:'The roll contains the number 101 (a101)'},
+      {key:'first-exceeds-1', id:uid(), name:'1 better', type:'firstExceedsLastBy', params:{diff:1}, points:6200, rarity:'rare', icon:'⛷️', discovered:false, desc:'The first digit is exactly 1 more than the last digit'},
+      {key:'full-house', id:uid(), name:'Full House', type:'fullHouse', params:{}, points:6700, rarity:'rare', icon:'🏠', discovered:false},
+      {key:'num-000', id:uid(), name:'Nothingness..', type:'containsSequence', params:{value:'000'}, points:7680, rarity:'rare', icon:'👀', discovered:false, desc:'The roll contains the number 000'},
+      {key:'gt-990000', id:uid(), name:'Bigger and Bigger!', type:'numberGreaterThan', params:{n:990000}, points:8750, rarity:'rare', icon:'📊', discovered:false, desc:'The roll, read as a number, is greater than 990000'},
+      {key:'pattern-2', id:uid(), name:'2 Pattern Repeater', type:'customRepeatingPattern', params:{blockLength:2}, points:10000, rarity:'epic', icon:'♻️', discovered:false, desc:'The roll is a short pattern repeated to fill all the digits (like 1212)'},
+      {key:'div-32', id:uid(), name:'Divisible by 32', type:'divisibleBy', params:{n:32}, points:10000, rarity:'epic', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 32'},
+      {key:'palindrome', id:uid(), name:'Palindrome', type:'isPalindrome', params:{}, points:10000, rarity:'epic', icon:'🪞', discovered:false},
+      {key:'ends-000', id:uid(), name:'Millenium', type:'lastDigits', params:{value:'000'}, points:12500, rarity:'epic', icon:'🏁', discovered:false, desc:'The roll ends with 000'},
+      {key:'three-digits', id:uid(), name:'Three Digits', type:'digitCount', params:{n:3}, points:15000, rarity:'epic', icon:'🎲', discovered:false, desc:'The roll has exactly 3 digits'},
+      {key:'num-777', id:uid(), name:'JACKPOT!', type:'containsSequence', params:{value:'777'}, points:15000, rarity:'epic', icon:'🍀', discovered:false},
+      {key:'distinct-2', id:uid(), name:'Unique!', type:'distinctCount', params:{n:2}, points:17000, rarity:'legendary', icon:'🎨', discovered:false, desc:'Exactly 2 unique digit value(s) appear in the roll'},
+      {key:'ascending', id:uid(), name:'Ascending', type:'orderedSequence', params:{direction:'asc'}, points:25000, rarity:'legendary', icon:'🎢', discovered:false},
+      {key:'descending', id:uid(), name:'Descending', type:'orderedSequence', params:{direction:'desc'}, points:25000, rarity:'legendary', icon:'🎢', discovered:false},
+      {key:'straight-6', id:uid(), name:'Full Send', type:'straightRange', params:{start:-1,length:6}, points:50000, rarity:'legendary', icon:'🔥', discovered:false, desc:'6 consecutive values in a row, starting anywhere'},
+      {key:'pattern-3', id:uid(), name:'3 Pattern Repeater', type:'customRepeatingPattern', params:{blockLength:3}, points:50000, rarity:'legendary', icon:'♻️', discovered:false, desc:'The roll is a short pattern repeated to fill all the digits (like 123123)'},
+      {key:'two-digits', id:uid(), name:'Two Digits', type:'digitCount', params:{n:2}, points:55000, rarity:'legendary', icon:'🎲', discovered:false, desc:'The roll has exactly 2 digits'},
+      {key:'one-digit', id:uid(), name:'Single Digit', type:'digitCount', params:{n:1}, points:100000, rarity:'mythic', icon:'🎲', discovered:false, desc:'The roll has exactly single digit'},
+      {key:'exact-1', id:uid(), name:'ONE.', type:'exactNumber', params:{value:'000001'}, points:100000, rarity:'mythic', icon:'💯', discovered:false, desc:'The roll is exactly the number 000001'},
+      {key:'div-999-mythic', id:uid(), name:'Everything Aligns', type:'divisibleBy', params:{n:999}, points:65000, rarity:'mythic', icon:'🏅', discovered:false, desc:'The roll, read as a number, is divisible by 999'},
+      {key:'six-of-a-kind', id:uid(), name:'6 of a Kind', type:'allSame', params:{}, points:120000, rarity:'mythic', icon:'🌟', discovered:false}
     ];
   }
 
@@ -1131,19 +1131,33 @@
   var lastRollTierRank = -1;
   var lastRollEP = 0;
 
-  var ACHIEVEMENTS_VERSION = 9;
+  var ACHIEVEMENTS_VERSION = 10;
 
   function getState(){
     return {achievements:achievements, nums:nums, everRolled:everRolled, achievementsVersion:ACHIEVEMENTS_VERSION};
   }
+  function mergeAchievements(oldList){
+    var oldByKey = {};
+    var extras = [];
+    (oldList||[]).forEach(function(a){
+      if (a && a.key) oldByKey[a.key] = a;
+      else if (a) extras.push(a);
+    });
+    var fresh = defaultAchievements();
+    fresh.forEach(function(a){
+      var prev = oldByKey[a.key];
+      if (prev) a.discovered = !!prev.discovered;
+    });
+    return fresh.concat(extras);
+  }
   function applyState(s){
-    if (!s || s.achievementsVersion !== ACHIEVEMENTS_VERSION){
+    if (!s || typeof s.achievementsVersion !== 'number' || s.achievementsVersion < ACHIEVEMENTS_VERSION){
       achievements = defaultAchievements();
       nums = [0,0,0,0,0,0];
       everRolled = false;
       return;
     }
-    achievements = Array.isArray(s.achievements) && s.achievements.length ? s.achievements : defaultAchievements();
+    achievements = Array.isArray(s.achievements) && s.achievements.length ? mergeAchievements(s.achievements) : defaultAchievements();
     nums = Array.isArray(s.nums) && s.nums.length===NUM_DIGITS ? s.nums : [0,0,0,0,0,0];
     everRolled = !!s.everRolled;
   }
@@ -1484,6 +1498,7 @@
         clone.name = a.name + ' copy';
         clone.discovered = false;
         delete clone.wasDiscoveredBeforeThisRoll;
+        delete clone.key;
         var i = achievements.indexOf(a);
         achievements.splice(i + 1, 0, clone);
         editingId = clone.id;

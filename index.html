@@ -1341,7 +1341,9 @@
     testerPanel.hidden = true;
   });
 
-  var dbCap = null;
+  var LEADERBOARD = [
+    {name:'991991', score:90150}
+  ];
 
   function renderLeaderboardRow(name, score){
     var row = document.createElement('div');
@@ -1362,42 +1364,19 @@
     return row;
   }
 
-  function subscribeLeaderboard(){
-    if (!dbCap){
-      leaderboardStatus.textContent = 'Leaderboard unavailable in this view.';
+  function renderLeaderboard(){
+    leaderboardList.innerHTML = '';
+    if (!LEADERBOARD.length){
+      leaderboardStatus.textContent = 'No entries yet.';
       return;
     }
-    leaderboardStatus.textContent = 'Loading…';
-    var q = dbCap.collection('leaderboard').orderBy('score', 'desc').limit(10);
-    q.onSnapshot(function(snap){
-      leaderboardList.innerHTML = '';
-      if (snap.empty){
-        leaderboardStatus.textContent = 'No entries yet.';
-        return;
-      }
-      leaderboardStatus.textContent = 'Top ' + snap.size;
-      snap.docs.forEach(function(d){
-        var data = d.data() || {};
-        leaderboardList.appendChild(renderLeaderboardRow(data.name, data.score));
-      });
-    }, function(err){
-      leaderboardStatus.textContent = 'Could not load leaderboard.';
+    var sorted = LEADERBOARD.slice().sort(function(a,b){ return b.score - a.score; }).slice(0,10);
+    leaderboardStatus.textContent = 'Top ' + sorted.length;
+    sorted.forEach(function(entry){
+      leaderboardList.appendChild(renderLeaderboardRow(entry.name, entry.score));
     });
   }
-
-  function initLeaderboardCapabilities(){
-    if (!window.claude || typeof window.claude.use !== 'function'){
-      leaderboardStatus.textContent = 'Leaderboard unavailable in this view.';
-      return;
-    }
-    window.claude.use('db').then(function(cap){
-      dbCap = cap;
-      subscribeLeaderboard();
-    }).catch(function(){
-      leaderboardStatus.textContent = 'Leaderboard unavailable in this view.';
-    });
-  }
-  initLeaderboardCapabilities();
+  renderLeaderboard();
 
   testBtn.addEventListener('click', runTest);
 

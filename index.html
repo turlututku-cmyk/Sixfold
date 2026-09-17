@@ -468,7 +468,10 @@
   </div>
 
   <section class="panel" id="testerPanel" hidden>
-    <h2>Number tester</h2>
+    <div class="modal-head">
+      <h2>Number tester</h2>
+      <button class="modal-close" type="button" id="testCloseBtn" aria-label="Close">×</button>
+    </div>
     <p class="breakdown-sub">Check which badges a specific number would match, without rolling.</p>
     <div class="paramrow">
       <div class="field">
@@ -1330,6 +1333,11 @@
       }
       testInput.focus();
     }
+  });
+
+  var testCloseBtn = document.getElementById('testCloseBtn');
+  testCloseBtn.addEventListener('click', function(){
+    testerPanel.hidden = true;
   });
 
   var dbCap = null;

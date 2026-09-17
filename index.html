@@ -1101,7 +1101,7 @@
       {id:uid(), name:'Unlucky Lucky', type:'valueCount', params:{value:7,count:3}, points:5000, rarity:'rare', icon:'🍀', discovered:false},
       {id:uid(), name:'911', type:'containsSequence', params:{value:'911'}, points:5050, rarity:'rare', icon:'🚑', discovered:false, desc:'The roll contains the number 911'},
       {id:uid(), name:'a101', type:'containsSequence', params:{value:'101'}, points:5050, rarity:'rare', icon:'🏪', discovered:false, desc:'The roll contains the number 101 (a101)'},
-      {id:uid(), name:'1 is better', type:'firstExceedsLastBy', params:{diff:1}, points:6200, rarity:'rare', icon:'⛷️', discovered:false},
+      {id:uid(), name:'1 better', type:'firstExceedsLastBy', params:{diff:1}, points:6200, rarity:'rare', icon:'⛷️', discovered:false, desc:'The first digit is exactly 1 more than the last digit'},
       {id:uid(), name:'Full House', type:'fullHouse', params:{}, points:6700, rarity:'rare', icon:'🏠', discovered:false},
       {id:uid(), name:'Nothingness..', type:'containsSequence', params:{value:'000'}, points:7680, rarity:'rare', icon:'👀', discovered:false, desc:'The roll contains the number 000'},
       {id:uid(), name:'Bigger and Bigger!', type:'numberGreaterThan', params:{n:990000}, points:8750, rarity:'rare', icon:'📊', discovered:false, desc:'The roll, read as a number, is greater than 990000'},
@@ -1131,7 +1131,7 @@
   var lastRollTierRank = -1;
   var lastRollEP = 0;
 
-  var ACHIEVEMENTS_VERSION = 8;
+  var ACHIEVEMENTS_VERSION = 9;
 
   function getState(){
     return {achievements:achievements, nums:nums, everRolled:everRolled, achievementsVersion:ACHIEVEMENTS_VERSION};

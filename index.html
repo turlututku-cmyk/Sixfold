@@ -1,0 +1,1872 @@
+<title>Sixfold</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#f5f6fa;
+    --surface:#ffffff;
+    --surface-2:#f0f1f6;
+    --border:#e2e5ee;
+    --ink:#1a2030;
+    --muted:#6c7486;
+    --accent:#4a4ff0;
+    --accent-ink:#ffffff;
+    --shadow:0 1px 2px rgba(20,24,40,.04), 0 8px 20px rgba(20,24,40,.06);
+    --common-bg:#eceef4; --common-ink:#5a6274;
+    --uncommon-bg:#e2f6ec; --uncommon-ink:#1a8a55;
+    --rare-bg:#e6ecfd; --rare-ink:#3654d6;
+    --epic-bg:#f2e6fb; --epic-ink:#8035c4;
+    --legendary-bg:#fdf1dc; --legendary-ink:#b8791a;
+    --mythic-bg:#fde3e8; --mythic-ink:#c21856;
+    --chip-bg:#eceef4; --chip-ink:#aeb4c2;
+    --chip-active-bg:#4a4ff0; --chip-active-ink:#ffffff;
+    --glow-a:#ee49d0; --glow-b:#3fd6e8;
+    --cta-bg:#14151b; --cta-ink:#ffffff;
+    --blank-ink:#c7cbd6;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#12141c;
+      --surface:#1a1d28;
+      --surface-2:#20232f;
+      --border:#2c3040;
+      --ink:#edeef4;
+      --muted:#9298ac;
+      --accent:#7b7fff;
+      --accent-ink:#12141c;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 24px rgba(0,0,0,.35);
+      --common-bg:#262a38; --common-ink:#a8afc2;
+      --uncommon-bg:#123526; --uncommon-ink:#3fd18c;
+      --rare-bg:#1c2748; --rare-ink:#8ea4f7;
+      --epic-bg:#2a1c40; --epic-ink:#c68df2;
+      --legendary-bg:#3a2c12; --legendary-ink:#f0b84f;
+      --mythic-bg:#3a1420; --mythic-ink:#f45f8c;
+      --chip-bg:#262a38; --chip-ink:#565d70;
+      --chip-active-bg:#7b7fff; --chip-active-ink:#12141c;
+      --glow-a:#f45fda; --glow-b:#4fe4f4;
+      --cta-bg:#f5f6fb; --cta-ink:#14151b;
+      --blank-ink:#3a3f52;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#12141c;
+    --surface:#1a1d28;
+    --surface-2:#20232f;
+    --border:#2c3040;
+    --ink:#edeef4;
+    --muted:#9298ac;
+    --accent:#7b7fff;
+    --accent-ink:#12141c;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 24px rgba(0,0,0,.35);
+    --common-bg:#262a38; --common-ink:#a8afc2;
+    --uncommon-bg:#123526; --uncommon-ink:#3fd18c;
+    --rare-bg:#1c2748; --rare-ink:#8ea4f7;
+    --epic-bg:#2a1c40; --epic-ink:#c68df2;
+    --legendary-bg:#3a2c12; --legendary-ink:#f0b84f;
+    --mythic-bg:#3a1420; --mythic-ink:#f45f8c;
+    --chip-bg:#262a38; --chip-ink:#565d70;
+    --chip-active-bg:#7b7fff; --chip-active-ink:#12141c;
+    --glow-a:#f45fda; --glow-b:#4fe4f4;
+    --cta-bg:#f5f6fb; --cta-ink:#14151b;
+    --blank-ink:#3a3f52;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    min-height:100%;
+  }
+  .wrap{
+    max-width:880px;
+    margin:0 auto;
+    padding-block:28px 56px;
+    padding-inline:16px;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+  }
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .brand{
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    font-weight:700;
+    font-size:1.4rem;
+    letter-spacing:-0.01em;
+  }
+  .icon-btn{
+    background:var(--surface);
+    border:1px solid var(--border);
+    color:var(--ink);
+    width:38px;height:38px;
+    border-radius:10px;
+    font-size:16px;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:border-color .12s ease, color .12s ease;
+  }
+  .icon-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .topbar-actions{display:flex;gap:8px;}
+  .rollcard{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:28px 22px 24px;
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+  }
+  .panel{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:22px;
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .panel h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:1.1rem;
+    font-weight:700;
+    margin:0;
+  }
+  .leaderboard-mini{padding:16px 18px;gap:8px;}
+  .leaderboard-mini .achlist{max-height:220px;}
+  .leaderboard-mini .catrow{padding:7px 10px;}
+  .topboard{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;}
+  .topboard .leaderboard-mini{flex:1 1 190px;order:1;min-width:190px;}
+  .topboard .rollcard{flex:3 1 380px;order:2;min-width:300px;}
+  @media (max-width:820px){
+    .topboard{flex-direction:column;flex-wrap:nowrap;}
+    .topboard .leaderboard-mini{order:2;flex:none;width:100%;min-width:0;}
+    .topboard .rollcard{order:1;width:100%;min-width:0;}
+  }
+  .numberbox{
+    background:var(--surface-2);
+    border-radius:16px;
+    padding:18px 24px;
+    display:flex;
+    gap:2px;
+    box-shadow:
+      0 0 0 1.5px color-mix(in srgb, var(--glow-a) 55%, transparent),
+      0 0 20px -4px color-mix(in srgb, var(--glow-a) 65%, transparent),
+      0 0 30px -6px color-mix(in srgb, var(--glow-b) 60%, transparent);
+    transition:box-shadow .3s ease;
+  }
+  .digitcell{
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:700;
+    font-size:2.6rem;
+    font-variant-numeric:tabular-nums;
+    color:var(--ink);
+    width:1ch;
+    text-align:center;
+    transition:color .1s ease;
+  }
+  .digitcell.spin{color:var(--accent);}
+  .digitcell.blank{color:var(--blank-ink);}
+  .digitcell.leading{opacity:.32;}
+  .digitcell.pop{animation:pop .28s ease;}
+  @keyframes pop{
+    0%{transform:scale(1.4);}
+    100%{transform:scale(1);}
+  }
+  .tags{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .pill{
+    font-family:'Inter',sans-serif;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    padding:4px 10px;
+    border-radius:999px;
+  }
+  .pill-common{background:var(--common-bg);color:var(--common-ink);}
+  .pill-uncommon{background:var(--uncommon-bg);color:var(--uncommon-ink);}
+  .pill-rare{background:var(--rare-bg);color:var(--rare-ink);}
+  .pill-epic{background:var(--epic-bg);color:var(--epic-ink);}
+  .pill-legendary{background:var(--legendary-bg);color:var(--legendary-ink);}
+  .pill-mythic{background:var(--mythic-bg);color:var(--mythic-ink);}
+  .pill-new{background:var(--accent);color:var(--accent-ink);}
+  .pill-owned{background:var(--surface-2);color:var(--muted);}
+  .percentile{font-size:12.5px;color:var(--muted);font-weight:600;}
+  .eprow{display:flex;gap:28px;}
+  .epstat{display:flex;flex-direction:column;align-items:center;}
+  .epval{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:1.5rem;
+    font-variant-numeric:tabular-nums;
+  }
+  .eplabel{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
+  .actions{display:flex;gap:10px;width:100%;}
+  button{
+    font-family:inherit;
+    font-size:14px;
+    font-weight:600;
+    border-radius:10px;
+    padding:11px 18px;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:filter .12s ease, transform .05s ease, border-color .12s ease;
+  }
+  button:active{transform:translateY(1px);}
+  button:disabled{opacity:.45;cursor:not-allowed;}
+  .btn-primary{background:var(--accent);color:var(--accent-ink);flex:1;}
+  .btn-primary:hover:not(:disabled){filter:brightness(1.06);}
+  .btn-ghost{background:transparent;border-color:var(--border);color:var(--ink);flex:1;}
+  .btn-ghost:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
+  #rollBtn{
+    background:var(--cta-bg);
+    color:var(--cta-ink);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    font-weight:700;
+    box-shadow:
+      0 0 0 1.5px color-mix(in srgb, var(--glow-a) 70%, transparent),
+      0 0 16px -2px color-mix(in srgb, var(--glow-a) 75%, transparent),
+      0 0 24px -4px color-mix(in srgb, var(--glow-b) 70%, transparent);
+  }
+  #rollBtn:hover:not(:disabled){
+    filter:none;
+    box-shadow:
+      0 0 0 1.5px var(--glow-a),
+      0 0 20px -1px var(--glow-a),
+      0 0 30px -2px var(--glow-b);
+  }
+  .discoveredline{font-size:12px;color:var(--muted);margin:0;}
+  .metarow{display:flex;align-items:center;justify-content:space-between;width:100%;gap:10px;flex-wrap:wrap;}
+  .metalinks{display:flex;gap:14px;flex-wrap:wrap;}
+  .resetlink{background:none;border:none;color:var(--muted);font-size:12px;text-decoration:underline;cursor:pointer;padding:2px;white-space:nowrap;}
+  .resetlink:hover{color:#c0392b;}
+  .breakdown h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:1.15rem;
+    font-weight:700;
+    margin:0 0 2px;
+  }
+  .breakdown-sub{font-size:13px;color:var(--muted);margin:0 0 14px;}
+  .badgelist{display:flex;flex-direction:column;gap:10px;}
+  .badge{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:14px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    box-shadow:var(--shadow);
+  }
+  .badge.enter{opacity:0;transform:translateY(10px) scale(.98);}
+  .badge.enter.show{
+    opacity:1;transform:translateY(0) scale(1);
+    transition:opacity .28s ease, transform .28s ease;
+  }
+  .badge-top{display:flex;align-items:flex-start;gap:10px;}
+  .badge-icon{font-size:20px;line-height:1.3;flex:none;}
+  .badge-main{flex:1;min-width:0;}
+  .badge-name-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .badge-name{font-weight:700;font-size:14px;}
+  .badge-desc{font-size:12.5px;color:var(--muted);margin-top:2px;}
+  .badge-ep{
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:700;
+    font-size:13px;
+    color:var(--accent);
+    flex:none;
+    white-space:nowrap;
+  }
+  .badge-ep.owned{color:var(--muted);}
+  .chiprow{display:flex;gap:5px;}
+  .chip{
+    width:22px;height:22px;
+    border-radius:6px;
+    background:var(--chip-bg);
+    color:var(--chip-ink);
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    font-size:12px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .chip.active{background:var(--chip-active-bg);color:var(--chip-active-ink);}
+  .empty-state{
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+    padding:20px 10px;
+    border:1px dashed var(--border);
+    border-radius:14px;
+  }
+  .modal-backdrop{
+    position:fixed;
+    inset:0;
+    background:rgba(15,18,26,.55);
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    z-index:20;
+  }
+  .modal-backdrop[hidden]{display:none;}
+  @media (min-width:640px){
+    .modal-backdrop{align-items:center;padding:16px;}
+  }
+  .modal{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:18px 18px 0 0;
+    padding:20px;
+    width:100%;
+    max-width:520px;
+    max-height:min(82vh, 660px);
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));
+  }
+  @media (min-width:640px){ .modal{border-radius:18px;} }
+  .modal-head{display:flex;align-items:center;justify-content:space-between;}
+  .modal-head h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:1.1rem;
+    margin:0;
+  }
+  .modal-close{background:none;border:none;color:var(--muted);font-size:22px;line-height:1;padding:2px 6px;cursor:pointer;}
+  .modal-close:hover{color:var(--accent);}
+  .catlist{display:flex;flex-direction:column;gap:8px;overflow-y:auto;padding-right:2px;}
+  .catrow{
+    display:flex;align-items:center;gap:10px;
+    padding:9px 11px;border-radius:11px;border:1px solid var(--border);
+    background:var(--surface-2);
+  }
+  .catrow .info{flex:1;min-width:0;}
+  .catrow .name{font-weight:600;font-size:13px;}
+  .catrow .desc{font-size:11.5px;color:var(--muted);}
+  .catrow .del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:17px;padding:2px 4px;}
+  .catrow .del:hover{color:#c0392b;}
+  .catrow .edit{background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:2px 4px;flex:none;}
+  .catrow .edit:hover{color:var(--accent);}
+  .catrow .copy{background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:2px 4px;flex:none;}
+  .catrow .copy:hover{color:var(--accent);}
+  .catrow-edit{flex-direction:column;align-items:stretch;gap:8px;}
+  .editgrid{display:flex;flex-wrap:wrap;gap:6px;width:100%;}
+  .editgrid input, .editgrid select{
+    background:var(--bg);border:1px solid var(--border);color:var(--ink);
+    border-radius:8px;padding:7px 9px;font-family:inherit;font-size:12.5px;
+  }
+  .editgrid .edit-icon{width:52px;flex:none;text-align:center;}
+  .editgrid .edit-name{flex:2;min-width:120px;}
+  .editgrid .edit-points{width:80px;flex:none;}
+  .editgrid .edit-rarity{flex:1;min-width:100px;}
+  .edit-desc{
+    background:var(--bg);border:1px solid var(--border);color:var(--ink);
+    border-radius:8px;padding:7px 9px;font-family:inherit;font-size:12.5px;width:100%;
+  }
+  .editactions{display:flex;gap:8px;}
+  .editactions button{flex:1;padding:8px 12px;font-size:13px;}
+  details{border-top:1px solid var(--border);padding-top:14px;}
+  summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--accent);list-style:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary:before{content:"+ ";}
+  details[open] summary:before{content:"– ";}
+  form{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
+  .field{display:flex;flex-direction:column;gap:4px;}
+  .field label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);}
+  .field input,.field select{
+    background:var(--bg);
+    border:1px solid var(--border);
+    color:var(--ink);
+    border-radius:8px;
+    padding:8px 10px;
+    font-family:inherit;
+    font-size:13.5px;
+  }
+  .field input:focus,.field select:focus{outline:2px solid var(--accent);}
+  .paramrow{display:flex;gap:10px;flex-wrap:wrap;}
+  .paramrow .field{flex:1;min-width:110px;}
+  .toasts{
+    position:fixed;
+    top:calc(16px + env(safe-area-inset-top,0px));
+    right:16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    z-index:30;
+    max-width:min(280px,calc(100vw - 32px));
+  }
+  .toast{
+    background:var(--accent);
+    color:var(--accent-ink);
+    padding:10px 14px;
+    border-radius:10px;
+    font-size:13px;
+    font-weight:600;
+    box-shadow:var(--shadow);
+    animation:toastin .25s ease, toastout .3s ease 2.4s forwards;
+  }
+  @keyframes toastin{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes toastout{to{opacity:0;transform:translateY(-8px);}}
+  @media (prefers-reduced-motion:reduce){
+    .digitcell.pop{animation:none;}
+    .toast{animation:none;}
+    .badge.enter, .badge.enter.show{opacity:1;transform:none;transition:none;}
+  }
+</style>
+
+<div class="toasts" id="toasts"></div>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">Sixfold</div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="soundBtn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
+      <button class="icon-btn" id="catalogBtn" title="Badge catalog" aria-label="Open badge catalog">☰</button>
+    </div>
+  </div>
+
+  <div class="topboard">
+    <section class="panel leaderboard-mini">
+      <h2>Leaderboard</h2>
+      <p class="breakdown-sub" id="leaderboardStatus">Loading…</p>
+      <div id="leaderboardList" class="achlist"></div>
+    </section>
+
+    <section class="rollcard">
+      <div class="numberbox" id="numberBox"></div>
+      <div class="tags">
+        <span class="pill pill-common" id="rarityPill">—</span>
+        <span class="percentile" id="percentileText">Roll to find out</span>
+      </div>
+      <div class="eprow">
+        <div class="epstat"><span class="epval" id="epThisRoll">0</span><span class="eplabel">EP this roll</span></div>
+      </div>
+      <div class="actions">
+        <button class="btn-ghost" id="shareBtn">Share</button>
+        <button class="btn-primary" id="rollBtn">Roll</button>
+      </div>
+      <div class="metarow">
+        <p class="discoveredline" id="discoveredLine"></p>
+        <div class="metalinks">
+          <button class="resetlink" id="recalcBtn" type="button">Recalculate score</button>
+          <button class="resetlink" id="testToggleBtn" type="button">Test a number</button>
+          <button class="resetlink" id="exportBtn" type="button">Export save</button>
+          <button class="resetlink" id="resetBtn" type="button">Reset progress</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel" id="testerPanel" hidden>
+    <h2>Number tester</h2>
+    <p class="breakdown-sub">Check which badges a specific number would match, without rolling.</p>
+    <div class="paramrow">
+      <div class="field">
+        <label for="testInput">Digits to test</label>
+        <input id="testInput" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="e.g. 121212">
+      </div>
+    </div>
+    <button class="btn-primary" type="button" id="testBtn">Test</button>
+    <div id="testResults" class="achlist"></div>
+  </section>
+
+  <section class="breakdown">
+    <h2>Badge breakdown</h2>
+    <p class="breakdown-sub" id="breakdownSub">Roll to see which badges you earn.</p>
+    <div id="badgeList" class="badgelist"></div>
+  </section>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Badge catalog">
+    <div class="modal-head">
+      <h2>Badge catalog</h2>
+      <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+    </div>
+    <div class="catlist" id="catalogList"></div>
+
+    <details>
+      <summary>Add badge</summary>
+      <form id="addForm">
+        <div class="field">
+          <label for="nameInput">Name</label>
+          <input id="nameInput" type="text" placeholder="e.g. Lucky Sevens" required maxlength="40">
+        </div>
+        <div class="field">
+          <label for="tplSelect">Condition</label>
+          <select id="tplSelect"></select>
+        </div>
+        <div id="paramFields"></div>
+        <div class="paramrow">
+          <div class="field">
+            <label for="iconInput">Icon (emoji)</label>
+            <input id="iconInput" type="text" maxlength="4" placeholder="🏅">
+          </div>
+          <div class="field">
+            <label for="rarityInput">Rarity</label>
+            <select id="rarityInput"></select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="ptsInput">EP reward</label>
+          <input id="ptsInput" type="number" value="50" min="1" required>
+        </div>
+        <button class="btn-primary" type="submit">Add badge</button>
+      </form>
+    </details>
+  </div>
+</div>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'sixfold-state-v1';
+  var SOUND_KEY = 'sixfold-sound-v1';
+  var BLANK_CHAR = '?';
+  var NUM_DIGITS = 6;
+
+  var soundOn = true;
+  try{
+    var storedSound = localStorage.getItem(SOUND_KEY);
+    if (storedSound !== null) soundOn = storedSound === '1';
+  }catch(e){}
+
+  var audioCtx = null;
+  function ensureAudio(){
+    if (!soundOn) return;
+    if (!audioCtx){
+      try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){ audioCtx = null; }
+    }
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  }
+  function beep(freq, duration, type, peak){
+    if (!soundOn || !audioCtx) return;
+    try{
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = type || 'square';
+      osc.frequency.value = freq;
+      var t0 = audioCtx.currentTime;
+      gain.gain.setValueAtTime(0.0001, t0);
+      gain.gain.exponentialRampToValueAtTime(peak || 0.15, t0 + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(t0);
+      osc.stop(t0 + duration + 0.02);
+    }catch(e){}
+  }
+  function playTick(){ beep(280 + Math.random()*160, 0.05, 'square', 0.07); }
+  function playSettle(i){
+    var scale = [440,523,587,659,784];
+    beep(scale[i % scale.length], 0.18, 'triangle', 0.16);
+  }
+  function playFanfare(){
+    var notes = [523,659,784,1047];
+    notes.forEach(function(f, idx){
+      setTimeout(function(){ beep(f, 0.22, 'triangle', 0.18); }, idx*90);
+    });
+  }
+  function playReveal(idx){
+    var scale = [392,440,494,523,587,659];
+    beep(scale[idx % scale.length], 0.12, 'sine', 0.1);
+  }
+
+  var TEMPLATES = [
+    {id:'allSame', label:'All Same', params:[]},
+    {id:'nOfAKind', label:'N of a Kind', params:[{key:'count',label:'Count',type:'number',min:2,max:6,def:4}]},
+    {id:'fullHouse', label:'Full House (3 + 2)', params:[]},
+    {id:'straight', label:'Straight run', params:[{key:'length',label:'Length',type:'number',min:3,max:6,def:4}]},
+    {id:'sumAtLeast', label:'Sum at least', params:[{key:'n',label:'Minimum sum',type:'number',min:0,max:54,def:36}]},
+    {id:'sumAtMost', label:'Sum at most', params:[{key:'n',label:'Maximum sum',type:'number',min:0,max:54,def:12}]},
+    {id:'exactSum', label:'Exact sum', params:[{key:'n',label:'Exact sum',type:'number',min:0,max:54,def:24}]},
+    {id:'valueCount', label:'Value appears at least N times', params:[{key:'value',label:'Value (0-9)',type:'number',min:0,max:9,def:7},{key:'count',label:'Minimum count',type:'number',min:1,max:6,def:3}]},
+    {id:'valueCountExact', label:'Value appears exactly N times', params:[{key:'value',label:'Value (0-9)',type:'number',min:0,max:9,def:0},{key:'count',label:'Exact count',type:'number',min:1,max:6,def:1}]},
+    {id:'allDifferent', label:'All different', params:[]},
+    {id:'twoPair', label:'Two pair', params:[]},
+    {id:'isPrime', label:'Reads as a prime number', params:[]},
+    {id:'isPalindrome', label:'Palindrome sequence', params:[]},
+    {id:'firstGreaterThanLast', label:'First digit beats last', params:[]},
+    {id:'lastDigitParity', label:'Last digit parity', params:[{key:'parity',label:'Parity',type:'select',options:[{value:'odd',label:'Odd'},{value:'even',label:'Even'}],def:'odd'}]},
+    {id:'adjacentPair', label:'Adjacent pair', params:[]},
+    {id:'adjacentTriple', label:'Adjacent three of a kind', params:[]},
+    {id:'firstEqualsLast', label:'First equals last digit', params:[]},
+    {id:'digitCount', label:'Exact digit count', params:[{key:'n',label:'Digit count',type:'number',min:1,max:10,def:6}]},
+    {id:'exactNumber', label:'N (exact number)', params:[{key:'value',label:'Target number',type:'text',def:'123456'}]},
+    {id:'containsSequence', label:'Contains number', params:[{key:'value',label:'Sequence',type:'text',def:'67'}]},
+    {id:'repeatingPattern', label:'Repeating pattern', params:[]},
+    {id:'customRepeatingPattern', label:'Custom repeating pattern', params:[{key:'blockLength',label:'Pattern length',type:'number',min:1,max:NUM_DIGITS-1,def:2}]},
+    {id:'nAdjacentPairs', label:'N of adjacent pairs', params:[{key:'count',label:'Number of pairs',type:'number',min:1,max:NUM_DIGITS-1,def:2}]},
+    {id:'distinctCount', label:'Amount of unique digits', params:[{key:'n',label:'Unique digit count',type:'number',min:1,max:NUM_DIGITS,def:3}]},
+    {id:'numberGreaterThan', label:'Your roll bigger than N', params:[{key:'n',label:'Threshold',type:'number',min:0,max:Math.pow(10,NUM_DIGITS)-1,def:500000}]},
+    {id:'divisibleBy', label:'Divisible by N', params:[{key:'n',label:'Divisor',type:'number',min:2,max:1000,def:3}]},
+    {id:'notContainsSequence', label:'Not include', params:[{key:'value',label:'Sequence',type:'text',def:'67'}]},
+    {id:'lastDigits', label:'Last digits', params:[{key:'value',label:'Ending sequence',type:'text',def:'67'}]},
+    {id:'straightRange', label:'Straight (custom range)', params:[{key:'start',label:'Start value (-1 = any)',type:'number',min:-1,max:9,def:2},{key:'length',label:'Length',type:'number',min:2,max:NUM_DIGITS,def:5}]},
+    {id:'orderedSequence', label:'Ascending / Descending', params:[{key:'direction',label:'Direction',type:'select',options:[{value:'asc',label:'Ascending'},{value:'desc',label:'Descending'}],def:'asc'}]},
+    {id:'startsAndEndsWith', label:'Starts with # and ends with #', params:[{key:'startValue',label:'Starts with',type:'text',def:'1'},{key:'endValue',label:'Ends with',type:'text',def:'7'}]}
+  ];
+
+  var RARITY_OPTIONS = [
+    {value:'common',label:'Common'}, {value:'uncommon',label:'Uncommon'},
+    {value:'rare',label:'Rare'}, {value:'epic',label:'Epic'}, {value:'legendary',label:'Legendary'},
+    {value:'mythic',label:'Mythic'}
+  ];
+
+  var ICONS = {
+    allSame:'🌟', nOfAKind:'🎯', fullHouse:'🏠', straight:'📈', sumAtLeast:'🏋️',
+    sumAtMost:'🪶', exactSum:'🧮', valueCount:'🍀', valueCountExact:'🔍',
+    allDifferent:'🌈', twoPair:'👯', isPrime:'💎', isPalindrome:'🪞',
+    firstGreaterThanLast:'⛷️', lastDigitParity:'🔢', adjacentPair:'👯',
+    adjacentTriple:'👨‍👩‍👦', firstEqualsLast:'🥪', digitCount:'📏', exactNumber:'💯', containsSequence:'🔎',
+    repeatingPattern:'♻️', customRepeatingPattern:'🔂', nAdjacentPairs:'🔗',
+    distinctCount:'🎨', numberGreaterThan:'📊', divisibleBy:'➗', notContainsSequence:'🚫',
+    lastDigits:'🏁', straightRange:'📶', orderedSequence:'🎢', startsAndEndsWith:'🔖'
+  };
+
+  function tpl(id){ for (var i=0;i<TEMPLATES.length;i++) if (TEMPLATES[i].id===id) return TEMPLATES[i]; return null; }
+
+  function describe(a){
+    switch(a.type){
+      case 'allSame': return 'All ' + NUM_DIGITS + ' draws show the same digit';
+      case 'nOfAKind': return a.params.count + '+ draws show the same digit';
+      case 'fullHouse': return 'Three of one digit and two of another';
+      case 'straight': return a.params.length + ' digits in a row, any order';
+      case 'sumAtLeast': return 'Total of all draws is ' + a.params.n + ' or more';
+      case 'sumAtMost': return 'Total of all draws is ' + a.params.n + ' or less';
+      case 'exactSum': return 'Total of all draws is exactly ' + a.params.n;
+      case 'valueCount': return 'At least ' + a.params.count + ' draws show a ' + a.params.value;
+      case 'valueCountExact': return 'Exactly ' + a.params.count + ' draw(s) show a ' + a.params.value;
+      case 'allDifferent': return 'All ' + NUM_DIGITS + ' draws show different digits';
+      case 'twoPair': return 'Two different pairs among the draws';
+      case 'isPrime': return 'The digits read as a prime number';
+      case 'isPalindrome': return 'The sequence reads the same forwards and backwards';
+      case 'firstGreaterThanLast': return 'The first digit is larger than the last';
+      case 'lastDigitParity': return 'The last digit is ' + a.params.parity;
+      case 'adjacentPair': return 'Two neighboring draws show the same digit';
+      case 'adjacentTriple': return 'Three neighboring draws show the same digit';
+      case 'firstEqualsLast': return 'The first and last digit are the same number';
+      case 'digitCount': return 'The roll has exactly ' + a.params.n + ' digits';
+      case 'exactNumber': return 'The roll is exactly the number ' + a.params.value;
+      case 'containsSequence': return 'The roll contains the number ' + a.params.value;
+      case 'repeatingPattern': return 'The roll is a short pattern repeated to fill all the digits (like 123123)';
+      case 'customRepeatingPattern': return 'A ' + a.params.blockLength + '-digit block repeats back-to-back somewhere in the roll (like 1212)';
+      case 'nAdjacentPairs': return 'At least ' + a.params.count + ' pairs of neighboring digits match';
+      case 'distinctCount': return 'Exactly ' + a.params.n + ' unique digit value(s) appear in the roll';
+      case 'numberGreaterThan': return 'The roll, read as a number, is greater than ' + a.params.n;
+      case 'divisibleBy': return 'The roll, read as a number, is divisible by ' + a.params.n;
+      case 'notContainsSequence': return 'The roll does not contain the number ' + a.params.value;
+      case 'lastDigits': return 'The roll ends with ' + a.params.value;
+      case 'straightRange': return a.params.start < 0
+        ? (a.params.length + ' neighboring draws form consecutive values, in any order')
+        : (a.params.length + ' neighboring draws are exactly ' + a.params.start + ' through ' + (a.params.start + a.params.length - 1) + ', in any order');
+      case 'orderedSequence': return a.params.direction === 'asc'
+        ? 'Every digit is greater than the one before it, left to right'
+        : 'Every digit is less than the one before it, left to right';
+      case 'startsAndEndsWith': return 'The roll starts with ' + a.params.startValue + ' and ends with ' + a.params.endValue;
+      default: return '';
+    }
+  }
+
+  function rarityOf(a){
+    if (a.rarity) return a.rarity;
+    switch(a.type){
+      case 'allSame': return 'legendary';
+      case 'nOfAKind': return a.params.count>=5 ? 'legendary' : 'epic';
+      case 'fullHouse': return 'epic';
+      case 'straight': return a.params.length>=5 ? 'rare' : 'uncommon';
+      case 'isPrime': return 'uncommon';
+      case 'isPalindrome': return 'rare';
+      case 'firstGreaterThanLast': return 'common';
+      case 'lastDigitParity': return 'common';
+      case 'valueCountExact': return a.params.count>=3 ? 'rare' : (a.params.count===2 ? 'uncommon' : 'common');
+      case 'valueCount': return a.params.count>=4 ? 'epic' : (a.params.count===3 ? 'rare' : (a.params.count===2 ? 'uncommon' : 'common'));
+      case 'sumAtLeast': case 'sumAtMost': return (a.params.n>=38 || a.params.n<=7) ? 'rare' : 'uncommon';
+      case 'exactSum': return 'rare';
+      case 'allDifferent': return 'common';
+      case 'twoPair': return 'uncommon';
+      case 'adjacentPair': return 'common';
+      case 'adjacentTriple': return 'uncommon';
+      case 'firstEqualsLast': return 'uncommon';
+      case 'digitCount': return 'common';
+      case 'exactNumber': return 'legendary';
+      case 'containsSequence': return String(a.params.value||'').replace(/\D/g,'').length >= 3 ? 'rare' : 'uncommon';
+      case 'repeatingPattern': return 'rare';
+      case 'customRepeatingPattern': {
+        var bl = a.params.blockLength;
+        return bl<=1 ? 'common' : (bl===2 ? 'uncommon' : (bl===3 ? 'rare' : 'epic'));
+      }
+      case 'nAdjacentPairs': {
+        var pc = a.params.count;
+        return pc>=3 ? 'epic' : (pc===2 ? 'rare' : 'uncommon');
+      }
+      case 'distinctCount': {
+        var dc = a.params.n;
+        return (dc<=1 || dc>=NUM_DIGITS) ? 'legendary' : (dc===2 ? 'epic' : 'common');
+      }
+      case 'numberGreaterThan': {
+        var maxVal = Math.pow(10,NUM_DIGITS)-1;
+        var frac = a.params.n / maxVal;
+        return frac>=0.95 ? 'epic' : (frac>=0.8 ? 'rare' : (frac>=0.5 ? 'uncommon' : 'common'));
+      }
+      case 'divisibleBy': {
+        var div = a.params.n;
+        return div>=100 ? 'epic' : (div>=20 ? 'rare' : (div>=7 ? 'uncommon' : 'common'));
+      }
+      case 'notContainsSequence': {
+        var nl = String(a.params.value||'').replace(/\D/g,'').length;
+        return nl>=3 ? 'common' : (nl===2 ? 'uncommon' : 'rare');
+      }
+      case 'lastDigits': {
+        var ll = String(a.params.value||'').replace(/\D/g,'').length;
+        return ll>=3 ? 'epic' : (ll===2 ? 'rare' : 'uncommon');
+      }
+      case 'straightRange': {
+        var srl = a.params.length;
+        return srl>=6 ? 'legendary' : (srl===5 ? 'rare' : (srl===4 ? 'uncommon' : 'common'));
+      }
+      case 'orderedSequence': return 'legendary';
+      case 'startsAndEndsWith': {
+        var seLen = String(a.params.startValue||'').replace(/\D/g,'').length + String(a.params.endValue||'').replace(/\D/g,'').length;
+        return seLen>=4 ? 'epic' : (seLen===3 ? 'rare' : 'uncommon');
+      }
+      default: return 'common';
+    }
+  }
+
+  var RARITY_RANK = ['common','uncommon','rare','epic','legendary','mythic'];
+  var RARITY_LABEL = {common:'Common',uncommon:'Uncommon',rare:'Rare',epic:'Epic',legendary:'Legendary',mythic:'Mythic'};
+  function rarityThenPointsCompare(x,y){
+    var rx = RARITY_RANK.indexOf(rarityOf(x));
+    var ry = RARITY_RANK.indexOf(rarityOf(y));
+    if (rx !== ry) return rx - ry;
+    return x.points - y.points;
+  }
+  var PERCENTILE_BY_TIER = {
+    common:'Bottom 45%', uncommon:'Top 35%', rare:'Top 12%', epic:'Top 3%', legendary:'Top 0.1%', mythic:'Top 0.001%'
+  };
+
+  function hasStraight(nums, len){
+    var uniq = Array.from(new Set(nums)).sort(function(a,b){return a-b;});
+    var run = 1, best = uniq.length ? 1 : 0, runStart = uniq[0], bestStart = uniq[0];
+    for (var i=1;i<uniq.length;i++){
+      if (uniq[i] === uniq[i-1]+1){ run++; if (run>best){best=run; bestStart=uniq[i]-run+1;} }
+      else { run = 1; runStart = uniq[i]; }
+    }
+    return {ok: best >= len, start: bestStart, len: best};
+  }
+
+  function isPrimeNum(n){
+    if (n < 2) return false;
+    if (n % 2 === 0) return n === 2;
+    for (var i=3; i*i<=n; i+=2) if (n % i === 0) return false;
+    return true;
+  }
+
+  function firstSignificantIndex(nums){
+    for (var i=0;i<nums.length-1;i++){ if (nums[i] !== 0) return i; }
+    return nums.length - 1;
+  }
+  function effectiveDigitLength(nums){
+    return nums.length - firstSignificantIndex(nums);
+  }
+
+  function countExactAdjacentPairs(nums){
+    var count = 0;
+    var i = 0;
+    while (i < nums.length - 1){
+      if (nums[i] === nums[i+1]){
+        var j = i;
+        while (j+1 < nums.length && nums[j+1] === nums[i]) j++;
+        var runLen = j - i + 1;
+        if (runLen === 2) count++;
+        i = j + 1;
+      } else {
+        i++;
+      }
+    }
+    return count;
+  }
+  function exactAdjacentPairIndices(nums){
+    var idx = [];
+    var i = 0;
+    while (i < nums.length - 1){
+      if (nums[i] === nums[i+1]){
+        var j = i;
+        while (j+1 < nums.length && nums[j+1] === nums[i]) j++;
+        var runLen = j - i + 1;
+        if (runLen === 2){ idx.push(i); idx.push(i+1); }
+        i = j + 1;
+      } else {
+        i++;
+      }
+    }
+    return idx;
+  }
+
+  function findConsecutiveStraightWindow(nums, start, length){
+    for (var p=0; p<=nums.length-length; p++){
+      var window = nums.slice(p, p+length);
+      var uniq = Array.from(new Set(window));
+      if (uniq.length !== length) continue;
+      uniq.sort(function(x,y){ return x-y; });
+      if (start >= 0){
+        if (uniq[0] === start && uniq[uniq.length-1] === start+length-1) return p;
+      } else {
+        var consecutive = true;
+        for (var k=1; k<uniq.length; k++){
+          if (uniq[k] !== uniq[k-1]+1){ consecutive = false; break; }
+        }
+        if (consecutive) return p;
+      }
+    }
+    return null;
+  }
+
+  function hasRepeatingPatternOfLength(nums, b){
+    var n = nums.length;
+    if (!b || b <= 0 || b >= n || n % b !== 0) return false;
+    for (var i=b; i<n; i++){
+      if (nums[i] !== nums[i % b]) return false;
+    }
+    return true;
+  }
+
+  function findConsecutiveBlockRepeat(nums, blockLength){
+    var start = firstSignificantIndex(nums);
+    var eff = nums.slice(start);
+    var n = eff.length;
+    if (!blockLength || blockLength < 1 || blockLength*2 > n) return null;
+    for (var i=0; i<=n-2*blockLength; i++){
+      var match = true;
+      for (var k=0; k<blockLength; k++){
+        if (eff[i+k] !== eff[i+blockLength+k]){ match = false; break; }
+      }
+      if (match) return start + i;
+    }
+    return null;
+  }
+
+  function hasRepeatingPattern(nums){
+    var n = nums.length;
+    for (var b=1; b<n; b++){
+      if (hasRepeatingPatternOfLength(nums, b)) return true;
+    }
+    return false;
+  }
+
+  function isPalindromeSeq(nums){
+    for (var i=0;i<Math.floor(nums.length/2);i++){
+      if (nums[i] !== nums[nums.length-1-i]) return false;
+    }
+    return true;
+  }
+
+  function evaluate(a, nums){
+    var counts = [0,0,0,0,0,0,0,0,0,0];
+    nums.forEach(function(d){ counts[d]++; });
+    var sum = nums.reduce(function(s,d){return s+d;},0);
+    var distinct = new Set(nums).size;
+    var last = nums.length - 1;
+    switch(a.type){
+      case 'allSame': return counts.some(function(c){return c===nums.length;});
+      case 'nOfAKind': return counts.some(function(c){return c>=a.params.count;});
+      case 'fullHouse': { var cs = counts.filter(function(c){return c>0;}); return cs.indexOf(3)>=0 && cs.indexOf(2)>=0; }
+      case 'straight': return hasStraight(nums, a.params.length).ok;
+      case 'sumAtLeast': return sum >= a.params.n;
+      case 'sumAtMost': return sum <= a.params.n;
+      case 'exactSum': return sum === a.params.n;
+      case 'valueCount': return counts[a.params.value] >= a.params.count;
+      case 'valueCountExact': return counts[a.params.value] === a.params.count;
+      case 'allDifferent': return distinct === nums.length;
+      case 'twoPair': return counts.filter(function(c){return c>=2;}).length >= 2;
+      case 'isPrime': return isPrimeNum(parseInt(nums.join(''),10));
+      case 'isPalindrome': return isPalindromeSeq(nums);
+      case 'firstGreaterThanLast': return nums[0] > nums[last];
+      case 'lastDigitParity': return (nums[last] % 2 === (a.params.parity === 'odd' ? 1 : 0));
+      case 'adjacentPair': for (var i=0;i<nums.length-1;i++) if (nums[i]===nums[i+1]) return true; return false;
+      case 'adjacentTriple': for (var j=0;j<nums.length-2;j++) if (nums[j]===nums[j+1] && nums[j+1]===nums[j+2]) return true; return false;
+      case 'firstEqualsLast': return nums[0] === nums[last];
+      case 'digitCount': return effectiveDigitLength(nums) === a.params.n;
+      case 'exactNumber': {
+        var target = String(a.params.value).replace(/\D/g,'').padStart(nums.length,'0').slice(-nums.length);
+        return nums.join('') === target;
+      }
+      case 'containsSequence': {
+        var seq = String(a.params.value).replace(/\D/g,'');
+        return seq.length > 0 && nums.join('').indexOf(seq) >= 0;
+      }
+      case 'repeatingPattern': return hasRepeatingPattern(nums);
+      case 'customRepeatingPattern': return findConsecutiveBlockRepeat(nums, a.params.blockLength) !== null;
+      case 'nAdjacentPairs': return countExactAdjacentPairs(nums) >= a.params.count;
+      case 'distinctCount': return distinct === a.params.n;
+      case 'numberGreaterThan': return parseInt(nums.join(''),10) > a.params.n;
+      case 'divisibleBy': return a.params.n > 0 && parseInt(nums.join(''),10) % a.params.n === 0;
+      case 'notContainsSequence': {
+        var nseq = String(a.params.value).replace(/\D/g,'');
+        return nseq.length === 0 || nums.join('').indexOf(nseq) < 0;
+      }
+      case 'lastDigits': {
+        var lseq = String(a.params.value).replace(/\D/g,'');
+        return lseq.length > 0 && lseq.length <= nums.length && nums.join('').slice(-lseq.length) === lseq;
+      }
+      case 'straightRange': return findConsecutiveStraightWindow(nums, a.params.start, a.params.length) !== null;
+      case 'orderedSequence': {
+        var oDir = a.params.direction;
+        for (var oi=1; oi<nums.length; oi++){
+          if (oDir === 'asc' && !(nums[oi] > nums[oi-1])) return false;
+          if (oDir === 'desc' && !(nums[oi] < nums[oi-1])) return false;
+        }
+        return true;
+      }
+      case 'startsAndEndsWith': {
+        var seStart = String(a.params.startValue).replace(/\D/g,'');
+        var seEnd = String(a.params.endValue).replace(/\D/g,'');
+        if (!seStart.length || !seEnd.length) return false;
+        var rollStr = nums.join('');
+        return rollStr.slice(0, seStart.length) === seStart && rollStr.slice(-seEnd.length) === seEnd;
+      }
+      default: return false;
+    }
+  }
+
+  function relevantIndices(a, nums){
+    var counts = [0,0,0,0,0,0,0,0,0,0];
+    nums.forEach(function(d){ counts[d]++; });
+    var all = nums.map(function(n,i){return i;});
+    var last = nums.length - 1;
+    switch(a.type){
+      case 'allSame': return all;
+      case 'nOfAKind': {
+        var best=-1,bestC=0;
+        counts.forEach(function(c,v){ if (c>bestC){bestC=c;best=v;} });
+        return nums.map(function(n,i){return n===best?i:-1;}).filter(function(i){return i>=0;});
+      }
+      case 'fullHouse': {
+        var v3=-1,v2=-1;
+        counts.forEach(function(c,v){ if(c===3)v3=v; if(c===2)v2=v; });
+        return nums.map(function(n,i){return (n===v3||n===v2)?i:-1;}).filter(function(i){return i>=0;});
+      }
+      case 'straight': {
+        var res = hasStraight(nums, a.params.length);
+        var lo = res.start, hi = res.start + res.len - 1;
+        return nums.map(function(n,i){return (n>=lo && n<=hi) ? i : -1;}).filter(function(i){return i>=0;});
+      }
+      case 'sumAtLeast': case 'sumAtMost': case 'exactSum': case 'allDifferent': case 'isPrime':
+        return all;
+      case 'firstGreaterThanLast': return [0,last];
+      case 'valueCount': case 'valueCountExact':
+        return nums.map(function(n,i){return n===a.params.value?i:-1;}).filter(function(i){return i>=0;});
+      case 'twoPair':
+        return nums.map(function(n,i){return counts[n]>=2?i:-1;}).filter(function(i){return i>=0;});
+      case 'isPalindrome': {
+        var idx = [];
+        for (var mi=0; mi<Math.floor(nums.length/2); mi++){ idx.push(mi); idx.push(nums.length-1-mi); }
+        return idx;
+      }
+      case 'lastDigitParity': return [last];
+      case 'adjacentPair': {
+        for (var pi=0; pi<nums.length-1; pi++) if (nums[pi]===nums[pi+1]) return [pi,pi+1];
+        return [];
+      }
+      case 'adjacentTriple': {
+        for (var ti=0; ti<nums.length-2; ti++) if (nums[ti]===nums[ti+1] && nums[ti+1]===nums[ti+2]) return [ti,ti+1,ti+2];
+        return [];
+      }
+      case 'firstEqualsLast': return [0, nums.length-1];
+      case 'digitCount': {
+        var sig = firstSignificantIndex(nums);
+        var out = [];
+        for (var di=sig; di<nums.length; di++) out.push(di);
+        return out;
+      }
+      case 'exactNumber': return all;
+      case 'containsSequence': {
+        var seq = String(a.params.value).replace(/\D/g,'');
+        var start = nums.join('').indexOf(seq);
+        if (start < 0) return [];
+        var out = [];
+        for (var si=0; si<seq.length; si++) out.push(start+si);
+        return out;
+      }
+      case 'repeatingPattern': return all;
+      case 'customRepeatingPattern': {
+        var pos = findConsecutiveBlockRepeat(nums, a.params.blockLength);
+        if (pos === null) return [];
+        var out = [];
+        for (var pi=0; pi<2*a.params.blockLength; pi++) out.push(pos+pi);
+        return out;
+      }
+      case 'nAdjacentPairs': return exactAdjacentPairIndices(nums);
+      case 'distinctCount': return all;
+      case 'numberGreaterThan': return all;
+      case 'divisibleBy': return all;
+      case 'notContainsSequence': return all;
+      case 'lastDigits': {
+        var lseq2 = String(a.params.value).replace(/\D/g,'');
+        if (!lseq2.length || lseq2.length > nums.length) return [];
+        var out2 = [];
+        for (var li=nums.length-lseq2.length; li<nums.length; li++) out2.push(li);
+        return out2;
+      }
+      case 'straightRange': {
+        var srp = findConsecutiveStraightWindow(nums, a.params.start, a.params.length);
+        if (srp === null) return [];
+        var srIdx = [];
+        for (var si=0; si<a.params.length; si++) srIdx.push(srp+si);
+        return srIdx;
+      }
+      case 'orderedSequence': return all;
+      case 'startsAndEndsWith': {
+        var seStart2 = String(a.params.startValue).replace(/\D/g,'');
+        var seEnd2 = String(a.params.endValue).replace(/\D/g,'');
+        var seOut = [];
+        for (var sei=0; sei<seStart2.length; sei++) seOut.push(sei);
+        for (var sej=nums.length-seEnd2.length; sej<nums.length; sej++) if (seOut.indexOf(sej)<0) seOut.push(sej);
+        return seOut;
+      }
+      default: return [];
+    }
+  }
+
+  function uid(){ return 'a' + Math.random().toString(36).slice(2,10) + Date.now().toString(36); }
+
+  function defaultAchievements(){
+    return [
+      {id:uid(), name:'Six Digits', type:'digitCount', params:{n:6}, points:100, rarity:'common', icon:'🎲', discovered:false},
+      {id:uid(), name:'Void', type:'notContainsSequence', params:{value:'0'}, points:100, rarity:'common', icon:'🚫', discovered:false},
+      {id:uid(), name:'EZ Straight', type:'straightRange', params:{start:-1,length:2}, points:100, rarity:'common', icon:'📶', discovered:false},
+      {id:uid(), name:'Odd', type:'lastDigitParity', params:{parity:'odd'}, points:150, rarity:'common', icon:'🔸', discovered:false},
+      {id:uid(), name:'Even', type:'lastDigitParity', params:{parity:'even'}, points:150, rarity:'common', icon:'🔹', discovered:false},
+      {id:uid(), name:'Ghost', type:'valueCountExact', params:{value:0,count:1}, points:150, rarity:'common', icon:'👻', discovered:false, desc:'Contains exactly one "0"'},
+      {id:uid(), name:'One One', type:'valueCountExact', params:{value:1,count:1}, points:150, rarity:'common', icon:'💧', discovered:false, desc:'Contains exactly one "1"'},
+      {id:uid(), name:'Twice', type:'valueCountExact', params:{value:2,count:1}, points:150, rarity:'common', icon:'🎈', discovered:false, desc:'Contains exactly one "2"'},
+      {id:uid(), name:'Thrice', type:'valueCountExact', params:{value:3,count:1}, points:150, rarity:'common', icon:'🪫', discovered:false, desc:'Contains exactly one "3"'},
+      {id:uid(), name:'Four', type:'valueCountExact', params:{value:4,count:1}, points:150, rarity:'common', icon:'🪨', discovered:false, desc:'Contains exactly one "4".'},
+      {id:uid(), name:'Five', type:'valueCountExact', params:{value:5,count:1}, points:150, rarity:'common', icon:'🖐️', discovered:false, desc:'Contains exactly one "5"'},
+      {id:uid(), name:'6', type:'valueCountExact', params:{value:6,count:1}, points:150, rarity:'common', icon:'✏️', discovered:false, desc:'Contains exactly one "6"'},
+      {id:uid(), name:'Lone Seven', type:'valueCountExact', params:{value:7,count:1}, points:150, rarity:'common', icon:'❄️', discovered:false, desc:'Contains exactly one "7"'},
+      {id:uid(), name:'Lone Eight', type:'valueCountExact', params:{value:8,count:1}, points:150, rarity:'common', icon:'💨', discovered:false, desc:'Contains exactly one "8"'},
+      {id:uid(), name:'Circles', type:'valueCountExact', params:{value:9,count:1}, points:150, rarity:'common', icon:'🦷', discovered:false, desc:'Contains exactly one "9"'},
+      {id:uid(), name:'Divisible by 3', type:'divisibleBy', params:{n:3}, points:150, rarity:'common', icon:'➗', discovered:false},
+      {id:uid(), name:'Divisible by 4', type:'divisibleBy', params:{n:4}, points:150, rarity:'common', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 4'},
+      {id:uid(), name:'Lucky Seven', type:'valueCount', params:{value:7,count:1}, points:200, rarity:'common', icon:'🍀', discovered:false, desc:'Contains the number "7"'},
+      {id:uid(), name:'Divisible by 5', type:'divisibleBy', params:{n:5}, points:200, rarity:'common', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 5'},
+      {id:uid(), name:'Straight', type:'straightRange', params:{start:-1,length:3}, points:250, rarity:'common', icon:'📶', discovered:false, desc:'3 consecutive values in a row, starting anywhere'},
+      {id:uid(), name:'Pair', type:'adjacentPair', params:{}, points:300, rarity:'common', icon:'👯', discovered:false, desc:'Contains a pair (2 of the same number together)'},
+      {id:uid(), name:'Deep Void', type:'containsSequence', params:{value:'00'}, points:500, rarity:'common', icon:'🔎', discovered:false},
+      {id:uid(), name:'Three of a Kind', type:'adjacentTriple', params:{}, points:700, rarity:'common', icon:'👨‍👩‍👦', discovered:false, desc:'Contains a ToaK (3 of the same number together)'},
+      {id:uid(), name:'Difference', type:'allDifferent', params:{}, points:750, rarity:'common', icon:'🌈', discovered:false},
+      {id:uid(), name:'Everything Aligns', type:'divisibleBy', params:{n:999}, points:67250, rarity:'common', icon:'➗', discovered:false},
+      {id:uid(), name:'Difficult Straight', type:'straightRange', params:{start:-1,length:4}, points:1000, rarity:'uncommon', icon:'📶', discovered:false, desc:'4 consecutive values in a row, starting anywhere'},
+      {id:uid(), name:'Five Digits', type:'digitCount', params:{n:5}, points:1000, rarity:'uncommon', icon:'🎲', discovered:false, desc:'The roll has exactly 5 digits'},
+      {id:uid(), name:'Bookends', type:'firstEqualsLast', params:{}, points:1000, rarity:'uncommon', icon:'📖', discovered:false},
+      {id:uid(), name:'Nice!', type:'distinctCount', params:{n:4}, points:1000, rarity:'uncommon', icon:'🎨', discovered:false, desc:'Exactly 4 unique digit value(s) appear in the roll'},
+      {id:uid(), name:'86', type:'containsSequence', params:{value:'86'}, points:1050, rarity:'uncommon', icon:'🍔', discovered:false, desc:'The roll contains the number 86 (Slang for the word "Out Of" used in restaurants)'},
+      {id:uid(), name:'67', type:'containsSequence', params:{value:'67'}, points:1050, rarity:'uncommon', icon:'🤣', discovered:false, desc:'The roll contains the number 67 (the Meme)'},
+      {id:uid(), name:'69', type:'containsSequence', params:{value:'69'}, points:1050, rarity:'uncommon', icon:'😯', discovered:false, desc:'The roll contains the number 69 (Slang for the word "S3x")'},
+      {id:uid(), name:'31', type:'containsSequence', params:{value:'31'}, points:1050, rarity:'uncommon', icon:'🥛', discovered:false, desc:'The roll contains the number 31'},
+      {id:uid(), name:'Its Over 900000!', type:'numberGreaterThan', params:{n:900000}, points:1050, rarity:'uncommon', icon:'📊', discovered:false, desc:'The roll, read as a number, is greater than 900000'},
+      {id:uid(), name:'Mr Greedy Prime 2008', type:'isPrime', params:{}, points:1080, rarity:'uncommon', icon:'💎', discovered:false, desc:'The digits read as a prime number'},
+      {id:uid(), name:'21', type:'containsSequence', params:{value:'21'}, points:1100, rarity:'uncommon', icon:'➕', discovered:false, desc:'The roll contains the number 21 (the Meme)'},
+      {id:uid(), name:'92', type:'containsSequence', params:{value:'92'}, points:1100, rarity:'uncommon', icon:'🤪', discovered:false, desc:'The roll contains the number 92 (Phobos 92%)'},
+      {id:uid(), name:'55', type:'containsSequence', params:{value:'55'}, points:1100, rarity:'uncommon', icon:'🤪', discovered:false, desc:'The roll contains the number 55 (B A N E 55%)'},
+      {id:uid(), name:'Close Luck', type:'containsSequence', params:{value:'77'}, points:1100, rarity:'uncommon', icon:'🤪', discovered:false, desc:'The roll contains the number 77'},
+      {id:uid(), name:'Double Pair', type:'nAdjacentPairs', params:{count:2}, points:3000, rarity:'uncommon', icon:'👯', discovered:false, desc:'Contains a 2 pair (2 of the same number together but 2 times)'},
+      {id:uid(), name:'Long 67', type:'startsAndEndsWith', params:{startValue:'6',endValue:'7'}, points:3240, rarity:'uncommon', icon:'🔖', discovered:false},
+      {id:uid(), name:'Divisible by 7', type:'divisibleBy', params:{n:7}, points:3500, rarity:'uncommon', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 7'},
+      {id:uid(), name:'Rare!', type:'distinctCount', params:{n:3}, points:4300, rarity:'uncommon', icon:'🎨', discovered:false, desc:'Exactly 3 unique digit value(s) appear in the roll'},
+      {id:uid(), name:'Four Digits', type:'digitCount', params:{n:4}, points:5000, rarity:'rare', icon:'🎲', discovered:false, desc:'The roll has exactly 4 digits'},
+      {id:uid(), name:'Straighter', type:'straightRange', params:{start:-1,length:5}, points:5000, rarity:'rare', icon:'📶', discovered:false, desc:'5 consecutive values in a row, starting anywhere'},
+      {id:uid(), name:'ILY Too', type:'containsSequence', params:{value:'143'}, points:5000, rarity:'rare', icon:'❤️', discovered:false, desc:'The roll contains the number 143 (Slang for the word "I Love You")'},
+      {id:uid(), name:'Century', type:'lastDigits', params:{value:'00'}, points:5000, rarity:'rare', icon:'🏁', discovered:false},
+      {id:uid(), name:'Unlucky Lucky', type:'valueCount', params:{value:7,count:3}, points:5000, rarity:'rare', icon:'🍀', discovered:false},
+      {id:uid(), name:'911', type:'containsSequence', params:{value:'911'}, points:5050, rarity:'rare', icon:'🚑', discovered:false, desc:'The roll contains the number 911'},
+      {id:uid(), name:'a101', type:'containsSequence', params:{value:'101'}, points:5050, rarity:'rare', icon:'🏪', discovered:false, desc:'The roll contains the number 101 (a101)'},
+      {id:uid(), name:'1 is better', type:'firstGreaterThanLast', params:{}, points:6200, rarity:'rare', icon:'⛷️', discovered:false},
+      {id:uid(), name:'Full House', type:'fullHouse', params:{}, points:6700, rarity:'rare', icon:'🏠', discovered:false},
+      {id:uid(), name:'Nothingness..', type:'containsSequence', params:{value:'000'}, points:7680, rarity:'rare', icon:'👀', discovered:false, desc:'The roll contains the number 000'},
+      {id:uid(), name:'Bigger and Bigger!', type:'numberGreaterThan', params:{n:990000}, points:8750, rarity:'rare', icon:'📊', discovered:false, desc:'The roll, read as a number, is greater than 990000'},
+      {id:uid(), name:'2 Pattern Repeater', type:'customRepeatingPattern', params:{blockLength:2}, points:10000, rarity:'epic', icon:'♻️', discovered:false, desc:'The roll is a short pattern repeated to fill all the digits (like 1212)'},
+      {id:uid(), name:'Divisible by 32', type:'divisibleBy', params:{n:32}, points:10000, rarity:'epic', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 32'},
+      {id:uid(), name:'Palindrome', type:'isPalindrome', params:{}, points:10000, rarity:'epic', icon:'🪞', discovered:false},
+      {id:uid(), name:'Millenium', type:'lastDigits', params:{value:'000'}, points:12500, rarity:'epic', icon:'🏁', discovered:false, desc:'The roll ends with 000'},
+      {id:uid(), name:'Three Digits', type:'digitCount', params:{n:3}, points:15000, rarity:'epic', icon:'🎲', discovered:false, desc:'The roll has exactly 3 digits'},
+      {id:uid(), name:'JACKPOT!', type:'containsSequence', params:{value:'777'}, points:15000, rarity:'epic', icon:'🍀', discovered:false},
+      {id:uid(), name:'Unique!', type:'distinctCount', params:{n:2}, points:17000, rarity:'legendary', icon:'🎨', discovered:false, desc:'Exactly 2 unique digit value(s) appear in the roll'},
+      {id:uid(), name:'Ascending', type:'orderedSequence', params:{direction:'asc'}, points:25000, rarity:'legendary', icon:'🎢', discovered:false},
+      {id:uid(), name:'Descending', type:'orderedSequence', params:{direction:'desc'}, points:25000, rarity:'legendary', icon:'🎢', discovered:false},
+      {id:uid(), name:'Full Send', type:'straightRange', params:{start:-1,length:6}, points:50000, rarity:'legendary', icon:'🔥', discovered:false, desc:'6 consecutive values in a row, starting anywhere'},
+      {id:uid(), name:'3 Pattern Repeater', type:'customRepeatingPattern', params:{blockLength:3}, points:50000, rarity:'legendary', icon:'♻️', discovered:false, desc:'The roll is a short pattern repeated to fill all the digits (like 123123)'},
+      {id:uid(), name:'Two Digits', type:'digitCount', params:{n:2}, points:55000, rarity:'legendary', icon:'🎲', discovered:false, desc:'The roll has exactly 2 digits'},
+      {id:uid(), name:'Single Digit', type:'digitCount', params:{n:1}, points:100000, rarity:'mythic', icon:'🎲', discovered:false, desc:'The roll has exactly single digit'},
+      {id:uid(), name:'ONE.', type:'exactNumber', params:{value:'000001'}, points:100000, rarity:'mythic', icon:'💯', discovered:false, desc:'The roll is exactly the number 000001'},
+      {id:uid(), name:'Everything Aligns', type:'divisibleBy', params:{n:999}, points:65000, rarity:'mythic', icon:'🏅', discovered:false, desc:'The roll, read as a number, is divisible by 999'},
+      {id:uid(), name:'6 of a Kind', type:'allSame', params:{}, points:120000, rarity:'mythic', icon:'🌟', discovered:false}
+    ];
+  }
+
+  var achievements = defaultAchievements();
+  var nums = [0,0,0,0,0,0];
+  var everRolled = false;
+  var isSpinning = false;
+  var lastRollTierRank = -1;
+  var lastRollEP = 0;
+
+  var ACHIEVEMENTS_VERSION = 7;
+
+  function getState(){
+    return {achievements:achievements, nums:nums, everRolled:everRolled, achievementsVersion:ACHIEVEMENTS_VERSION};
+  }
+  function applyState(s){
+    if (!s || s.achievementsVersion !== ACHIEVEMENTS_VERSION){
+      achievements = defaultAchievements();
+      nums = [0,0,0,0,0,0];
+      everRolled = false;
+      return;
+    }
+    achievements = Array.isArray(s.achievements) && s.achievements.length ? s.achievements : defaultAchievements();
+    nums = Array.isArray(s.nums) && s.nums.length===NUM_DIGITS ? s.nums : [0,0,0,0,0,0];
+    everRolled = !!s.everRolled;
+  }
+  function loadLocal(){
+    try{ var raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : null; }catch(e){ return null; }
+  }
+  function saveLocal(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(getState())); }catch(e){}
+  }
+
+  var numberBoxEl = document.getElementById('numberBox');
+  var rarityPillEl = document.getElementById('rarityPill');
+  var percentileTextEl = document.getElementById('percentileText');
+  var epThisRollEl = document.getElementById('epThisRoll');
+  var discoveredLineEl = document.getElementById('discoveredLine');
+  var breakdownSubEl = document.getElementById('breakdownSub');
+  var badgeListEl = document.getElementById('badgeList');
+  var rollBtn = document.getElementById('rollBtn');
+  var shareBtn = document.getElementById('shareBtn');
+  var soundBtn = document.getElementById('soundBtn');
+  var catalogBtn = document.getElementById('catalogBtn');
+  var modalBackdrop = document.getElementById('modalBackdrop');
+  var modalClose = document.getElementById('modalClose');
+  var catalogListEl = document.getElementById('catalogList');
+  var resetBtn = document.getElementById('resetBtn');
+  var exportBtn = document.getElementById('exportBtn');
+  var testInput = document.getElementById('testInput');
+  var testBtn = document.getElementById('testBtn');
+  var testResultsEl = document.getElementById('testResults');
+  var testToggleBtn = document.getElementById('testToggleBtn');
+  var testerPanel = document.getElementById('testerPanel');
+  var leaderboardStatus = document.getElementById('leaderboardStatus');
+  var leaderboardList = document.getElementById('leaderboardList');
+  var recalcBtn = document.getElementById('recalcBtn');
+  var toastsEl = document.getElementById('toasts');
+  var tplSelect = document.getElementById('tplSelect');
+  var paramFields = document.getElementById('paramFields');
+  var addForm = document.getElementById('addForm');
+  var iconInput = document.getElementById('iconInput');
+  var rarityInput = document.getElementById('rarityInput');
+
+  var digitEls = [];
+
+  function buildNumberBox(){
+    numberBoxEl.innerHTML = '';
+    digitEls = [];
+    for (var i=0;i<NUM_DIGITS;i++){
+      var cell = document.createElement('span');
+      cell.className = 'digitcell';
+      if (everRolled){
+        cell.textContent = nums[i];
+      } else {
+        cell.textContent = BLANK_CHAR;
+        cell.classList.add('blank');
+      }
+      numberBoxEl.appendChild(cell);
+      digitEls.push(cell);
+    }
+    if (everRolled) refreshLeadingZeros();
+  }
+
+  function refreshLeadingZeros(){
+    var sig = firstSignificantIndex(nums);
+    digitEls.forEach(function(el, i){ el.classList.toggle('leading', i < sig); });
+  }
+
+  function syncSoundIcon(){
+    soundBtn.textContent = soundOn ? '🔊' : '🔇';
+    soundBtn.setAttribute('aria-pressed', String(!soundOn));
+  }
+
+  function showToast(text){
+    var t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = text;
+    toastsEl.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 2800);
+  }
+
+  function renderPillClass(el, tier){
+    el.className = 'pill pill-' + tier;
+  }
+
+  function renderTopStats(){
+    epThisRollEl.textContent = lastRollEP.toLocaleString();
+    if (!everRolled){
+      renderPillClass(rarityPillEl, 'common');
+      rarityPillEl.textContent = '—';
+      percentileTextEl.textContent = 'Roll to find out';
+    } else if (lastRollTierRank < 0){
+      renderPillClass(rarityPillEl, 'common');
+      rarityPillEl.textContent = 'No badges';
+      percentileTextEl.textContent = 'Bottom 60%';
+    } else {
+      var tier = RARITY_RANK[lastRollTierRank];
+      renderPillClass(rarityPillEl, tier);
+      rarityPillEl.textContent = RARITY_LABEL[tier];
+      percentileTextEl.textContent = PERCENTILE_BY_TIER[tier];
+    }
+    var discoveredCount = achievements.filter(function(a){return a.discovered;}).length;
+    discoveredLineEl.textContent = discoveredCount + ' / ' + achievements.length + ' badges discovered';
+    rollBtn.disabled = isSpinning;
+  }
+
+  function buildBadgeCard(a){
+    var tier = rarityOf(a);
+    var isNew = a.wasDiscoveredBeforeThisRoll === false;
+    var card = document.createElement('div');
+    card.className = 'badge';
+    var indices = relevantIndices(a, nums);
+    var chips = nums.map(function(n,i){
+      return '<span class="chip' + (indices.indexOf(i)>=0 ? ' active' : '') + '">' + n + '</span>';
+    }).join('');
+    card.innerHTML =
+      '<div class="badge-top">' +
+        '<div class="badge-icon">' + (a.icon || ICONS[a.type] || '🏅') + '</div>' +
+        '<div class="badge-main">' +
+          '<div class="badge-name-row">' +
+            '<span class="badge-name"></span>' +
+            '<span class="pill pill-' + tier + '">' + RARITY_LABEL[tier] + '</span>' +
+            (isNew ? '<span class="pill pill-new">New</span>' : '<span class="pill pill-owned">Owned</span>') +
+          '</div>' +
+          '<div class="badge-desc"></div>' +
+        '</div>' +
+        '<div class="badge-ep">+' + a.points + ' EP</div>' +
+      '</div>' +
+      '<div class="chiprow">' + chips + '</div>';
+    card.querySelector('.badge-name').textContent = a.name;
+    card.querySelector('.badge-desc').textContent = a.desc || describe(a);
+    return card;
+  }
+
+  function buildTestBadgeCard(a, testNums, matched){
+    var tier = rarityOf(a);
+    var card = document.createElement('div');
+    card.className = 'badge';
+    var indices = matched ? relevantIndices(a, testNums) : [];
+    var chips = testNums.map(function(n,i){
+      return '<span class="chip' + (indices.indexOf(i)>=0 ? ' active' : '') + '">' + n + '</span>';
+    }).join('');
+    card.innerHTML =
+      '<div class="badge-top">' +
+        '<div class="badge-icon">' + (a.icon || ICONS[a.type] || '🏅') + '</div>' +
+        '<div class="badge-main">' +
+          '<div class="badge-name-row">' +
+            '<span class="badge-name"></span>' +
+            '<span class="pill pill-' + tier + '">' + RARITY_LABEL[tier] + '</span>' +
+            '<span class="pill ' + (matched ? 'pill-new' : 'pill-owned') + '">' + (matched ? 'Match' : 'No match') + '</span>' +
+          '</div>' +
+          '<div class="badge-desc"></div>' +
+        '</div>' +
+        '<div class="badge-ep">' + a.points + ' EP</div>' +
+      '</div>' +
+      '<div class="chiprow">' + chips + '</div>';
+    card.querySelector('.badge-name').textContent = a.name;
+    card.querySelector('.badge-desc').textContent = a.desc || describe(a);
+    return card;
+  }
+
+  function runTest(){
+    var digits = testInput.value.replace(/\D/g,'');
+    testResultsEl.innerHTML = '';
+    if (!digits.length){
+      var msg = document.createElement('p');
+      msg.style.cssText = 'color:var(--muted);font-size:13px;';
+      msg.textContent = 'Type some digits first.';
+      testResultsEl.appendChild(msg);
+      return;
+    }
+    digits = digits.length >= NUM_DIGITS ? digits.slice(-NUM_DIGITS) : digits.padStart(NUM_DIGITS, '0');
+    var testNums = digits.split('').map(Number);
+    var matched = achievements.filter(function(a){ return evaluate(a, testNums); });
+    matched.sort(rarityThenPointsCompare);
+    var totalEP = matched.reduce(function(sum,a){ return sum + a.points; }, 0);
+    var heading = document.createElement('p');
+    heading.style.cssText = 'color:var(--muted);font-size:12px;margin:0 0 6px;';
+    heading.textContent = 'Testing ' + digits + ' — ' + matched.length + ' badge' + (matched.length===1?'':'s') + ' would match:';
+    testResultsEl.appendChild(heading);
+    var scoreLine = document.createElement('p');
+    scoreLine.style.cssText = 'font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:1.3rem;margin:0 0 10px;color:var(--accent);';
+    scoreLine.textContent = totalEP.toLocaleString() + ' EP';
+    testResultsEl.appendChild(scoreLine);
+    matched.forEach(function(a){
+      testResultsEl.appendChild(buildTestBadgeCard(a, testNums, true));
+    });
+  }
+
+  testToggleBtn.addEventListener('click', function(){
+    testerPanel.hidden = !testerPanel.hidden;
+    if (!testerPanel.hidden){
+      if (everRolled){
+        testInput.value = nums.join('');
+        runTest();
+      }
+      testInput.focus();
+    }
+  });
+
+  var dbCap = null;
+
+  function renderLeaderboardRow(name, score){
+    var row = document.createElement('div');
+    row.className = 'catrow';
+    row.style.cursor = 'pointer';
+    row.title = 'Test this number';
+    row.innerHTML =
+      '<div class="info"><div class="name"></div></div>' +
+      '<span class="pill pill-common"></span>';
+    row.querySelector('.name').textContent = name || 'Someone';
+    row.querySelector('.pill').textContent = Number(score || 0).toLocaleString() + ' EP';
+    row.addEventListener('click', function(){
+      testerPanel.hidden = false;
+      testInput.value = String(name || '').replace(/\D/g,'');
+      runTest();
+      testerPanel.scrollIntoView({behavior:'smooth', block:'nearest'});
+    });
+    return row;
+  }
+
+  function subscribeLeaderboard(){
+    if (!dbCap){
+      leaderboardStatus.textContent = 'Leaderboard unavailable in this view.';
+      return;
+    }
+    leaderboardStatus.textContent = 'Loading…';
+    var q = dbCap.collection('leaderboard').orderBy('score', 'desc').limit(10);
+    q.onSnapshot(function(snap){
+      leaderboardList.innerHTML = '';
+      if (snap.empty){
+        leaderboardStatus.textContent = 'No entries yet.';
+        return;
+      }
+      leaderboardStatus.textContent = 'Top ' + snap.size;
+      snap.docs.forEach(function(d){
+        var data = d.data() || {};
+        leaderboardList.appendChild(renderLeaderboardRow(data.name, data.score));
+      });
+    }, function(err){
+      leaderboardStatus.textContent = 'Could not load leaderboard.';
+    });
+  }
+
+  function initLeaderboardCapabilities(){
+    if (!window.claude || typeof window.claude.use !== 'function'){
+      leaderboardStatus.textContent = 'Leaderboard unavailable in this view.';
+      return;
+    }
+    window.claude.use('db').then(function(cap){
+      dbCap = cap;
+      subscribeLeaderboard();
+    }).catch(function(){
+      leaderboardStatus.textContent = 'Leaderboard unavailable in this view.';
+    });
+  }
+  initLeaderboardCapabilities();
+
+  testBtn.addEventListener('click', runTest);
+
+  function renderBreakdown(){
+    badgeListEl.innerHTML = '';
+    if (!everRolled){
+      breakdownSubEl.textContent = 'Roll to see which badges you earn.';
+      return;
+    }
+    var matched = achievements.filter(function(a){ return evaluate(a, nums); });
+    matched.sort(rarityThenPointsCompare);
+    breakdownSubEl.textContent = matched.length + ' badge' + (matched.length===1?'':'s') + ' earned this roll';
+    if (!matched.length){
+      var empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.textContent = 'No badges matched this draw. Try again, or add an easier badge to the catalog.';
+      badgeListEl.appendChild(empty);
+      return;
+    }
+    matched.forEach(function(a){
+      badgeListEl.appendChild(buildBadgeCard(a));
+    });
+  }
+
+  var STAGGER_MS = 260;
+  var reducedMotion = false;
+  try{ reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+
+  function revealBreakdown(matched, onDone){
+    badgeListEl.innerHTML = '';
+    breakdownSubEl.textContent = matched.length + ' badge' + (matched.length===1?'':'s') + ' earned this roll';
+    if (!matched.length){
+      var empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.textContent = 'No badges matched this draw. Try again, or add an easier badge to the catalog.';
+      badgeListEl.appendChild(empty);
+      onDone();
+      return;
+    }
+    if (reducedMotion){
+      matched.forEach(function(a){
+        var card = buildBadgeCard(a);
+        badgeListEl.appendChild(card);
+        if (a.wasDiscoveredBeforeThisRoll === false) showToast('+' + a.points + ' EP — ' + a.name);
+      });
+      onDone();
+      return;
+    }
+    matched.forEach(function(a, idx){
+      setTimeout(function(){
+        var card = buildBadgeCard(a);
+        card.classList.add('enter');
+        badgeListEl.appendChild(card);
+        requestAnimationFrame(function(){ card.classList.add('show'); });
+        playReveal(idx);
+        if (a.wasDiscoveredBeforeThisRoll === false) showToast('+' + a.points + ' EP — ' + a.name);
+        if (idx === matched.length - 1) onDone();
+      }, idx * STAGGER_MS);
+    });
+  }
+
+  var editingId = null;
+
+  function buildCatalogRow(a){
+    var tier = rarityOf(a);
+    var row = document.createElement('div');
+    row.className = 'catrow';
+    row.innerHTML =
+      '<div class="badge-icon">' + (a.icon || ICONS[a.type] || '🏅') + '</div>' +
+      '<div class="info"><div class="name"></div><div class="desc"></div></div>' +
+      '<span class="pill pill-' + tier + '">' + RARITY_LABEL[tier] + '</span>' +
+      '<button class="copy" title="Duplicate badge" aria-label="Duplicate ' + a.name.replace(/"/g,'') + '">⧉</button>' +
+      '<button class="edit" title="Edit badge" aria-label="Edit ' + a.name.replace(/"/g,'') + '">✎</button>' +
+      '<button class="del" title="Remove badge" aria-label="Remove ' + a.name.replace(/"/g,'') + '">×</button>';
+    row.querySelector('.name').textContent = a.name + ' · ' + a.points + ' EP';
+    row.querySelector('.desc').textContent = a.desc || describe(a);
+    row.querySelector('.copy').addEventListener('click', function(){
+      var clone = JSON.parse(JSON.stringify(a));
+      clone.id = uid();
+      clone.name = a.name + ' copy';
+      clone.discovered = false;
+      delete clone.wasDiscoveredBeforeThisRoll;
+      var i = achievements.indexOf(a);
+      achievements.splice(i + 1, 0, clone);
+      editingId = clone.id;
+      renderCatalog();
+      recalcScore();
+    });
+    row.querySelector('.edit').addEventListener('click', function(){
+      editingId = a.id;
+      renderCatalog();
+    });
+    row.querySelector('.del').addEventListener('click', function(){
+      achievements = achievements.filter(function(x){ return x.id !== a.id; });
+      renderCatalog();
+      recalcScore();
+    });
+    return row;
+  }
+
+  function buildCatalogEditRow(a){
+    var row = document.createElement('div');
+    row.className = 'catrow catrow-edit';
+    row.innerHTML =
+      '<div class="field"><label>Condition</label><select class="edit-tpl"></select></div>' +
+      '<div class="edit-paramwrap"></div>' +
+      '<div class="editgrid">' +
+        '<input class="edit-icon" type="text" maxlength="4" value="' + (a.icon||'').replace(/"/g,'&quot;') + '" aria-label="Icon">' +
+        '<input class="edit-name" type="text" maxlength="40" value="' + a.name.replace(/"/g,'&quot;') + '" aria-label="Name">' +
+        '<input class="edit-points" type="number" min="1" value="' + a.points + '" aria-label="EP reward">' +
+        '<select class="edit-rarity" aria-label="Rarity"></select>' +
+      '</div>' +
+      '<input class="edit-desc" type="text" maxlength="120" value="' + (a.desc || describe(a)).replace(/"/g,'&quot;') + '" aria-label="Description">' +
+      '<div class="editactions">' +
+        '<button class="btn-primary edit-save" type="button">Save</button>' +
+        '<button class="btn-ghost edit-cancel" type="button">Cancel</button>' +
+      '</div>';
+    var tplChoice = row.querySelector('.edit-tpl');
+    TEMPLATES.forEach(function(t){
+      var opt = document.createElement('option');
+      opt.value = t.id; opt.textContent = t.label;
+      if (t.id === a.type) opt.selected = true;
+      tplChoice.appendChild(opt);
+    });
+    var paramWrap = row.querySelector('.edit-paramwrap');
+    function refreshParams(){
+      paramWrap.innerHTML = '';
+      var t = tpl(tplChoice.value);
+      var existing = t && t.id === a.type ? a.params : null;
+      paramWrap.appendChild(buildParamRow(t, existing, 'edit-param-' + a.id + '-'));
+    }
+    refreshParams();
+    tplChoice.addEventListener('change', refreshParams);
+    var raritySelect = row.querySelector('.edit-rarity');
+    RARITY_OPTIONS.forEach(function(r){
+      var opt = document.createElement('option');
+      opt.value = r.value; opt.textContent = r.label;
+      if (r.value === rarityOf(a)) opt.selected = true;
+      raritySelect.appendChild(opt);
+    });
+    row.querySelector('.edit-save').addEventListener('click', function(){
+      var name = row.querySelector('.edit-name').value.trim();
+      var icon = row.querySelector('.edit-icon').value.trim();
+      var points = parseInt(row.querySelector('.edit-points').value, 10);
+      var desc = row.querySelector('.edit-desc').value.trim();
+      var t = tpl(tplChoice.value);
+      if (t){
+        var params = {};
+        t.params.forEach(function(p){
+          var input = paramWrap.querySelector('[data-key="' + p.key + '"]');
+          if (!input){ params[p.key] = p.def; return; }
+          params[p.key] = (input.dataset.type === 'select' || input.dataset.type === 'text') ? input.value.trim() : parseInt(input.value, 10);
+        });
+        a.type = t.id;
+        a.params = params;
+      }
+      if (name) a.name = name;
+      if (icon) a.icon = icon;
+      if (points) a.points = points;
+      a.desc = desc || undefined;
+      a.rarity = raritySelect.value;
+      editingId = null;
+      renderCatalog();
+      recalcScore();
+    });
+    row.querySelector('.edit-cancel').addEventListener('click', function(){
+      editingId = null;
+      renderCatalog();
+    });
+    return row;
+  }
+
+  function renderCatalog(){
+    catalogListEl.innerHTML = '';
+    achievements.sort(rarityThenPointsCompare);
+    achievements.forEach(function(a){
+      catalogListEl.appendChild(a.id === editingId ? buildCatalogEditRow(a) : buildCatalogRow(a));
+    });
+    if (!achievements.length){
+      var empty = document.createElement('p');
+      empty.style.color = 'var(--muted)';
+      empty.style.fontSize = '13px';
+      empty.textContent = 'No badges defined yet — add one below.';
+      catalogListEl.appendChild(empty);
+    }
+  }
+
+  function buildParamRow(t, existingParams, idPrefix){
+    var row = document.createElement('div');
+    row.className = 'paramrow';
+    if (!t || !t.params.length) return row;
+    t.params.forEach(function(p){
+      var field = document.createElement('div');
+      field.className = 'field';
+      var label = document.createElement('label');
+      label.textContent = p.label;
+      var input;
+      var inputId = idPrefix + p.key;
+      var val = (existingParams && existingParams[p.key] !== undefined) ? existingParams[p.key] : p.def;
+      if (p.type === 'select'){
+        input = document.createElement('select');
+        p.options.forEach(function(o){
+          var opt = document.createElement('option');
+          opt.value = o.value; opt.textContent = o.label;
+          if (o.value === val) opt.selected = true;
+          input.appendChild(opt);
+        });
+      } else if (p.type === 'text'){
+        input = document.createElement('input');
+        input.type = 'text';
+        input.maxLength = NUM_DIGITS;
+        input.pattern = '[0-9]*';
+        input.inputMode = 'numeric';
+        input.value = val;
+      } else {
+        input = document.createElement('input');
+        input.type = 'number';
+        input.min = p.min; input.max = p.max; input.value = val;
+      }
+      input.dataset.key = p.key;
+      input.dataset.type = p.type || 'number';
+      input.id = inputId;
+      label.setAttribute('for', inputId);
+      field.appendChild(label);
+      field.appendChild(input);
+      row.appendChild(field);
+    });
+    return row;
+  }
+
+  function renderParamFields(){
+    var t = tpl(tplSelect.value);
+    paramFields.innerHTML = '';
+    paramFields.appendChild(buildParamRow(t, null, 'param-'));
+  }
+
+  function populateTemplateSelect(){
+    tplSelect.innerHTML = '';
+    TEMPLATES.forEach(function(t){
+      var opt = document.createElement('option');
+      opt.value = t.id;
+      opt.textContent = t.label;
+      tplSelect.appendChild(opt);
+    });
+  }
+
+  function populateRaritySelect(){
+    rarityInput.innerHTML = '';
+    RARITY_OPTIONS.forEach(function(r){
+      var opt = document.createElement('option');
+      opt.value = r.value;
+      opt.textContent = r.label;
+      rarityInput.appendChild(opt);
+    });
+  }
+
+  function openModal(){ renderCatalog(); modalBackdrop.hidden = false; }
+  function closeModal(){ modalBackdrop.hidden = true; editingId = null; }
+  catalogBtn.addEventListener('click', openModal);
+  modalClose.addEventListener('click', closeModal);
+  modalBackdrop.addEventListener('click', function(e){ if (e.target === modalBackdrop) closeModal(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !modalBackdrop.hidden) closeModal(); });
+
+  function spinOneDigit(i, cb){
+    var el = digitEls[i];
+    el.classList.remove('blank');
+    el.classList.add('spin');
+    var delays = [40,40,50,60,75,95,120,150];
+    var step = 0;
+    function tick(){
+      nums[i] = Math.floor(Math.random()*10);
+      el.textContent = nums[i];
+      playTick();
+      step++;
+      if (step < delays.length){
+        setTimeout(tick, delays[step]);
+      } else {
+        nums[i] = Math.floor(Math.random()*10);
+        el.textContent = nums[i];
+        el.classList.remove('spin');
+        el.classList.add('pop');
+        playSettle(i);
+        setTimeout(function(){ el.classList.remove('pop'); }, 300);
+        cb();
+      }
+    }
+    tick();
+  }
+
+  function scoreAgainstCurrentRoll(){
+    var matched = achievements.filter(function(a){ return evaluate(a, nums); });
+    matched.sort(rarityThenPointsCompare);
+    matched.forEach(function(a){ a.wasDiscoveredBeforeThisRoll = a.discovered; });
+    var newlyDiscovered = matched.filter(function(a){ return !a.discovered; });
+    var topRank = -1;
+    var epGained = 0;
+    matched.forEach(function(a){
+      epGained += a.points;
+      var rank = RARITY_RANK.indexOf(rarityOf(a));
+      if (rank > topRank) topRank = rank;
+    });
+    newlyDiscovered.forEach(function(a){ a.discovered = true; });
+    lastRollEP = epGained;
+    lastRollTierRank = topRank;
+    return {matched:matched, newlyDiscovered:newlyDiscovered};
+  }
+
+  function recalcScore(announce){
+    if (!everRolled) return;
+    var result = scoreAgainstCurrentRoll();
+    renderTopStats();
+    renderBreakdown();
+    saveLocal();
+    if (announce) showToast('Score recalculated — ' + lastRollEP.toLocaleString() + ' EP');
+  }
+
+  function evaluateRoll(){
+    var result = scoreAgainstCurrentRoll();
+    if (result.newlyDiscovered.length) playFanfare();
+    renderTopStats();
+    saveLocal();
+    if (testerPanel && !testerPanel.hidden){
+      testInput.value = nums.join('');
+      runTest();
+    }
+    revealBreakdown(result.matched, function(){
+      isSpinning = false;
+      renderTopStats();
+    });
+  }
+
+  function startRoll(){
+    if (isSpinning) return;
+    ensureAudio();
+    isSpinning = true;
+    everRolled = true;
+    if (!digitEls.length) buildNumberBox();
+    digitEls.forEach(function(el){
+      el.classList.remove('spin','pop','leading');
+      el.classList.add('blank');
+      el.textContent = BLANK_CHAR;
+    });
+    renderTopStats();
+    var order = nums.map(function(n,i){return i;});
+    var leadingActive = true;
+    function next(idx){
+      if (idx >= order.length){
+        evaluateRoll();
+        return;
+      }
+      var i = order[idx];
+      spinOneDigit(i, function(){
+        if (i === nums.length - 1){
+          digitEls[i].classList.remove('leading');
+        } else if (leadingActive && nums[i] === 0){
+          digitEls[i].classList.add('leading');
+        } else {
+          leadingActive = false;
+          digitEls[i].classList.remove('leading');
+        }
+        next(idx+1);
+      });
+    }
+    next(0);
+  }
+
+  rollBtn.addEventListener('click', startRoll);
+
+  soundBtn.addEventListener('click', function(){
+    soundOn = !soundOn;
+    syncSoundIcon();
+    try{ localStorage.setItem(SOUND_KEY, soundOn ? '1' : '0'); }catch(e){}
+    if (soundOn){ ensureAudio(); beep(587, 0.12, 'triangle', 0.15); }
+  });
+
+  shareBtn.addEventListener('click', function(){
+    if (!everRolled){ showToast('Roll first!'); return; }
+    var matched = achievements.filter(function(a){ return evaluate(a, nums); });
+    var names = matched.map(function(a){ return a.name; }).join(', ') || 'no badges';
+    var text = 'Sixfold roll ' + nums.join('') + ' — ' + names + ' (' + lastRollEP.toLocaleString() + ' EP)';
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){
+        showToast('Copied to clipboard');
+      }).catch(function(){
+        showToast('Could not copy');
+      });
+    } else {
+      showToast('Clipboard unavailable');
+    }
+  });
+
+  recalcBtn.addEventListener('click', function(){
+    if (!everRolled){ showToast('Roll first!'); return; }
+    recalcScore(true);
+  });
+
+  exportBtn.addEventListener('click', function(){
+    var data = JSON.stringify(getState());
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(data).then(function(){
+        showToast('Save data copied to clipboard');
+      }).catch(function(){
+        showToast('Could not copy — check console');
+        console.log(data);
+      });
+    } else {
+      showToast('Clipboard unavailable — check console');
+      console.log(data);
+    }
+  });
+
+  resetBtn.addEventListener('click', function(){
+    if (!confirm('Reset all badge discovery progress? This cannot be undone.')) return;
+    achievements.forEach(function(a){ a.discovered = false; });
+    lastRollEP = 0;
+    lastRollTierRank = -1;
+    everRolled = false;
+    nums = [0,0,0,0,0,0];
+    buildNumberBox();
+    renderTopStats();
+    renderBreakdown();
+    renderCatalog();
+    saveLocal();
+  });
+
+  tplSelect.addEventListener('change', function(){
+    renderParamFields();
+    iconInput.value = ICONS[tplSelect.value] || '';
+  });
+
+  addForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = document.getElementById('nameInput').value.trim();
+    var points = parseInt(document.getElementById('ptsInput').value, 10);
+    var t = tpl(tplSelect.value);
+    if (!name || !t || !points) return;
+    var params = {};
+    t.params.forEach(function(p){
+      var input = paramFields.querySelector('[data-key="' + p.key + '"]');
+      if (!input){ params[p.key] = p.def; return; }
+      params[p.key] = (input.dataset.type === 'select' || input.dataset.type === 'text') ? input.value.trim() : parseInt(input.value, 10);
+    });
+    var icon = iconInput.value.trim() || ICONS[t.id] || '🏅';
+    var rarity = rarityInput.value || 'common';
+    achievements.push({id:uid(), name:name, type:t.id, params:params, points:points, icon:icon, rarity:rarity, discovered:false});
+    renderCatalog();
+    recalcScore();
+    addForm.reset();
+    document.getElementById('ptsInput').value = 50;
+    tplSelect.selectedIndex = 0;
+    renderParamFields();
+    iconInput.value = ICONS[tplSelect.value] || '';
+    rarityInput.value = 'common';
+  });
+
+  populateTemplateSelect();
+  populateRaritySelect();
+  renderParamFields();
+  iconInput.value = ICONS[tplSelect.value] || '';
+
+  function start(initial){
+    var merged = (initial && Object.keys(initial).length) ? initial : loadLocal();
+    applyState(merged);
+    buildNumberBox();
+    syncSoundIcon();
+    if (everRolled){
+      scoreAgainstCurrentRoll();
+    }
+    renderTopStats();
+    renderBreakdown();
+  }
+
+  if (window.claude && window.claude.hot && typeof window.claude.hot.snapshot === 'function'){
+    window.claude.hot.snapshot(getState);
+  }
+  if (window.claude && window.claude.hot && typeof window.claude.hot.ready === 'function'){
+    window.claude.hot.ready(start);
+  } else {
+    start(window.claude && window.claude.hot ? window.claude.hot.data : null);
+  }
+})();
+</script>

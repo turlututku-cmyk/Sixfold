@@ -616,7 +616,8 @@
     {id:'lastDigits', label:'Last digits', params:[{key:'value',label:'Ending sequence',type:'text',def:'67'}]},
     {id:'straightRange', label:'Straight (custom range)', params:[{key:'start',label:'Start value (-1 = any)',type:'number',min:-1,max:9,def:2},{key:'length',label:'Length',type:'number',min:2,max:NUM_DIGITS,def:5}]},
     {id:'orderedSequence', label:'Ascending / Descending', params:[{key:'direction',label:'Direction',type:'select',options:[{value:'asc',label:'Ascending'},{value:'desc',label:'Descending'}],def:'asc'}]},
-    {id:'startsAndEndsWith', label:'Starts with # and ends with #', params:[{key:'startValue',label:'Starts with',type:'text',def:'1'},{key:'endValue',label:'Ends with',type:'text',def:'7'}]}
+    {id:'startsAndEndsWith', label:'Starts with # and ends with #', params:[{key:'startValue',label:'Starts with',type:'text',def:'1'},{key:'endValue',label:'Ends with',type:'text',def:'7'}]},
+    {id:'firstExceedsLastBy', label:'First exceeds last by N', params:[{key:'diff',label:'Difference',type:'number',min:-9,max:9,def:1}]}
   ];
 
   var RARITY_OPTIONS = [
@@ -633,7 +634,8 @@
     adjacentTriple:'👨‍👩‍👦', firstEqualsLast:'🥪', digitCount:'📏', exactNumber:'💯', containsSequence:'🔎',
     repeatingPattern:'♻️', customRepeatingPattern:'🔂', nAdjacentPairs:'🔗',
     distinctCount:'🎨', numberGreaterThan:'📊', divisibleBy:'➗', notContainsSequence:'🚫',
-    lastDigits:'🏁', straightRange:'📶', orderedSequence:'🎢', startsAndEndsWith:'🔖'
+    lastDigits:'🏁', straightRange:'📶', orderedSequence:'🎢', startsAndEndsWith:'🔖',
+    firstExceedsLastBy:'⛷️'
   };
 
   function tpl(id){ for (var i=0;i<TEMPLATES.length;i++) if (TEMPLATES[i].id===id) return TEMPLATES[i]; return null; }
@@ -676,6 +678,7 @@
         ? 'Every digit is greater than the one before it, left to right'
         : 'Every digit is less than the one before it, left to right';
       case 'startsAndEndsWith': return 'The roll starts with ' + a.params.startValue + ' and ends with ' + a.params.endValue;
+      case 'firstExceedsLastBy': return 'The first digit is exactly ' + a.params.diff + ' more than the last digit';
       default: return '';
     }
   }
@@ -742,6 +745,7 @@
         var seLen = String(a.params.startValue||'').replace(/\D/g,'').length + String(a.params.endValue||'').replace(/\D/g,'').length;
         return seLen>=4 ? 'epic' : (seLen===3 ? 'rare' : 'uncommon');
       }
+      case 'firstExceedsLastBy': return 'uncommon';
       default: return 'common';
     }
   }
@@ -938,6 +942,7 @@
         var rollStr = nums.join('');
         return rollStr.slice(0, seStart.length) === seStart && rollStr.slice(-seEnd.length) === seEnd;
       }
+      case 'firstExceedsLastBy': return (nums[0] - nums[nums.length-1]) === a.params.diff;
       default: return false;
     }
   }
@@ -1029,6 +1034,7 @@
         return srIdx;
       }
       case 'orderedSequence': return all;
+      case 'firstExceedsLastBy': return [0, nums.length-1];
       case 'startsAndEndsWith': {
         var seStart2 = String(a.params.startValue).replace(/\D/g,'');
         var seEnd2 = String(a.params.endValue).replace(/\D/g,'');
@@ -1095,7 +1101,7 @@
       {id:uid(), name:'Unlucky Lucky', type:'valueCount', params:{value:7,count:3}, points:5000, rarity:'rare', icon:'🍀', discovered:false},
       {id:uid(), name:'911', type:'containsSequence', params:{value:'911'}, points:5050, rarity:'rare', icon:'🚑', discovered:false, desc:'The roll contains the number 911'},
       {id:uid(), name:'a101', type:'containsSequence', params:{value:'101'}, points:5050, rarity:'rare', icon:'🏪', discovered:false, desc:'The roll contains the number 101 (a101)'},
-      {id:uid(), name:'1 is better', type:'firstGreaterThanLast', params:{}, points:6200, rarity:'rare', icon:'⛷️', discovered:false},
+      {id:uid(), name:'1 is better', type:'firstExceedsLastBy', params:{diff:1}, points:6200, rarity:'rare', icon:'⛷️', discovered:false},
       {id:uid(), name:'Full House', type:'fullHouse', params:{}, points:6700, rarity:'rare', icon:'🏠', discovered:false},
       {id:uid(), name:'Nothingness..', type:'containsSequence', params:{value:'000'}, points:7680, rarity:'rare', icon:'👀', discovered:false, desc:'The roll contains the number 000'},
       {id:uid(), name:'Bigger and Bigger!', type:'numberGreaterThan', params:{n:990000}, points:8750, rarity:'rare', icon:'📊', discovered:false, desc:'The roll, read as a number, is greater than 990000'},
@@ -1125,7 +1131,7 @@
   var lastRollTierRank = -1;
   var lastRollEP = 0;
 
-  var ACHIEVEMENTS_VERSION = 7;
+  var ACHIEVEMENTS_VERSION = 8;
 
   function getState(){
     return {achievements:achievements, nums:nums, everRolled:everRolled, achievementsVersion:ACHIEVEMENTS_VERSION};

@@ -499,7 +499,7 @@
     </div>
     <div class="catlist" id="catalogList"></div>
 
-    <details>
+    <details id="addBadgeDetails" hidden>
       <summary>Add badge</summary>
       <form id="addForm">
         <div class="field">
@@ -1344,6 +1344,17 @@
   var LEADERBOARD = [
     {name:'991991', score:90150}
   ];
+
+  var addBadgeDetails = document.getElementById('addBadgeDetails');
+  (function checkOwnerForAddBadge(){
+    if (!window.claude || typeof window.claude.use !== 'function') return;
+    window.claude.use('user').then(function(cap){
+      if (!cap) return false;
+      return cap.isOwner();
+    }).then(function(isOwner){
+      if (isOwner) addBadgeDetails.hidden = false;
+    }).catch(function(){});
+  })();
 
   function renderLeaderboardRow(name, score){
     var row = document.createElement('div');

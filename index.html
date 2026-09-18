@@ -373,6 +373,11 @@
   .sfxhead{font-weight:700;color:var(--ink);margin-top:4px;}
   .intro{position:fixed;inset:0;z-index:40;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;overflow:hidden;--hit:900ms;--ic:var(--legendary-ink);}
   .intro[hidden]{display:none;}
+  .intro.show{pointer-events:auto;cursor:pointer;}
+  .intro-skip{position:absolute;bottom:22px;left:0;right:0;text-align:center;font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--muted);opacity:.85;}
+  .volrow{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--ink);}
+  .volrow input[type=range]{flex:1;accent-color:var(--accent);}
+  .volrow #volVal{min-width:38px;text-align:right;color:var(--muted);font-weight:600;}
   .intro-epic{--ic:var(--epic-ink);}
   .intro-legendary{--ic:var(--legendary-ink);}
   .intro-mythic{--ic:var(--mythic-ink);}
@@ -543,6 +548,7 @@
   <div class="intro-flash"></div>
   <div class="intro-label" id="introLabel"></div>
   <div class="intro-sub" id="introSub"></div>
+  <div class="intro-skip">Tap anywhere to skip</div>
 </div>
 
 <div class="modal-backdrop" id="modalBackdrop" hidden>
@@ -558,6 +564,7 @@
     </div>
     <div class="statspanel" id="statsPanel" hidden></div>
     <div class="sfxpanel" id="sfxPanel" hidden>
+      <label class="volrow"><span>Volume</span><input type="range" id="volSlider" min="0" max="100" step="1" value="100" aria-label="Volume"><span id="volVal">100%</span></label>
       <p class="sfxhint">Tap a sound to hear it. These play even if sound is muted.</p>
       <div class="sfxgrid" id="sfxGrid"></div>
       <p class="sfxhint sfxhead">Intros / cutscenes (rising sound + full-screen flash, then the tier sound)</p>
@@ -612,6 +619,27 @@
 
   var audioCtx = null;
   var previewing = false;
+  var VOLUME_KEY = 'sixfold-volume-v1';
+  var volume = 1;
+  try{
+    var storedVol = parseFloat(localStorage.getItem(VOLUME_KEY));
+    if (!isNaN(storedVol)) volume = Math.min(1, Math.max(0, storedVol));
+  }catch(e){}
+  var masterGain = null, currentBus = null;
+  function getMaster(){
+    if (!masterGain){
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = volume * volume;
+      masterGain.connect(audioCtx.destination);
+    }
+    return masterGain;
+  }
+  function outNode(){ return currentBus || getMaster(); }
+  function setVolume(v){
+    volume = Math.min(1, Math.max(0, v));
+    if (masterGain) masterGain.gain.value = volume * volume;
+    try{ localStorage.setItem(VOLUME_KEY, String(volume)); }catch(e){}
+  }
   function ensureAudio(){
     if (!soundOn && !previewing) return;
     if (!audioCtx){
@@ -630,7 +658,7 @@
       gain.gain.setValueAtTime(0.0001, t0);
       gain.gain.exponentialRampToValueAtTime(peak || 0.15, t0 + 0.01);
       gain.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
-      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.connect(gain); gain.connect(outNode());
       osc.start(t0);
       osc.stop(t0 + duration + 0.02);
     }catch(e){}
@@ -663,7 +691,7 @@
       gain.gain.setValueAtTime(0.0001, t0);
       gain.gain.exponentialRampToValueAtTime(peak || 0.15, t0 + 0.015);
       gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.connect(gain); gain.connect(outNode());
       osc.start(t0);
       osc.stop(t0 + dur + 0.03);
     }catch(e){}
@@ -729,15 +757,38 @@
     5: {tier:'mythic',    hit:1300, hold:1300, burst:900,  riser:riserMythic},
     6: {tier:'chroma',    hit:3200, hold:2800, burst:1600, riser:riserChroma}
   };
-  var introEl = null, introLabel = null, introSub = null, introTimer = null;
+  var introEl = null, introLabel = null, introSub = null, introTimer = null, introSfxTimer = null, introBus = null;
+  function skipIntro(){
+    clearTimeout(introTimer);
+    clearTimeout(introSfxTimer);
+    if (introBus && audioCtx){ try{ introBus.gain.setTargetAtTime(0, audioCtx.currentTime, 0.04); }catch(e){} }
+    introBus = null; currentBus = null;
+    var el = document.getElementById('introOverlay');
+    if (el){ el.classList.remove('show'); el.hidden = true; }
+  }
+  document.getElementById('introOverlay').addEventListener('click', skipIntro);
   function playIntro(rank, subText){
     var cfg = INTROS[rank];
     if (!cfg) return false;
+    clearTimeout(introSfxTimer);
+    if (introBus && audioCtx){ try{ introBus.gain.setTargetAtTime(0, audioCtx.currentTime, 0.04); }catch(e){} }
+    introBus = null; currentBus = null;
+    if (audioCtx && (soundOn || previewing)){
+      try{
+        introBus = audioCtx.createGain();
+        introBus.connect(getMaster());
+        currentBus = introBus;
+      }catch(e){ introBus = null; currentBus = null; }
+    }
     cfg.riser();
-    setTimeout(function(){ playTierSfx(rank); }, cfg.hit);
+    introSfxTimer = setTimeout(function(){ playTierSfx(rank); }, cfg.hit);
     var reduce = false;
     try{ reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
-    if (reduce) return true;
+    if (reduce){
+      clearTimeout(introTimer);
+      introTimer = setTimeout(function(){ currentBus = null; }, cfg.hit + 400);
+      return true;
+    }
     if (!introEl){
       introEl = document.getElementById('introOverlay');
       introLabel = document.getElementById('introLabel');
@@ -757,6 +808,7 @@
     introTimer = setTimeout(function(){
       introEl.classList.remove('show');
       introEl.hidden = true;
+      currentBus = null;
     }, cfg.hit + cfg.hold + 400);
     return true;
   }
@@ -2152,6 +2204,21 @@
     b.textContent = s.label;
     b.addEventListener('click', function(){ previewSfx(s.fn, b); });
     sfxGrid.appendChild(b);
+  });
+  var volSlider = document.getElementById('volSlider');
+  var volVal = document.getElementById('volVal');
+  volSlider.value = String(Math.round(volume * 100));
+  volVal.textContent = volSlider.value + '%';
+  volSlider.addEventListener('input', function(){
+    setVolume(parseInt(volSlider.value, 10) / 100);
+    volVal.textContent = volSlider.value + '%';
+  });
+  volSlider.addEventListener('change', function(){
+    previewing = true;
+    ensureAudio();
+    playSettle(2);
+    clearTimeout(previewTimer);
+    previewTimer = setTimeout(function(){ previewing = false; }, 7000);
   });
   var introGrid = document.getElementById('introGrid');
   [

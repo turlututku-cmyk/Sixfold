@@ -944,7 +944,7 @@
       case 'justNOfAKind': return 'Exactly one digit appears ' + a.params.count + ' times (anywhere) and every other digit is different';
       case 'parityAll': return a.params.parity === 'odd' ? 'Every digit in the roll is odd' : 'Every digit in the roll is even (0 counts as even)';
       case 'alternatingParity': return 'The digits alternate between odd and even all the way through (like 214365)';
-      case 'zigzag': return 'The digits go up, down, up, down... with no ties (like 132465)';
+      case 'zigzag': return 'The digits go up, down, up, down... with no ties (like 132546)';
       case 'balancedHalves': return 'The first half of the digits adds up to the same total as the second half';
       case 'digitRange': return 'Every digit is between ' + a.params.min + ' and ' + a.params.max;
       case 'containsPalindrome': return 'A stretch of ' + a.params.minLen + ' or more neighboring digits reads the same both ways (like 9449)';
@@ -1525,7 +1525,7 @@
       {key:'even-steven', id:uid(), name:'Even Steven', type:'parityAll', params:{parity:'even'}, points:5000, rarity:'rare', icon:'🔵', discovered:false, desc:'Every digit in the roll is even (0 counts as even)'},
       {key:'odd-squad', id:uid(), name:'Odd Squad', type:'parityAll', params:{parity:'odd'}, points:5000, rarity:'rare', icon:'🟠', discovered:false, desc:'Every digit in the roll is odd'},
       {key:'ping-pong', id:uid(), name:'Ping Pong', type:'alternatingParity', params:{}, points:3500, rarity:'uncommon', icon:'🏓', discovered:false, desc:'The digits alternate between odd and even all the way through (like 214365)'},
-      {key:'zigzag', id:uid(), name:'Zigzag', type:'zigzag', params:{}, points:3500, rarity:'uncommon', icon:'⚡', discovered:false, desc:'The digits go up, down, up, down... with no ties (like 132465)'},
+      {key:'zigzag', id:uid(), name:'Zigzag', type:'zigzag', params:{}, points:3500, rarity:'uncommon', icon:'⚡', discovered:false, desc:'The digits go up, down, up, down... with no ties (like 132546)'},
       {key:'balanced', id:uid(), name:'Balanced', type:'balancedHalves', params:{}, points:2500, rarity:'uncommon', icon:'🧮', discovered:false, desc:'The first three digits add up to the same total as the last three'},
       {key:'high-rollers', id:uid(), name:'High Rollers', type:'digitRange', params:{min:5, max:9}, points:5000, rarity:'rare', icon:'🎰', discovered:false, desc:'Every digit is 5 or higher'},
       {key:'low-riders', id:uid(), name:'Low Riders', type:'digitRange', params:{min:0, max:4}, points:5000, rarity:'rare', icon:'🛹', discovered:false, desc:'Every digit is 4 or lower'},

@@ -795,6 +795,8 @@
     {id:'continuousChunks', label:'Continuous (split into numbers that are consecutive, any order)', params:[{key:'chunk',label:'Digits per number',type:'select',options:[{value:'2',label:'2 digits (like 34 36 35)'},{value:'3',label:'3 digits (like 124 123)'}],def:'2'}]},
     {id:'piDigits', label:'Pi (first N digits: 3.14, 3.1415...)', params:[{key:'n',label:'Digits of pi',type:'number',min:2,max:NUM_DIGITS,def:3},{key:'match',label:'Match',type:'select',options:[{value:'includes',label:'Includes (anywhere in the roll)'},{value:'exact',label:'Exactly (whole roll, zero-padded like 000314)'}],def:'includes'}]},
     {id:'halfAndHalf', label:'Half and half (one half even digits, the other half odd)', params:[{key:'order',label:'Order',type:'select',options:[{value:'either',label:'Either way'},{value:'evenOdd',label:'Even first, then odd'},{value:'oddEven',label:'Odd first, then even'}],def:'either'}]},
+    {id:'distinctPairs', label:'N different pairs (anywhere)', params:[{key:'count',label:'Number of different pairs',type:'number',min:2,max:Math.floor(NUM_DIGITS/2),def:3}]},
+    {id:'bookendBlock', label:'Start block equals end block (like 40...40)', params:[{key:'len',label:'Digits in the block',type:'number',min:2,max:Math.floor(NUM_DIGITS/2),def:2}]},
     {id:'justNOfAKind', label:'Just N of a kind (rest all different)', params:[{key:'count',label:'Same-digit count',type:'number',min:2,max:NUM_DIGITS,def:2}]},
     {id:'distinctCount', label:'Amount of unique digits', params:[{key:'n',label:'Unique digit count',type:'number',min:1,max:NUM_DIGITS,def:3}]},
     {id:'numberGreaterThan', label:'Your roll bigger than N', params:[{key:'n',label:'Threshold',type:'number',min:0,max:Math.pow(10,NUM_DIGITS)-1,def:500000}]},
@@ -819,7 +821,7 @@
     allDifferent:'🌈', twoPair:'👯', isPrime:'💎', isPalindrome:'🪞',
     firstGreaterThanLast:'⛷️', lastDigitParity:'🔢', adjacentPair:'👯',
     adjacentTriple:'👨‍👩‍👦', firstEqualsLast:'🥪', digitCount:'📏', exactNumber:'💯', containsSequence:'🔎',
-    repeatingPattern:'♻️', customRepeatingPattern:'🔂', nAdjacentPairs:'🔗', justNOfAKind:'🎯', continuousChunks:'🧩', piDigits:'🥧', halfAndHalf:'⚖️',
+    repeatingPattern:'♻️', customRepeatingPattern:'🔂', nAdjacentPairs:'🔗', justNOfAKind:'🎯', continuousChunks:'🧩', piDigits:'🥧', halfAndHalf:'⚖️', distinctPairs:'🧷', bookendBlock:'🧲',
     distinctCount:'🎨', numberGreaterThan:'📊', divisibleBy:'➗', notContainsSequence:'🚫',
     lastDigits:'🏁', straightRange:'📶', orderedSequence:'🎢', startsAndEndsWith:'🔖',
     firstExceedsLastBy:'⛷️'
@@ -854,6 +856,8 @@
       case 'customRepeatingPattern': return 'A ' + a.params.blockLength + '-digit block repeats back-to-back somewhere in the roll (like 1212)';
       case 'nAdjacentPairs': return 'At least ' + a.params.count + ' pairs of neighboring digits match';
       case 'justNOfAKind': return 'Exactly one digit appears ' + a.params.count + ' times (anywhere) and every other digit is different';
+      case 'distinctPairs': return 'At least ' + a.params.count + ' different digits each appear twice or more (anywhere in the roll)';
+      case 'bookendBlock': return 'The first ' + a.params.len + ' digits are the same as the last ' + a.params.len + ' digits, in the same order';
       case 'halfAndHalf': return a.params.order === 'evenOdd'
         ? 'The first half of the roll is all even digits and the second half is all odd digits'
         : (a.params.order === 'oddEven'
@@ -911,6 +915,8 @@
         var bl = a.params.blockLength;
         return bl<=1 ? 'common' : (bl===2 ? 'uncommon' : (bl===3 ? 'rare' : 'epic'));
       }
+      case 'distinctPairs': return a.params.count >= 3 ? 'rare' : 'uncommon';
+      case 'bookendBlock': return a.params.len >= 3 ? 'epic' : 'rare';
       case 'halfAndHalf': return 'uncommon';
       case 'piDigits': return a.params.match === 'exact' ? 'mythic' : a.params.n>=6 ? 'mythic' : (a.params.n===5 ? 'legendary' : (a.params.n===4 ? 'epic' : (a.params.n===3 ? 'rare' : 'uncommon')));
       case 'continuousChunks': return parseInt(a.params.chunk,10)===3 ? 'epic' : 'legendary';
@@ -1126,6 +1132,12 @@
       case 'repeatingPattern': return hasRepeatingPattern(nums);
       case 'customRepeatingPattern': return findConsecutiveBlockRepeat(nums, a.params.blockLength) !== null;
       case 'nAdjacentPairs': return countExactAdjacentPairs(nums) >= a.params.count;
+      case 'distinctPairs': return counts.filter(function(c){ return c >= 2; }).length >= a.params.count;
+      case 'bookendBlock': {
+        var bbLen = parseInt(a.params.len, 10);
+        if (!(bbLen >= 1) || bbLen * 2 > nums.length) return false;
+        return nums.slice(0, bbLen).join('') === nums.slice(nums.length - bbLen).join('');
+      }
       case 'halfAndHalf': {
         var hhN = Math.floor(nums.length / 2);
         var hhA = nums.slice(0, hhN), hhB = nums.slice(nums.length - hhN);
@@ -1281,6 +1293,12 @@
       case 'orderedSequence': return all;
       case 'continuousChunks': return all;
       case 'halfAndHalf': return all;
+      case 'distinctPairs': return nums.map(function(n,i){ return i; }).filter(function(i){ return counts[nums[i]] >= 2; });
+      case 'bookendBlock': {
+        var bbl = parseInt(a.params.len, 10) || 2, bbIdx = [];
+        for (var bi=0; bi<bbl; bi++){ bbIdx.push(bi); bbIdx.push(nums.length - 1 - bi); }
+        return bbIdx;
+      }
       case 'piDigits': {
         if (a.params.match === 'exact') return evaluate(a, nums) ? all : [];
         var pin = a.params.n, pst = nums.join('').indexOf('314159'.slice(0, pin));
@@ -1349,6 +1367,8 @@
       {key:'num-77', id:uid(), name:'Close Luck', type:'containsSequence', params:{value:'77'}, points:1100, rarity:'uncommon', icon:'🤪', discovered:false, desc:'The roll contains the number 77'},
       {key:'black-jack', id:uid(), name:'Black Jack', type:'exactSum', params:{n:21}, points:1950, rarity:'uncommon', icon:'♠️', discovered:false},
       {key:'half-half', id:uid(), name:'Half and Half', type:'halfAndHalf', params:{order:'either'}, points:3000, rarity:'uncommon', icon:'⚖️', discovered:false, desc:'One half of the roll is all even digits and the other half is all odd digits (like 246135)'},
+      {key:'trio-pairs', id:uid(), name:'Trio of Pairs', type:'distinctPairs', params:{count:3}, points:8000, rarity:'rare', icon:'🧷', discovered:false, desc:'Three different digits each appear twice, anywhere in the roll (like 408840)'},
+      {key:'bookends-2', id:uid(), name:'Double Bookends', type:'bookendBlock', params:{len:2}, points:8000, rarity:'rare', icon:'🧲', discovered:false, desc:'The first two digits are the same as the last two, in order (like 40 ... 40)'},
       {key:'double-pair', id:uid(), name:'Double Pair', type:'nAdjacentPairs', params:{count:2}, points:3000, rarity:'uncommon', icon:'👯', discovered:false, desc:'Contains a 2 pair (2 of the same number together but 2 times)'},
       {key:'starts6-ends7', id:uid(), name:'Long 67', type:'startsAndEndsWith', params:{startValue:'6',endValue:'7'}, points:3240, rarity:'uncommon', icon:'🔖', discovered:false},
       {key:'div-7', id:uid(), name:'Divisible by 7', type:'divisibleBy', params:{n:7}, points:3500, rarity:'uncommon', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 7'},

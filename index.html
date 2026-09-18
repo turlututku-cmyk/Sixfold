@@ -359,6 +359,21 @@
   .modal-tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
   .sfxpanel{display:flex;flex-direction:column;gap:12px;overflow-y:auto;}
   .sfxhint{margin:0;font-size:12.5px;color:var(--muted);}
+  .sfxhead{font-weight:700;color:var(--ink);margin-top:4px;}
+  .intro{position:fixed;inset:0;z-index:40;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;overflow:hidden;--hit:900ms;--ic:var(--legendary-ink);}
+  .intro[hidden]{display:none;}
+  .intro-legendary{--ic:var(--legendary-ink);}
+  .intro-mythic{--ic:var(--mythic-ink);}
+  .intro-chroma{--ic:var(--chroma-ink);}
+  .intro-flash{position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 50%, color-mix(in srgb,var(--ic) 55%,transparent) 0%, color-mix(in srgb,var(--ic) 20%,transparent) 38%, transparent 72%);}
+  .intro.show .intro-flash{animation:introBuild var(--hit) ease-in forwards, introBurst .9s var(--hit) ease-out forwards;}
+  @keyframes introBuild{0%{opacity:0;transform:scale(.35)}100%{opacity:.75;transform:scale(1)}}
+  @keyframes introBurst{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.7)}}
+  .intro-label{position:relative;opacity:0;font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:clamp(34px,10vw,88px);letter-spacing:.12em;text-transform:uppercase;color:var(--ic);text-shadow:0 0 26px color-mix(in srgb,var(--ic) 70%,transparent),0 2px 0 rgba(0,0,0,.2);}
+  .intro-sub{position:relative;opacity:0;font-weight:700;font-size:clamp(14px,3.5vw,22px);letter-spacing:.08em;color:var(--ic);}
+  .intro.show .intro-label{animation:introLabel 1.2s cubic-bezier(.2,.9,.3,1) var(--hit) both;}
+  .intro.show .intro-sub{animation:introLabel 1.1s cubic-bezier(.2,.9,.3,1) calc(var(--hit) + 150ms) both;}
+  @keyframes introLabel{0%{opacity:0;transform:scale(.55);letter-spacing:.5em}22%{opacity:1;transform:scale(1.08)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.05)}}
   .sfxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;}
   .sfxbtn{font:inherit;font-size:13px;font-weight:700;padding:12px 10px;border:1px solid var(--border);border-radius:12px;cursor:pointer;background:var(--surface-2);color:var(--ink);}
   .sfxbtn:active{transform:scale(.97);}
@@ -512,6 +527,12 @@
   </section>
 </div>
 
+<div class="intro" id="introOverlay" hidden aria-hidden="true">
+  <div class="intro-flash"></div>
+  <div class="intro-label" id="introLabel"></div>
+  <div class="intro-sub" id="introSub"></div>
+</div>
+
 <div class="modal-backdrop" id="modalBackdrop" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-label="Badge catalog">
     <div class="modal-head">
@@ -525,6 +546,8 @@
     <div class="sfxpanel" id="sfxPanel" hidden>
       <p class="sfxhint">Tap a sound to hear it. These play even if sound is muted.</p>
       <div class="sfxgrid" id="sfxGrid"></div>
+      <p class="sfxhint sfxhead">Intros (rising sound + full-screen flash, then the tier sound)</p>
+      <div class="sfxgrid" id="introGrid"></div>
     </div>
     <div class="catlist" id="catalogList"></div>
 
@@ -657,6 +680,56 @@
       note(f*1.006, 0.75, 1.3, 'sine', 0.05);
     });
     [3136,3520,4186].forEach(function(f, i){ note(f, 0.9 + i*0.12, 0.6, 'sine', 0.04); });
+  }
+  function riserLegendary(){
+    note(220, 0, 0.9, 'sawtooth', 0.06, 880);
+    note(440, 0.1, 0.8, 'triangle', 0.05, 1760);
+    for (var i=0; i<6; i++) note(1200 + i*150, 0.3 + i*0.1, 0.12, 'sine', 0.04);
+  }
+  function riserMythic(){
+    note(60, 0, 1.3, 'square', 0.07, 220);
+    note(90, 0, 1.3, 'sawtooth', 0.07, 700);
+    [0.4,0.8,1.05,1.2].forEach(function(t){ note(150, t, 0.1, 'square', 0.09); });
+    for (var i=0; i<8; i++) note(900 + i*120, 0.5 + i*0.1, 0.1, 'sine', 0.04);
+  }
+  function riserChroma(){
+    note(400, 0, 1.6, 'sine', 0.07, 3400);
+    note(800, 0.2, 1.4, 'sine', 0.05, 4200);
+    for (var i=0; i<12; i++) note(1500 + i*220, 0.2 + i*0.11, 0.09, 'sine', 0.05);
+  }
+  var INTROS = {
+    4: {tier:'legendary', hit:900,  riser:riserLegendary},
+    5: {tier:'mythic',    hit:1300, riser:riserMythic},
+    6: {tier:'chroma',    hit:1600, riser:riserChroma}
+  };
+  var introEl = null, introLabel = null, introSub = null, introTimer = null;
+  function playIntro(rank, subText){
+    var cfg = INTROS[rank];
+    if (!cfg) return false;
+    cfg.riser();
+    setTimeout(function(){ playTierSfx(rank); }, cfg.hit);
+    var reduce = false;
+    try{ reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+    if (reduce) return true;
+    if (!introEl){
+      introEl = document.getElementById('introOverlay');
+      introLabel = document.getElementById('introLabel');
+      introSub = document.getElementById('introSub');
+    }
+    clearTimeout(introTimer);
+    introEl.classList.remove('show');
+    introEl.hidden = false;
+    introEl.className = 'intro intro-' + cfg.tier;
+    introEl.style.setProperty('--hit', cfg.hit + 'ms');
+    introLabel.textContent = RARITY_LABEL[cfg.tier];
+    introSub.textContent = subText || PERCENTILE_BY_TIER[cfg.tier];
+    void introEl.offsetWidth;
+    introEl.classList.add('show');
+    introTimer = setTimeout(function(){
+      introEl.classList.remove('show');
+      introEl.hidden = true;
+    }, cfg.hit + 1300);
+    return true;
   }
   function playTierSfx(rank){
     var fn = {3:playEpic, 4:playLegendary, 5:playMythic, 6:playChroma}[rank];
@@ -1933,6 +2006,19 @@
     b.addEventListener('click', function(){ previewSfx(s.fn, b); });
     sfxGrid.appendChild(b);
   });
+  var introGrid = document.getElementById('introGrid');
+  [
+    {label:'Legendary intro', rank:4, tier:'legendary'},
+    {label:'Mythic intro', rank:5, tier:'mythic'},
+    {label:'Chroma intro', rank:6, tier:'chroma'}
+  ].forEach(function(s){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'sfxbtn pill-' + s.tier;
+    b.textContent = s.label;
+    b.addEventListener('click', function(){ previewSfx(function(){ playIntro(s.rank); }, b); });
+    introGrid.appendChild(b);
+  });
 
   function openModal(){ setModalTab('badges'); renderCatalog(); modalBackdrop.hidden = false; }
   function closeModal(){ modalBackdrop.hidden = true; editingId = null; }
@@ -1996,7 +2082,9 @@
 
   function evaluateRoll(){
     var result = scoreAgainstCurrentRoll();
-    if (!playTierSfx(lastRollTierRank) && result.newlyDiscovered.length) playFanfare();
+    var rk = lastRollTierRank;
+    var handledSfx = rk >= 4 ? playIntro(rk, lastRollEP.toLocaleString() + ' EP') : playTierSfx(rk);
+    if (!handledSfx && result.newlyDiscovered.length) playFanfare();
     renderTopStats();
     saveLocal();
     if (testerPanel && !testerPanel.hidden){

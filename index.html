@@ -1115,6 +1115,7 @@
       {key:'distinct-2', id:uid(), name:'Unique!', type:'distinctCount', params:{n:2}, points:17000, rarity:'legendary', icon:'🎨', discovered:false, desc:'Exactly 2 unique digit value(s) appear in the roll'},
       {key:'ascending', id:uid(), name:'Ascending', type:'orderedSequence', params:{direction:'asc'}, points:25000, rarity:'legendary', icon:'🎢', discovered:false},
       {key:'descending', id:uid(), name:'Descending', type:'orderedSequence', params:{direction:'desc'}, points:25000, rarity:'legendary', icon:'🎢', discovered:false},
+      {key:'triple-pair', id:uid(), name:'Triple Pair', type:'nAdjacentPairs', params:{count:3}, points:30000, rarity:'legendary', icon:'👯', discovered:false, desc:'Contains a 3 pair (2 of the same number together but 3 times)'},
       {key:'straight-6', id:uid(), name:'Full Send', type:'straightRange', params:{start:-1,length:6}, points:50000, rarity:'legendary', icon:'🔥', discovered:false, desc:'6 consecutive values in a row, starting anywhere'},
       {key:'pattern-3', id:uid(), name:'3 Pattern Repeater', type:'customRepeatingPattern', params:{blockLength:3}, points:50000, rarity:'legendary', icon:'♻️', discovered:false, desc:'The roll is a short pattern repeated to fill all the digits (like 123123)'},
       {key:'two-digits', id:uid(), name:'Two Digits', type:'digitCount', params:{n:2}, points:55000, rarity:'legendary', icon:'🎲', discovered:false, desc:'The roll has exactly 2 digits'},
@@ -1149,7 +1150,13 @@
       var prev = oldByKey[a.key];
       if (prev) a.discovered = !!prev.discovered;
     });
-    return fresh.concat(extras);
+    var keptExtras = extras.filter(function(x){
+      var twin = fresh.filter(function(a){ return a.name === x.name && a.type === x.type; })[0];
+      if (!twin) return true;
+      if (x.discovered) twin.discovered = true;
+      return false;
+    });
+    return fresh.concat(keptExtras);
   }
   function applyState(s){
     if (!s || typeof s.achievementsVersion !== 'number' || s.achievementsVersion < ACHIEVEMENTS_VERSION){

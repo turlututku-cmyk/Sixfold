@@ -1370,9 +1370,9 @@
   });
 
   var LEADERBOARD = [
-    {name:'083916', score:96600},
-    {name:'991991', score:90150},
-    {name:'445577', score:40450}
+    {name:'083916', user:'Cduking', score:96600},
+    {name:'991991', user:'Cduking', score:90150},
+    {name:'445577', user:'Cduking', score:40450}
   ];
 
   var addBadgeDetails = document.getElementById('addBadgeDetails');
@@ -1391,15 +1391,16 @@
     }).catch(function(){});
   })();
 
-  function renderLeaderboardRow(name, score){
+  function renderLeaderboardRow(name, score, user){
     var row = document.createElement('div');
     row.className = 'catrow';
     row.style.cursor = 'pointer';
     row.title = 'Test this number';
     row.innerHTML =
-      '<div class="info"><div class="name"></div></div>' +
+      '<div class="info"><div class="name"></div><div class="desc"></div></div>' +
       '<span class="pill pill-common"></span>';
     row.querySelector('.name').textContent = name || 'Someone';
+    row.querySelector('.desc').textContent = user || '';
     row.querySelector('.pill').textContent = Number(score || 0).toLocaleString() + ' EP';
     row.addEventListener('click', function(){
       testerPanel.hidden = false;
@@ -1419,7 +1420,7 @@
     var sorted = LEADERBOARD.slice().sort(function(a,b){ return b.score - a.score; }).slice(0,10);
     leaderboardStatus.textContent = 'Top ' + sorted.length;
     sorted.forEach(function(entry){
-      leaderboardList.appendChild(renderLeaderboardRow(entry.name, entry.score));
+      leaderboardList.appendChild(renderLeaderboardRow(entry.name, entry.score, entry.user));
     });
   }
   renderLeaderboard();

@@ -139,7 +139,7 @@
     margin:0;
   }
   .leaderboard-mini{padding:16px 18px;gap:8px;}
-  .leaderboard-mini .achlist{max-height:220px;}
+  .leaderboard-mini .achlist{max-height:360px;overflow-y:auto;flex:none;}
   .leaderboard-mini .catrow{padding:7px 10px;}
   .topboard{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;}
   .topboard .leaderboard-mini{flex:1 1 190px;order:1;min-width:190px;}
@@ -147,6 +147,7 @@
   @media (max-width:820px){
     .topboard{flex-direction:column;flex-wrap:nowrap;}
     .topboard .leaderboard-mini{order:2;flex:none;width:100%;min-width:0;}
+    .leaderboard-mini .achlist{max-height:none;overflow-y:visible;}
     .topboard .rollcard{order:1;width:100%;min-width:0;}
   }
   .numberbox{

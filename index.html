@@ -139,7 +139,7 @@
     margin:0;
   }
   .leaderboard-mini{padding:16px 18px;gap:8px;}
-  .leaderboard-mini .achlist{max-height:360px;overflow-y:auto;flex:none;}
+  .leaderboard-mini .achlist{max-height:620px;overflow-y:auto;flex:none;}
   .leaderboard-mini .catrow{padding:7px 10px;}
   .topboard{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;}
   .topboard .leaderboard-mini{flex:1 1 190px;order:1;min-width:190px;}
@@ -1437,7 +1437,8 @@
     {name:'655545', user:'poncik', score:31350},
     {name:'525224', user:'Cduking', score:31650},
     {name:'051243', user:'Cduking', score:59300},
-    {name:'111310', user:'Cduking', score:31050}
+    {name:'111310', user:'Cduking', score:31050},
+    {name:'222127', user:'poncik', score:26080}
   ];
 
   var addBadgeDetails = document.getElementById('addBadgeDetails');
@@ -1482,7 +1483,7 @@
       leaderboardStatus.textContent = 'No entries yet.';
       return;
     }
-    var sorted = LEADERBOARD.slice().sort(function(a,b){ return b.score - a.score; }).slice(0,10);
+    var sorted = LEADERBOARD.slice().sort(function(a,b){ return b.score - a.score; }).slice(0,25);
     leaderboardStatus.textContent = 'Top ' + sorted.length;
     sorted.forEach(function(entry){
       leaderboardList.appendChild(renderLeaderboardRow(entry.name, entry.score, entry.user));

@@ -609,7 +609,7 @@
     {id:'repeatingPattern', label:'Repeating pattern', params:[]},
     {id:'customRepeatingPattern', label:'Custom repeating pattern', params:[{key:'blockLength',label:'Pattern length',type:'number',min:1,max:NUM_DIGITS-1,def:2}]},
     {id:'nAdjacentPairs', label:'N of adjacent pairs', params:[{key:'count',label:'Number of pairs',type:'number',min:1,max:NUM_DIGITS-1,def:2}]},
-    {id:'justOnePair', label:'Just one pair (2 same, rest all different)', params:[]},
+    {id:'justNOfAKind', label:'Just N of a kind (rest all different)', params:[{key:'count',label:'Same-digit count',type:'number',min:2,max:NUM_DIGITS,def:2}]},
     {id:'distinctCount', label:'Amount of unique digits', params:[{key:'n',label:'Unique digit count',type:'number',min:1,max:NUM_DIGITS,def:3}]},
     {id:'numberGreaterThan', label:'Your roll bigger than N', params:[{key:'n',label:'Threshold',type:'number',min:0,max:Math.pow(10,NUM_DIGITS)-1,def:500000}]},
     {id:'divisibleBy', label:'Divisible by N', params:[{key:'n',label:'Divisor',type:'number',min:2,max:1000,def:3}]},
@@ -633,7 +633,7 @@
     allDifferent:'🌈', twoPair:'👯', isPrime:'💎', isPalindrome:'🪞',
     firstGreaterThanLast:'⛷️', lastDigitParity:'🔢', adjacentPair:'👯',
     adjacentTriple:'👨‍👩‍👦', firstEqualsLast:'🥪', digitCount:'📏', exactNumber:'💯', containsSequence:'🔎',
-    repeatingPattern:'♻️', customRepeatingPattern:'🔂', nAdjacentPairs:'🔗', justOnePair:'👯',
+    repeatingPattern:'♻️', customRepeatingPattern:'🔂', nAdjacentPairs:'🔗', justNOfAKind:'🎯',
     distinctCount:'🎨', numberGreaterThan:'📊', divisibleBy:'➗', notContainsSequence:'🚫',
     lastDigits:'🏁', straightRange:'📶', orderedSequence:'🎢', startsAndEndsWith:'🔖',
     firstExceedsLastBy:'⛷️'
@@ -667,7 +667,7 @@
       case 'repeatingPattern': return 'The roll is a short pattern repeated to fill all the digits (like 123123)';
       case 'customRepeatingPattern': return 'A ' + a.params.blockLength + '-digit block repeats back-to-back somewhere in the roll (like 1212)';
       case 'nAdjacentPairs': return 'At least ' + a.params.count + ' pairs of neighboring digits match';
-      case 'justOnePair': return 'Exactly one digit appears twice and every other digit is different';
+      case 'justNOfAKind': return 'Exactly one digit appears ' + a.params.count + ' times (anywhere) and every other digit is different';
       case 'distinctCount': return 'Exactly ' + a.params.n + ' unique digit value(s) appear in the roll';
       case 'numberGreaterThan': return 'The roll, read as a number, is greater than ' + a.params.n;
       case 'divisibleBy': return 'The roll, read as a number, is divisible by ' + a.params.n;
@@ -713,7 +713,7 @@
         var bl = a.params.blockLength;
         return bl<=1 ? 'common' : (bl===2 ? 'uncommon' : (bl===3 ? 'rare' : 'epic'));
       }
-      case 'justOnePair': return 'uncommon';
+      case 'justNOfAKind': return a.params.count>=5 ? 'legendary' : (a.params.count===4 ? 'rare' : (a.params.count===3 ? 'uncommon' : 'common'));
       case 'nAdjacentPairs': {
         var pc = a.params.count;
         return pc>=3 ? 'epic' : (pc===2 ? 'rare' : 'uncommon');
@@ -918,7 +918,7 @@
       case 'repeatingPattern': return hasRepeatingPattern(nums);
       case 'customRepeatingPattern': return findConsecutiveBlockRepeat(nums, a.params.blockLength) !== null;
       case 'nAdjacentPairs': return countExactAdjacentPairs(nums) >= a.params.count;
-      case 'justOnePair': return counts.filter(function(c){return c===2;}).length === 1 && counts.every(function(c){return c<=2;});
+      case 'justNOfAKind': return counts.filter(function(c){return c===a.params.count;}).length === 1 && counts.every(function(c){return c===a.params.count || c<=1;});
       case 'distinctCount': return distinct === a.params.n;
       case 'numberGreaterThan': return parseInt(nums.join(''),10) > a.params.n;
       case 'divisibleBy': return a.params.n > 0 && parseInt(nums.join(''),10) % a.params.n === 0;
@@ -1019,12 +1019,12 @@
         return out;
       }
       case 'nAdjacentPairs': return exactAdjacentPairIndices(nums);
-      case 'justOnePair': {
+      case 'justNOfAKind': {
         var pv = -1;
         for (var pd=0; pd<nums.length; pd++){
           var pn = 0;
           for (var pe=0; pe<nums.length; pe++) if (nums[pe]===nums[pd]) pn++;
-          if (pn===2){ pv = nums[pd]; break; }
+          if (pn===a.params.count){ pv = nums[pd]; break; }
         }
         var pi = [];
         nums.forEach(function(n,i){ if (n===pv) pi.push(i); });
@@ -1087,8 +1087,8 @@
       {key:'div-5', id:uid(), name:'Divisible by 5', type:'divisibleBy', params:{n:5}, points:200, rarity:'common', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 5'},
       {key:'straight-3', id:uid(), name:'Straight', type:'straightRange', params:{start:-1,length:3}, points:250, rarity:'common', icon:'📶', discovered:false, desc:'3 consecutive values in a row, starting anywhere'},
       {key:'pair', id:uid(), name:'Pair', type:'adjacentPair', params:{}, points:300, rarity:'common', icon:'👯', discovered:false, desc:'Contains a pair (2 of the same number together)'},
-      {key:'just-1-pair', id:uid(), name:'Just 1 Pair', type:'justOnePair', params:{}, points:400, rarity:'common', icon:'👯', discovered:false, desc:'Exactly one digit appears twice (anywhere) and every other digit is different'},
-      {key:'trips', id:uid(), name:'Trips', type:'nOfAKind', params:{count:3}, points:900, rarity:'common', icon:'🎯', discovered:false, desc:'The same digit appears 3 or more times (anywhere in the roll)'},
+      {key:'just-1-pair', id:uid(), name:'Just 1 Pair', type:'justNOfAKind', params:{count:2}, points:400, rarity:'common', icon:'👯', discovered:false, desc:'Exactly one digit appears twice (anywhere) and every other digit is different'},
+      {key:'trips', id:uid(), name:'Just Three of a Kind', type:'justNOfAKind', params:{count:3}, points:2500, rarity:'uncommon', icon:'🎯', discovered:false, desc:'Exactly one digit appears 3 times (anywhere) and every other digit is different'},
       {key:'deep-void', id:uid(), name:'Deep Void', type:'containsSequence', params:{value:'00'}, points:500, rarity:'common', icon:'🔎', discovered:false},
       {key:'triple', id:uid(), name:'Three of a Kind', type:'adjacentTriple', params:{}, points:700, rarity:'common', icon:'👨‍👩‍👦', discovered:false, desc:'Contains a ToaK (3 of the same number together)'},
       {key:'all-different', id:uid(), name:'Difference', type:'allDifferent', params:{}, points:750, rarity:'common', icon:'🌈', discovered:false},
@@ -1111,7 +1111,7 @@
       {key:'starts6-ends7', id:uid(), name:'Long 67', type:'startsAndEndsWith', params:{startValue:'6',endValue:'7'}, points:3240, rarity:'uncommon', icon:'🔖', discovered:false},
       {key:'div-7', id:uid(), name:'Divisible by 7', type:'divisibleBy', params:{n:7}, points:3500, rarity:'uncommon', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 7'},
       {key:'distinct-3', id:uid(), name:'Rare!', type:'distinctCount', params:{n:3}, points:4300, rarity:'uncommon', icon:'🎨', discovered:false, desc:'Exactly 3 unique digit value(s) appear in the roll'},
-      {key:'four-kind', id:uid(), name:'Four of a Kind', type:'nOfAKind', params:{count:4}, points:6000, rarity:'rare', icon:'🎯', discovered:false, desc:'The same digit appears 4 or more times (anywhere in the roll)'},
+      {key:'four-kind', id:uid(), name:'Just Four of a Kind', type:'justNOfAKind', params:{count:4}, points:9000, rarity:'rare', icon:'🎯', discovered:false, desc:'Exactly one digit appears 4 times (anywhere) and every other digit is different'},
       {key:'four-digits', id:uid(), name:'Four Digits', type:'digitCount', params:{n:4}, points:5000, rarity:'rare', icon:'🎲', discovered:false, desc:'The roll has exactly 4 digits'},
       {key:'straight-5', id:uid(), name:'Straighter', type:'straightRange', params:{start:-1,length:5}, points:5000, rarity:'rare', icon:'📶', discovered:false, desc:'5 consecutive values in a row, starting anywhere'},
       {key:'num-143', id:uid(), name:'ILY Too', type:'containsSequence', params:{value:'143'}, points:5000, rarity:'rare', icon:'❤️', discovered:false, desc:'The roll contains the number 143 (Slang for the word "I Love You")'},
@@ -1134,7 +1134,7 @@
       {key:'ascending', id:uid(), name:'Ascending', type:'orderedSequence', params:{direction:'asc'}, points:25000, rarity:'legendary', icon:'🎢', discovered:false},
       {key:'descending', id:uid(), name:'Descending', type:'orderedSequence', params:{direction:'desc'}, points:25000, rarity:'legendary', icon:'🎢', discovered:false},
       {key:'triple-pair', id:uid(), name:'Triple Pair', type:'nAdjacentPairs', params:{count:3}, points:30000, rarity:'legendary', icon:'👯', discovered:false, desc:'Contains a 3 pair (2 of the same number together but 3 times)'},
-      {key:'five-kind', id:uid(), name:'Five of a Kind', type:'nOfAKind', params:{count:5}, points:40000, rarity:'legendary', icon:'🎯', discovered:false, desc:'The same digit appears 5 or more times (anywhere in the roll)'},
+      {key:'five-kind', id:uid(), name:'Just Five of a Kind', type:'justNOfAKind', params:{count:5}, points:40000, rarity:'legendary', icon:'🎯', discovered:false, desc:'Exactly one digit appears 5 times (anywhere) and the last digit is different'},
       {key:'straight-6', id:uid(), name:'Full Send', type:'straightRange', params:{start:-1,length:6}, points:50000, rarity:'legendary', icon:'🔥', discovered:false, desc:'6 consecutive values in a row, starting anywhere'},
       {key:'pattern-3', id:uid(), name:'3 Pattern Repeater', type:'customRepeatingPattern', params:{blockLength:3}, points:50000, rarity:'legendary', icon:'♻️', discovered:false, desc:'The roll is a short pattern repeated to fill all the digits (like 123123)'},
       {key:'two-digits', id:uid(), name:'Two Digits', type:'digitCount', params:{n:2}, points:55000, rarity:'legendary', icon:'🎲', discovered:false, desc:'The roll has exactly 2 digits'},

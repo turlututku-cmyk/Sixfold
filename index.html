@@ -795,6 +795,7 @@
     {id:'continuousChunks', label:'Continuous (split into numbers that are consecutive, any order)', params:[{key:'chunk',label:'Digits per number',type:'select',options:[{value:'2',label:'2 digits (like 34 36 35)'},{value:'3',label:'3 digits (like 124 123)'}],def:'2'}]},
     {id:'piDigits', label:'Pi (first N digits: 3.14, 3.1415...)', params:[{key:'n',label:'Digits of pi',type:'number',min:2,max:NUM_DIGITS,def:3},{key:'match',label:'Match',type:'select',options:[{value:'includes',label:'Includes (anywhere in the roll)'},{value:'exact',label:'Exactly (whole roll, zero-padded like 000314)'}],def:'includes'}]},
     {id:'halfAndHalf', label:'Half and half (one half even digits, the other half odd)', params:[{key:'order',label:'Order',type:'select',options:[{value:'either',label:'Either way'},{value:'evenOdd',label:'Even first, then odd'},{value:'oddEven',label:'Odd first, then even'}],def:'either'}]},
+    {id:'containsPalindrome', label:'Contains a palindrome (N or more digits)', params:[{key:'minLen',label:'Minimum length',type:'number',min:3,max:NUM_DIGITS,def:4}]},
     {id:'distinctPairs', label:'N different pairs (anywhere)', params:[{key:'count',label:'Number of different pairs',type:'number',min:2,max:Math.floor(NUM_DIGITS/2),def:3}]},
     {id:'bookendBlock', label:'Start block equals end block (like 40...40)', params:[{key:'len',label:'Digits in the block',type:'number',min:2,max:Math.floor(NUM_DIGITS/2),def:2}]},
     {id:'justNOfAKind', label:'Just N of a kind (rest all different)', params:[{key:'count',label:'Same-digit count',type:'number',min:2,max:NUM_DIGITS,def:2}]},
@@ -821,7 +822,7 @@
     allDifferent:'🌈', twoPair:'👯', isPrime:'💎', isPalindrome:'🪞',
     firstGreaterThanLast:'⛷️', lastDigitParity:'🔢', adjacentPair:'👯',
     adjacentTriple:'👨‍👩‍👦', firstEqualsLast:'🥪', digitCount:'📏', exactNumber:'💯', containsSequence:'🔎',
-    repeatingPattern:'♻️', customRepeatingPattern:'🔂', nAdjacentPairs:'🔗', justNOfAKind:'🎯', continuousChunks:'🧩', piDigits:'🥧', halfAndHalf:'⚖️', distinctPairs:'🧷', bookendBlock:'🧲',
+    repeatingPattern:'♻️', customRepeatingPattern:'🔂', nAdjacentPairs:'🔗', justNOfAKind:'🎯', continuousChunks:'🧩', piDigits:'🥧', halfAndHalf:'⚖️', distinctPairs:'🧷', containsPalindrome:'🔁', bookendBlock:'🧲',
     distinctCount:'🎨', numberGreaterThan:'📊', divisibleBy:'➗', notContainsSequence:'🚫',
     lastDigits:'🏁', straightRange:'📶', orderedSequence:'🎢', startsAndEndsWith:'🔖',
     firstExceedsLastBy:'⛷️'
@@ -856,6 +857,7 @@
       case 'customRepeatingPattern': return 'A ' + a.params.blockLength + '-digit block repeats back-to-back somewhere in the roll (like 1212)';
       case 'nAdjacentPairs': return 'At least ' + a.params.count + ' pairs of neighboring digits match';
       case 'justNOfAKind': return 'Exactly one digit appears ' + a.params.count + ' times (anywhere) and every other digit is different';
+      case 'containsPalindrome': return 'A stretch of ' + a.params.minLen + ' or more neighboring digits reads the same both ways (like 9449)';
       case 'distinctPairs': return 'At least ' + a.params.count + ' different digits each appear twice or more (anywhere in the roll)';
       case 'bookendBlock': return 'The first ' + a.params.len + ' digits are the same as the last ' + a.params.len + ' digits, in the same order';
       case 'halfAndHalf': return a.params.order === 'evenOdd'
@@ -915,6 +917,7 @@
         var bl = a.params.blockLength;
         return bl<=1 ? 'common' : (bl===2 ? 'uncommon' : (bl===3 ? 'rare' : 'epic'));
       }
+      case 'containsPalindrome': return a.params.minLen >= 6 ? 'epic' : (a.params.minLen === 5 ? 'rare' : (a.params.minLen === 4 ? 'uncommon' : 'common'));
       case 'distinctPairs': return a.params.count >= 3 ? 'rare' : 'uncommon';
       case 'bookendBlock': return a.params.len >= 3 ? 'epic' : 'rare';
       case 'halfAndHalf': return 'uncommon';
@@ -1004,6 +1007,18 @@
     return nums.length - firstSignificantIndex(nums);
   }
 
+  function findPalindromeRun(nums, minLen){
+    for (var len = nums.length; len >= minLen; len--){
+      for (var st = 0; st + len <= nums.length; st++){
+        var ok = true;
+        for (var k = 0; k < Math.floor(len / 2); k++){
+          if (nums[st + k] !== nums[st + len - 1 - k]){ ok = false; break; }
+        }
+        if (ok) return {start:st, len:len};
+      }
+    }
+    return null;
+  }
   function countExactAdjacentPairs(nums){
     var count = 0;
     var i = 0;
@@ -1132,6 +1147,7 @@
       case 'repeatingPattern': return hasRepeatingPattern(nums);
       case 'customRepeatingPattern': return findConsecutiveBlockRepeat(nums, a.params.blockLength) !== null;
       case 'nAdjacentPairs': return countExactAdjacentPairs(nums) >= a.params.count;
+      case 'containsPalindrome': return findPalindromeRun(nums, parseInt(a.params.minLen, 10) || 4) !== null;
       case 'distinctPairs': return counts.filter(function(c){ return c >= 2; }).length >= a.params.count;
       case 'bookendBlock': {
         var bbLen = parseInt(a.params.len, 10);
@@ -1293,6 +1309,12 @@
       case 'orderedSequence': return all;
       case 'continuousChunks': return all;
       case 'halfAndHalf': return all;
+      case 'containsPalindrome': {
+        var pr = findPalindromeRun(nums, parseInt(a.params.minLen, 10) || 4);
+        var pri = [];
+        if (pr) for (var pj=0; pj<pr.len; pj++) pri.push(pr.start + pj);
+        return pri;
+      }
       case 'distinctPairs': return nums.map(function(n,i){ return i; }).filter(function(i){ return counts[nums[i]] >= 2; });
       case 'bookendBlock': {
         var bbl = parseInt(a.params.len, 10) || 2, bbIdx = [];
@@ -1369,6 +1391,7 @@
       {key:'half-half', id:uid(), name:'Half and Half', type:'halfAndHalf', params:{order:'either'}, points:3000, rarity:'uncommon', icon:'⚖️', discovered:false, desc:'One half of the roll is all even digits and the other half is all odd digits (like 246135)'},
       {key:'trio-pairs', id:uid(), name:'Trio of Pairs', type:'distinctPairs', params:{count:3}, points:8000, rarity:'rare', icon:'🧷', discovered:false, desc:'Three different digits each appear twice, anywhere in the roll (like 408840)'},
       {key:'bookends-2', id:uid(), name:'Double Bookends', type:'bookendBlock', params:{len:2}, points:8000, rarity:'rare', icon:'🧲', discovered:false, desc:'The first two digits are the same as the last two, in order (like 40 ... 40)'},
+      {key:'hidden-palindrome', id:uid(), name:'Hidden Palindrome', type:'containsPalindrome', params:{minLen:4}, points:4000, rarity:'uncommon', icon:'🔁', discovered:false, desc:'A stretch of 4 or more neighboring digits reads the same both ways (like 9449)'},
       {key:'double-pair', id:uid(), name:'Double Pair', type:'nAdjacentPairs', params:{count:2}, points:3000, rarity:'uncommon', icon:'👯', discovered:false, desc:'Contains a 2 pair (2 of the same number together but 2 times)'},
       {key:'starts6-ends7', id:uid(), name:'Long 67', type:'startsAndEndsWith', params:{startValue:'6',endValue:'7'}, points:3240, rarity:'uncommon', icon:'🔖', discovered:false},
       {key:'div-7', id:uid(), name:'Divisible by 7', type:'divisibleBy', params:{n:7}, points:3500, rarity:'uncommon', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 7'},

@@ -610,6 +610,7 @@
     {id:'repeatingPattern', label:'Repeating pattern', params:[]},
     {id:'customRepeatingPattern', label:'Custom repeating pattern', params:[{key:'blockLength',label:'Pattern length',type:'number',min:1,max:NUM_DIGITS-1,def:2}]},
     {id:'nAdjacentPairs', label:'N of adjacent pairs', params:[{key:'count',label:'Number of pairs',type:'number',min:1,max:NUM_DIGITS-1,def:2}]},
+    {id:'continuousChunks', label:'Continuous (split into numbers that are consecutive, any order)', params:[{key:'chunk',label:'Digits per number',type:'select',options:[{value:'2',label:'2 digits (like 34 36 35)'},{value:'3',label:'3 digits (like 124 123)'}],def:'2'}]},
     {id:'justNOfAKind', label:'Just N of a kind (rest all different)', params:[{key:'count',label:'Same-digit count',type:'number',min:2,max:NUM_DIGITS,def:2}]},
     {id:'distinctCount', label:'Amount of unique digits', params:[{key:'n',label:'Unique digit count',type:'number',min:1,max:NUM_DIGITS,def:3}]},
     {id:'numberGreaterThan', label:'Your roll bigger than N', params:[{key:'n',label:'Threshold',type:'number',min:0,max:Math.pow(10,NUM_DIGITS)-1,def:500000}]},
@@ -634,7 +635,7 @@
     allDifferent:'🌈', twoPair:'👯', isPrime:'💎', isPalindrome:'🪞',
     firstGreaterThanLast:'⛷️', lastDigitParity:'🔢', adjacentPair:'👯',
     adjacentTriple:'👨‍👩‍👦', firstEqualsLast:'🥪', digitCount:'📏', exactNumber:'💯', containsSequence:'🔎',
-    repeatingPattern:'♻️', customRepeatingPattern:'🔂', nAdjacentPairs:'🔗', justNOfAKind:'🎯',
+    repeatingPattern:'♻️', customRepeatingPattern:'🔂', nAdjacentPairs:'🔗', justNOfAKind:'🎯', continuousChunks:'🧩',
     distinctCount:'🎨', numberGreaterThan:'📊', divisibleBy:'➗', notContainsSequence:'🚫',
     lastDigits:'🏁', straightRange:'📶', orderedSequence:'🎢', startsAndEndsWith:'🔖',
     firstExceedsLastBy:'⛷️'
@@ -669,6 +670,7 @@
       case 'customRepeatingPattern': return 'A ' + a.params.blockLength + '-digit block repeats back-to-back somewhere in the roll (like 1212)';
       case 'nAdjacentPairs': return 'At least ' + a.params.count + ' pairs of neighboring digits match';
       case 'justNOfAKind': return 'Exactly one digit appears ' + a.params.count + ' times (anywhere) and every other digit is different';
+      case 'continuousChunks': return 'The roll splits into ' + a.params.chunk + '-digit numbers that are consecutive values in any order (like ' + (parseInt(a.params.chunk,10)===3 ? '124 123' : '34 36 35') + ')';
       case 'distinctCount': return 'Exactly ' + a.params.n + ' unique digit value(s) appear in the roll';
       case 'numberGreaterThan': return 'The roll, read as a number, is greater than ' + a.params.n;
       case 'divisibleBy': return 'The roll, read as a number, is divisible by ' + a.params.n;
@@ -714,6 +716,7 @@
         var bl = a.params.blockLength;
         return bl<=1 ? 'common' : (bl===2 ? 'uncommon' : (bl===3 ? 'rare' : 'epic'));
       }
+      case 'continuousChunks': return parseInt(a.params.chunk,10)===3 ? 'epic' : 'legendary';
       case 'justNOfAKind': return a.params.count>=5 ? 'legendary' : (a.params.count===4 ? 'rare' : (a.params.count===3 ? 'uncommon' : 'common'));
       case 'nAdjacentPairs': {
         var pc = a.params.count;
@@ -919,6 +922,15 @@
       case 'repeatingPattern': return hasRepeatingPattern(nums);
       case 'customRepeatingPattern': return findConsecutiveBlockRepeat(nums, a.params.blockLength) !== null;
       case 'nAdjacentPairs': return countExactAdjacentPairs(nums) >= a.params.count;
+      case 'continuousChunks': {
+        var chunkSz = parseInt(a.params.chunk,10);
+        if (!(chunkSz >= 1) || nums.length % chunkSz !== 0) return false;
+        var vals = [];
+        for (var ci=0; ci<nums.length; ci+=chunkSz) vals.push(parseInt(nums.slice(ci,ci+chunkSz).join(''),10));
+        vals.sort(function(x,y){return x-y;});
+        for (var cj=1; cj<vals.length; cj++) if (vals[cj] !== vals[cj-1]+1) return false;
+        return vals.length >= 2;
+      }
       case 'justNOfAKind': return counts.filter(function(c){return c===a.params.count;}).length === 1 && counts.every(function(c){return c===a.params.count || c<=1;});
       case 'distinctCount': return distinct === a.params.n;
       case 'numberGreaterThan': return parseInt(nums.join(''),10) > a.params.n;
@@ -1050,6 +1062,7 @@
         return srIdx;
       }
       case 'orderedSequence': return all;
+      case 'continuousChunks': return all;
       case 'firstExceedsLastBy': return [0, nums.length-1];
       case 'startsAndEndsWith': {
         var seStart2 = String(a.params.startValue).replace(/\D/g,'');
@@ -1138,6 +1151,7 @@
       {key:'descending', id:uid(), name:'Descending', type:'orderedSequence', params:{direction:'desc'}, points:25000, rarity:'legendary', icon:'🎢', discovered:false},
       {key:'triple-pair', id:uid(), name:'Triple Pair', type:'nAdjacentPairs', params:{count:3}, points:30000, rarity:'legendary', icon:'👯', discovered:false, desc:'Contains a 3 pair (2 of the same number together but 3 times)'},
       {key:'five-kind', id:uid(), name:'Just Five of a Kind', type:'justNOfAKind', params:{count:5}, points:40000, rarity:'legendary', icon:'🎯', discovered:false, desc:'Exactly one digit appears 5 times (anywhere) and the remaining digit is different'},
+      {key:'continuous-2', id:uid(), name:'Continuous', type:'continuousChunks', params:{chunk:2}, points:20000, rarity:'legendary', icon:'🧩', discovered:false, desc:'The roll splits into three 2-digit numbers that are consecutive in any order (like 34 36 35)'},
       {key:'straight-6', id:uid(), name:'Full Send', type:'straightRange', params:{start:-1,length:6}, points:50000, rarity:'legendary', icon:'🔥', discovered:false, desc:'6 consecutive values in a row, starting anywhere'},
       {key:'pattern-3', id:uid(), name:'3 Pattern Repeater', type:'customRepeatingPattern', params:{blockLength:3}, points:50000, rarity:'legendary', icon:'♻️', discovered:false, desc:'The roll is a short pattern repeated to fill all the digits (like 123123)'},
       {key:'two-digits', id:uid(), name:'Two Digits', type:'digitCount', params:{n:2}, points:55000, rarity:'legendary', icon:'🎲', discovered:false, desc:'The roll has exactly 2 digits'},

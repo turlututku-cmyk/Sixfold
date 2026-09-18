@@ -18,6 +18,7 @@
     --epic-bg:#f2e6fb; --epic-ink:#8035c4;
     --legendary-bg:#fdf1dc; --legendary-ink:#b8791a;
     --mythic-bg:#fde3e8; --mythic-ink:#c21856;
+    --chroma-bg:#d9f2fc; --chroma-ink:#0a86b8;
     --chip-bg:#eceef4; --chip-ink:#aeb4c2;
     --chip-active-bg:#4a4ff0; --chip-active-ink:#ffffff;
     --glow-a:#ee49d0; --glow-b:#3fd6e8;
@@ -41,6 +42,7 @@
       --epic-bg:#2a1c40; --epic-ink:#c68df2;
       --legendary-bg:#3a2c12; --legendary-ink:#f0b84f;
       --mythic-bg:#3a1420; --mythic-ink:#f45f8c;
+      --chroma-bg:#12303d; --chroma-ink:#7fdcf7;
       --chip-bg:#262a38; --chip-ink:#565d70;
       --chip-active-bg:#7b7fff; --chip-active-ink:#12141c;
       --glow-a:#f45fda; --glow-b:#4fe4f4;
@@ -64,6 +66,7 @@
     --epic-bg:#2a1c40; --epic-ink:#c68df2;
     --legendary-bg:#3a2c12; --legendary-ink:#f0b84f;
     --mythic-bg:#3a1420; --mythic-ink:#f45f8c;
+    --chroma-bg:#12303d; --chroma-ink:#7fdcf7;
     --chip-bg:#262a38; --chip-ink:#565d70;
     --chip-active-bg:#7b7fff; --chip-active-ink:#12141c;
     --glow-a:#f45fda; --glow-b:#4fe4f4;
@@ -203,6 +206,7 @@
   .pill-epic{background:var(--epic-bg);color:var(--epic-ink);}
   .pill-legendary{background:var(--legendary-bg);color:var(--legendary-ink);}
   .pill-mythic{background:var(--mythic-bg);color:var(--mythic-ink);}
+  .pill-chroma{background:linear-gradient(90deg,var(--chroma-bg),color-mix(in srgb,var(--chroma-ink) 22%,var(--chroma-bg)),var(--chroma-bg));color:var(--chroma-ink);box-shadow:0 0 0 1px color-mix(in srgb,var(--chroma-ink) 45%,transparent);}
   .pill-new{background:var(--accent);color:var(--accent-ink);}
   .pill-owned{background:var(--surface-2);color:var(--muted);}
   .percentile{font-size:12.5px;color:var(--muted);font-weight:600;}
@@ -766,8 +770,15 @@
     }
   }
 
-  var RARITY_RANK = ['common','uncommon','rare','epic','legendary','mythic'];
-  var RARITY_LABEL = {common:'Common',uncommon:'Uncommon',rare:'Rare',epic:'Epic',legendary:'Legendary',mythic:'Mythic'};
+  var RARITY_RANK = ['common','uncommon','rare','epic','legendary','mythic','chroma'];
+  var RARITY_LABEL = {common:'Common',uncommon:'Uncommon',rare:'Rare',epic:'Epic',legendary:'Legendary',mythic:'Mythic',chroma:'Chroma'};
+  function tierRankForRoll(ep, badgeTopRank){
+    if (ep >= 100000) return 6;
+    if (ep >= 75000) return 5;
+    if (ep >= 50000) return 4;
+    if (ep >= 35000) return 3;
+    return Math.min(badgeTopRank, 2);
+  }
   function rarityThenPointsCompare(x,y){
     var rx = RARITY_RANK.indexOf(rarityOf(x));
     var ry = RARITY_RANK.indexOf(rarityOf(y));
@@ -775,7 +786,7 @@
     return x.points - y.points;
   }
   var PERCENTILE_BY_TIER = {
-    common:'Bottom 45%', uncommon:'Top 35%', rare:'Top 12%', epic:'Top 3%', legendary:'Top 0.1%', mythic:'Top 0.001%'
+    common:'Bottom 45%', uncommon:'Top 35%', rare:'Top 12%', epic:'Top 3%', legendary:'Top 0.1%', mythic:'Top 0.001%', chroma:'Top 0.01%'
   };
 
   function hasStraight(nums, len){
@@ -1468,7 +1479,7 @@
   })();
 
   var lbCatalog = null;
-  function leaderboardTier(name){
+  function leaderboardTier(name, score){
     var digits = String(name || '').replace(/\D/g, '');
     if (digits.length !== NUM_DIGITS) return null;
     if (!lbCatalog) lbCatalog = defaultAchievements();
@@ -1479,7 +1490,8 @@
       var r = RARITY_RANK.indexOf(rarityOf(a));
       if (r > best) best = r;
     });
-    return best < 0 ? null : RARITY_RANK[best];
+    var rank = tierRankForRoll(Number(score || 0), best);
+    return rank < 0 ? null : RARITY_RANK[rank];
   }
 
   function renderLeaderboardRow(name, score, user){
@@ -1493,7 +1505,7 @@
     row.querySelector('.name').textContent = name || 'Someone';
     row.querySelector('.desc').textContent = user || '';
     row.querySelector('.lbep').textContent = Number(score || 0).toLocaleString() + ' EP';
-    var tier = leaderboardTier(name);
+    var tier = leaderboardTier(name, score);
     if (tier){
       var tp = document.createElement('span');
       tp.className = 'pill pill-' + tier + ' lbtier';
@@ -1830,7 +1842,7 @@
     });
     newlyDiscovered.forEach(function(a){ a.discovered = true; });
     lastRollEP = epGained;
-    lastRollTierRank = topRank;
+    lastRollTierRank = tierRankForRoll(epGained, topRank);
     return {matched:matched, newlyDiscovered:newlyDiscovered};
   }
 

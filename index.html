@@ -113,7 +113,9 @@
     transition:border-color .12s ease, color .12s ease;
   }
   .icon-btn:hover{border-color:var(--accent);color:var(--accent);}
-  .topbar-actions{display:flex;gap:8px;}
+  .topbar-actions{display:flex;gap:8px;align-items:center;}
+  .topvol{width:110px;height:22px;accent-color:var(--accent);cursor:pointer;margin:0 4px 0 0;}
+  @media (max-width:420px){ .topvol{width:76px;} }
   .rollcard{
     background:var(--surface);
     border:1px solid var(--border);
@@ -491,6 +493,7 @@
   <div class="topbar">
     <div class="brand">Sixfold</div>
     <div class="topbar-actions">
+      <input type="range" id="topVol" class="topvol" min="0" max="100" step="1" value="100" title="Volume" aria-label="Volume">
       <button class="icon-btn" id="soundBtn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
       <button class="icon-btn" id="catalogBtn" title="Badge catalog" aria-label="Open badge catalog">☰</button>
     </div>
@@ -2246,18 +2249,28 @@
   });
   var volSlider = document.getElementById('volSlider');
   var volVal = document.getElementById('volVal');
-  volSlider.value = String(Math.round(volume * 100));
-  volVal.textContent = volSlider.value + '%';
-  volSlider.addEventListener('input', function(){
-    setVolume(parseInt(volSlider.value, 10) / 100);
-    volVal.textContent = volSlider.value + '%';
-  });
-  volSlider.addEventListener('change', function(){
+  var topVol = document.getElementById('topVol');
+  function showVolume(pct){
+    volSlider.value = String(pct);
+    topVol.value = String(pct);
+    volVal.textContent = pct + '%';
+  }
+  function onVolumeInput(el){
+    var pct = parseInt(el.value, 10) || 0;
+    setVolume(pct / 100);
+    showVolume(pct);
+  }
+  function onVolumeChange(){
     previewing = true;
     ensureAudio();
     playSettle(2);
     clearTimeout(previewTimer);
     previewTimer = setTimeout(function(){ previewing = false; }, 7000);
+  }
+  showVolume(Math.round(volume * 100));
+  [volSlider, topVol].forEach(function(el){
+    el.addEventListener('input', function(){ onVolumeInput(el); });
+    el.addEventListener('change', onVolumeChange);
   });
   var introGrid = document.getElementById('introGrid');
   [

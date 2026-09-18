@@ -2243,7 +2243,7 @@
     var result = scoreAgainstCurrentRoll();
     recordRollStats();
     var rk = lastRollTierRank;
-    var handledSfx = rk >= 3 ? playIntro(rk, lastRollEP.toLocaleString() + ' EP') : playTierSfx(rk);
+    var handledSfx = rk >= 3 ? playIntro(rk) : playTierSfx(rk);
     if (!handledSfx && result.newlyDiscovered.length) playFanfare();
     renderTopStats();
     saveLocal();

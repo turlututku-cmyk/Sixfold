@@ -2340,7 +2340,7 @@
     return card;
   }
 
-  function runTest(){
+  function runTest(playScene){
     var digits = testInput.value.replace(/\D/g,'');
     testResultsEl.innerHTML = '';
     if (!digits.length){
@@ -2359,10 +2359,31 @@
     heading.style.cssText = 'color:var(--muted);font-size:12px;margin:0 0 6px;';
     heading.textContent = 'Testing ' + digits + ' — ' + matched.length + ' badge' + (matched.length===1?'':'s') + ' would match:';
     testResultsEl.appendChild(heading);
+    var testTopRank = -1;
+    matched.forEach(function(a){ var r = RARITY_RANK.indexOf(rarityOf(a)); if (r > testTopRank) testTopRank = r; });
+    var testTierRank = tierRankForRoll(totalEP, testTopRank);
+    var scoreRow = document.createElement('div');
+    scoreRow.style.cssText = 'display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:0 0 10px;';
     var scoreLine = document.createElement('p');
-    scoreLine.style.cssText = 'font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:1.3rem;margin:0 0 10px;color:var(--accent);';
+    scoreLine.style.cssText = 'font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:1.3rem;margin:0;color:var(--accent);';
     scoreLine.textContent = totalEP.toLocaleString() + ' EP';
-    testResultsEl.appendChild(scoreLine);
+    scoreRow.appendChild(scoreLine);
+    var testTierPill = document.createElement('span');
+    var testTierName = testTierRank >= 0 ? RARITY_RANK[testTierRank] : 'common';
+    testTierPill.className = 'pill pill-' + testTierName;
+    testTierPill.textContent = testTierRank >= 0 ? RARITY_LABEL[testTierName] : 'No badges';
+    scoreRow.appendChild(testTierPill);
+    if (testTierRank >= 0){
+      var testPct = document.createElement('span');
+      testPct.style.cssText = 'color:var(--muted);font-size:13px;font-weight:600;';
+      testPct.textContent = PERCENTILE_BY_TIER[testTierName];
+      scoreRow.appendChild(testPct);
+    }
+    testResultsEl.appendChild(scoreRow);
+    if (playScene === true && testTierRank >= 3){
+      ensureAudio();
+      playIntro(testTierRank, null, digits);
+    }
     matched.forEach(function(a){
       testResultsEl.appendChild(buildTestBadgeCard(a, testNums, true));
     });
@@ -2516,7 +2537,7 @@
   }
   renderLeaderboard();
 
-  testBtn.addEventListener('click', runTest);
+  testBtn.addEventListener('click', function(){ runTest(true); });
 
   function renderBreakdown(){
     badgeListEl.innerHTML = '';

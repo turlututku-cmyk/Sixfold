@@ -356,6 +356,11 @@
   .modal-close:hover{color:var(--accent);}
   .catlist{display:flex;flex-direction:column;gap:8px;overflow-y:auto;padding-right:2px;}
   .tabhidden{display:none!important;}
+  .catfilter{display:flex;gap:6px;}
+  .catfilter button{flex:1;font:inherit;font-size:12px;font-weight:600;padding:6px 8px;border-radius:999px;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;}
+  .catfilter button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
+  .catrow .pill-owned{margin-left:4px;}
+  .catrow.notowned .badge-icon{opacity:.55;}
   .modal-tabs{display:flex;gap:6px;}
   .modal-tab{flex:1;background:var(--surface-2);color:var(--muted);border:1px solid var(--border);border-radius:10px;padding:8px 10px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;}
   .modal-tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
@@ -572,6 +577,11 @@
       <button class="modal-tab" id="tabStats" type="button" role="tab" aria-selected="false">Stats</button>
       <button class="modal-tab" id="tabSfx" type="button" role="tab" aria-selected="false">SFX</button>
       <button class="modal-tab" id="tabSettings" type="button" role="tab" aria-selected="false">Settings</button>
+    </div>
+    <div class="catfilter" id="catFilter">
+      <button type="button" data-f="all" aria-pressed="true">All</button>
+      <button type="button" data-f="owned" aria-pressed="false">Owned</button>
+      <button type="button" data-f="missing" aria-pressed="false">Not owned</button>
     </div>
     <div class="statspanel" id="statsPanel" hidden></div>
     <div class="settingspanel" id="settingsPanel" hidden>
@@ -1667,6 +1677,24 @@
   var modalBackdrop = document.getElementById('modalBackdrop');
   var modalClose = document.getElementById('modalClose');
   var catalogListEl = document.getElementById('catalogList');
+  var catFilterEl = document.getElementById('catFilter');
+  var catFilterMode = 'all';
+  function updateCatFilterButtons(){
+    var owned = achievements.filter(function(a){ return a.discovered; }).length;
+    var counts = {all:achievements.length, owned:owned, missing:achievements.length - owned};
+    var labels = {all:'All', owned:'Owned', missing:'Not owned'};
+    Array.prototype.forEach.call(catFilterEl.querySelectorAll('button'), function(b){
+      var f = b.getAttribute('data-f');
+      b.textContent = labels[f] + ' (' + counts[f] + ')';
+      b.setAttribute('aria-pressed', String(f === catFilterMode));
+    });
+  }
+  catFilterEl.addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('button') : null;
+    if (!b) return;
+    catFilterMode = b.getAttribute('data-f');
+    renderCatalog();
+  });
   var resetBtn = document.getElementById('resetBtn');
   var exportBtn = document.getElementById('exportBtn');
   var testInput = document.getElementById('testInput');
@@ -2036,6 +2064,7 @@
       '<div class="badge-icon">' + (a.icon || ICONS[a.type] || '🏅') + '</div>' +
       '<div class="info"><div class="name"></div><div class="desc"></div></div>' +
       '<span class="pill pill-' + tier + '">' + RARITY_LABEL[tier] + '</span>' +
+      (a.discovered ? '<span class="pill pill-owned">Owned</span>' : '') +
       (isCatalogOwner ? (
         '<button class="copy" title="Duplicate badge" aria-label="Duplicate ' + a.name.replace(/"/g,'') + '">⧉</button>' +
         '<button class="edit" title="Edit badge" aria-label="Edit ' + a.name.replace(/"/g,'') + '">✎</button>' +
@@ -2043,6 +2072,7 @@
       ) : '');
     row.querySelector('.name').textContent = a.name + ' · ' + a.points + ' EP';
     row.querySelector('.desc').textContent = a.desc || describe(a);
+    if (!a.discovered) row.classList.add('notowned');
     if (isCatalogOwner){
       row.querySelector('.copy').addEventListener('click', function(){
         var clone = JSON.parse(JSON.stringify(a));
@@ -2145,9 +2175,23 @@
   function renderCatalog(){
     catalogListEl.innerHTML = '';
     achievements.sort(rarityThenPointsCompare);
+    var shownCount = 0;
     achievements.forEach(function(a){
+      if (a.id !== editingId){
+        if (catFilterMode === 'owned' && !a.discovered) return;
+        if (catFilterMode === 'missing' && a.discovered) return;
+      }
+      shownCount++;
       catalogListEl.appendChild(a.id === editingId ? buildCatalogEditRow(a) : buildCatalogRow(a));
     });
+    updateCatFilterButtons();
+    if (achievements.length && !shownCount){
+      var none = document.createElement('p');
+      none.style.color = 'var(--muted)';
+      none.style.fontSize = '13px';
+      none.textContent = catFilterMode === 'owned' ? 'No owned badges yet. Roll to find some.' : 'You own every badge!';
+      catalogListEl.appendChild(none);
+    }
     if (!achievements.length){
       var empty = document.createElement('p');
       empty.style.color = 'var(--muted)';
@@ -2302,6 +2346,7 @@
     statsPanel.hidden = !isStats;
     settingsPanel.hidden = !isSettings;
     catalogListEl.classList.toggle('tabhidden', !isBadges);
+    catFilterEl.classList.toggle('tabhidden', !isBadges);
     addBadgeDetails.classList.toggle('tabhidden', !isBadges);
     if (isStats) renderStats();
   }

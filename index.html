@@ -20,6 +20,7 @@
     --mythic-bg:#fde3e8; --mythic-ink:#c21856;
     --chroma-bg:#d9f2fc; --chroma-ink:#0a86b8;
     --unbelievable-bg:#0c1a45; --unbelievable-ink:#7db0ff;
+    --unique-bg:#0a0a0f; --unique-ink:#ffe9a8;
     --chip-bg:#eceef4; --chip-ink:#aeb4c2;
     --chip-active-bg:#4a4ff0; --chip-active-ink:#ffffff;
     --glow-a:#ee49d0; --glow-b:#3fd6e8;
@@ -45,6 +46,7 @@
       --mythic-bg:#3a1420; --mythic-ink:#f45f8c;
       --chroma-bg:#12303d; --chroma-ink:#7fdcf7;
     --unbelievable-bg:#0a1538; --unbelievable-ink:#6ea8ff;
+    --unique-bg:#0a0a0f; --unique-ink:#ffe9a8;
       --chip-bg:#262a38; --chip-ink:#565d70;
       --chip-active-bg:#7b7fff; --chip-active-ink:#12141c;
       --glow-a:#f45fda; --glow-b:#4fe4f4;
@@ -70,6 +72,7 @@
     --mythic-bg:#3a1420; --mythic-ink:#f45f8c;
     --chroma-bg:#12303d; --chroma-ink:#7fdcf7;
     --unbelievable-bg:#0a1538; --unbelievable-ink:#6ea8ff;
+    --unique-bg:#0a0a0f; --unique-ink:#ffe9a8;
     --chip-bg:#262a38; --chip-ink:#565d70;
     --chip-active-bg:#7b7fff; --chip-active-ink:#12141c;
     --glow-a:#f45fda; --glow-b:#4fe4f4;
@@ -213,6 +216,7 @@
   .pill-mythic{background:var(--mythic-bg);color:var(--mythic-ink);}
   .pill-chroma{background:linear-gradient(90deg,var(--chroma-bg),color-mix(in srgb,var(--chroma-ink) 22%,var(--chroma-bg)),var(--chroma-bg));color:var(--chroma-ink);box-shadow:0 0 0 1px color-mix(in srgb,var(--chroma-ink) 45%,transparent);}
   .pill-unbelievable{background:linear-gradient(90deg,#08122f,#152a63,#08122f);color:var(--unbelievable-ink);box-shadow:0 0 0 1px color-mix(in srgb,var(--unbelievable-ink) 55%,transparent),0 0 10px -2px color-mix(in srgb,var(--unbelievable-ink) 70%,transparent);}
+  .pill-unique{background:linear-gradient(90deg,#050508,#1c1c26,#050508);color:var(--unique-ink);box-shadow:0 0 0 1px rgba(255,233,168,.7),0 0 12px -2px rgba(255,209,102,.75);}
   .pill-new{background:var(--accent);color:var(--accent-ink);}
   .pill-owned{background:var(--surface-2);color:var(--muted);}
   .percentile{font-size:12.5px;color:var(--muted);font-weight:600;}
@@ -401,6 +405,10 @@
   .intro-mythic{--ic:#ff5c8a;--dim:.64;}
   .intro-chroma{--ic:#6fe3ff;--dim:.62;}
   .intro-unbelievable{--ic:#6ea8ff;--dim:.8;}
+  .intro-unique{--ic:#ffe9a8;--dim:.86;}
+  .intro-unique .intro-label{text-shadow:3px 0 rgba(255,120,60,.55),-3px 0 rgba(255,255,255,.5),0 0 34px color-mix(in srgb,var(--ic) 80%,transparent);}
+  .numberbox[data-tier="unique"]{--glow-a:#ffe9a8;--glow-b:#ffffff;}
+  .sfxbtn.pill-unique{background:linear-gradient(90deg,#050508,#1c1c26,#050508);color:var(--unique-ink);text-transform:uppercase;letter-spacing:.04em;font-size:12px;border-color:transparent;}
   .intro.show{animation:introDim var(--hit) ease-in forwards, introDimOut 700ms ease calc(var(--hit) + var(--hold) - 300ms) forwards;}
   @keyframes introDim{0%{background:rgba(3,6,20,0)}100%{background:rgba(3,6,20,var(--dim,.55))}}
   @keyframes introDimOut{0%{background:rgba(3,6,20,var(--dim,.55))}100%{background:rgba(3,6,20,0)}}
@@ -926,12 +934,31 @@
     [1760,2093,2637,3136,2637,2093,1760,1319,1760,2349,3520].forEach(function(f, i){ note(f, 0.6 + i*0.32, 0.8, 'sine', 0.045); });
     note(55, 3.5, 3.5, 'sine', 0.14);
   }
+  function riserUnique(){
+    note(40, 0, 4.6, 'sawtooth', 0.06, 140);
+    note(80, 0.2, 4.4, 'square', 0.04, 280);
+    [220,330,440,660].forEach(function(f, i){ note(f, 0.4 + i*0.3, 4.0 - i*0.3, 'sine', 0.05); });
+    note(500, 0.6, 3.8, 'sine', 0.035, 6000);
+    [0,0.8,1.5,2.1,2.6,3.0,3.3,3.55,3.75,3.9,4.0,4.1,4.2,4.3,4.4].forEach(function(t){ note(60, t, 0.2, 'sine', 0.11); });
+  }
+  function playUnique(){
+    note(120, 0, 2.2, 'sine', 0.26, 28);
+    note(60, 0, 3.2, 'sine', 0.2);
+    [523,659,784,1047,1319,1568,2093].forEach(function(f, i){
+      note(f, 0.1 + i*0.2, 2.2, 'sine', 0.07);
+      note(f*2.76, 0.1 + i*0.2, 1.4, 'sine', 0.03);
+    });
+    [131,196,262,330,392,523].forEach(function(f){ note(f, 0.8, 5.5, 'triangle', 0.07); });
+    [4186,3520,3136,2637,2349,2093,1760,1568].forEach(function(f, i){ note(f, 2.0 + i*0.28, 0.9, 'sine', 0.035); });
+    note(55, 4.5, 4.5, 'sine', 0.14);
+  }
   var INTROS = {
     3: {tier:'epic',      hit:1000, hold:1800, burst:900,  rs:1.67, ss:1.6, riser:riserEpic},
     4: {tier:'legendary', hit:1600, hold:2400, burst:1100, rs:1.78, ss:1.6, riser:riserLegendary},
     5: {tier:'mythic',    hit:2400, hold:3000, burst:1100, rs:1.85, ss:1.4, riser:riserMythic},
     6: {tier:'chroma',    hit:4600, hold:5200, burst:1600, rs:1.44, ss:1,   riser:riserChroma},
-    7: {tier:'unbelievable', hit:6000, hold:6000, burst:2000, rs:1.43, ss:1, riser:riserUnbelievable}
+    7: {tier:'unbelievable', hit:6000, hold:6000, burst:2000, rs:1.43, ss:1, riser:riserUnbelievable},
+    8: {tier:'unique', hit:7500, hold:7000, burst:2400, rs:1.63, ss:1, riser:riserUnique}
   };
   var introEl = null, introLabel = null, introSub = null, introTimer = null, introSfxTimer = null, introBus = null;
   function skipIntro(){
@@ -991,11 +1018,12 @@
     legendary:['#ffd166','#ff9f43','#fff1b8','#ffffff'],
     mythic:['#ff4d7d','#ff8a5c','#ffd1dc','#ffffff'],
     chroma:['#5fdcf7','#a6f0ff','#ffffff','#7a9bff','#ff9be6','#9bffb0'],
-    unbelievable:['#3d7bff','#7db0ff','#c8dcff','#ffffff','#5a7dff']
+    unbelievable:['#3d7bff','#7db0ff','#c8dcff','#ffffff','#5a7dff'],
+    unique:['#ffffff','#ffe9a8','#ffd166','#f5f5f5','#ff9f43']
   };
-  var FX_RINGS = {3:2, 4:3, 5:4, 6:5, 7:6};
-  var FX_BOOM = {3:60, 4:110, 5:170, 6:240, 7:320};
-  var FX_CONF = {4:70, 5:90, 6:130, 7:70};
+  var FX_RINGS = {3:2, 4:3, 5:4, 6:5, 7:6, 8:7};
+  var FX_BOOM = {3:60, 4:110, 5:170, 6:240, 7:320, 8:420};
+  var FX_CONF = {4:70, 5:90, 6:130, 7:70, 8:100};
   function fxPick(){ return fx.pal[Math.floor(Math.random() * fx.pal.length)]; }
   function fxResize(cv){
     fx.dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -1051,7 +1079,7 @@
       var p = t / hit, spawn = (0.5 + rank * 0.55) * (0.25 + p * 1.9) * dt / 16;
       var cnt = Math.floor(spawn) + (Math.random() < spawn % 1 ? 1 : 0);
       for (i = 0; i < cnt && fx.parts.length < 700; i++){
-        if (tier === 'unbelievable'){
+        if (tier === 'unbelievable' || tier === 'unique'){
           fx.parts.push({k:'star', a:Math.random() * Math.PI * 2, r:8 + Math.random() * 40, v:0.06 + Math.random() * 0.05, c:fxPick()});
         } else {
           fx.parts.push({k:'in', a:Math.random() * Math.PI * 2, r:diag * (0.3 + Math.random() * 0.25), v:0.22 + Math.random() * 0.35,
@@ -1077,7 +1105,7 @@
         }
         var nc = FX_CONF[rank] || 0;
         for (i = 0; i < nc; i++){
-          if (tier === 'unbelievable'){
+          if (tier === 'unbelievable' || tier === 'unique'){
             fx.conf.push({k:'meteor', x:Math.random() * fx.w, y:-Math.random() * fx.h * 0.6, vx:-0.05 - Math.random() * 0.08, vy:0.35 + Math.random() * 0.4, c:fxPick(), len:40 + Math.random() * 90});
           } else {
             fx.conf.push({k:'conf', x:Math.random() * fx.w, y:-20 - Math.random() * fx.h * 0.5, vx:0, vy:0.12 + Math.random() * 0.22, sway:Math.random() * 6.28,
@@ -1100,6 +1128,11 @@
         else if (tier === 'unbelievable'){
           fx.rings.push({r:0, v:0.34, delay:0, c:'#6ea8ff', w:4, max:diag * 0.7});
           fxBurst(Math.random() * fx.w, Math.random() * fx.h * 0.6, 24, 0.8); fx.nextA = t + 520;
+        }
+        else if (tier === 'unique'){
+          fx.rings.push({r:0, v:0.3, delay:0, c:'#ffe9a8', w:4, max:diag * 0.75});
+          fxBurst(Math.random() * fx.w, Math.random() * fx.h * 0.7, 30, 0.9);
+          fx.flash = Math.max(fx.flash, 0.12); fx.nextA = t + 450;
         }
         else { fxBurst(cx + (Math.random() - .5) * 260, cy + (Math.random() - .5) * 160, 16, 0.8); fx.nextA = t + 420; }
       }
@@ -1157,6 +1190,14 @@
         ng.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = ng; ctx.fillRect(0, 0, fx.w, fx.h);
       }
+    }
+    if (tier === 'unique' && t > hit - 900){
+      var ca = Math.min(1, (t - (hit - 900)) / 900) * Math.max(0, 1 - Math.max(0, t - hit - (fx.total - hit) * 0.55) / ((fx.total - hit) * 0.45));
+      var cr = 330 + Math.sin(t * 0.004) * 24, cg = ctx.createRadialGradient(cx, cy, 70, cx, cy, cr);
+      cg.addColorStop(0, 'rgba(255,240,200,' + (0.85 * ca) + ')');
+      cg.addColorStop(0.3, 'rgba(255,200,90,' + (0.35 * ca) + ')');
+      cg.addColorStop(1, 'rgba(255,160,40,0)');
+      ctx.fillStyle = cg; ctx.fillRect(0, 0, fx.w, fx.h);
     }
     if (tier === 'chroma'){
       var ramp = t < hit ? (t / hit) * 0.55 : Math.max(0, 1 - (t - hit) / Math.max(1, fx.total - hit)) * 0.65;
@@ -1280,7 +1321,7 @@
     return true;
   }
   function playTierSfx(rank){
-    var fn = {3:playEpic, 4:playLegendary, 5:playMythic, 6:playChroma, 7:playUnbelievable}[rank];
+    var fn = {3:playEpic, 4:playLegendary, 5:playMythic, 6:playChroma, 7:playUnbelievable, 8:playUnique}[rank];
     if (!fn) return false;
     fn();
     return true;
@@ -1339,7 +1380,7 @@
   var RARITY_OPTIONS = [
     {value:'common',label:'Common'}, {value:'uncommon',label:'Uncommon'},
     {value:'rare',label:'Rare'}, {value:'epic',label:'Epic'}, {value:'legendary',label:'Legendary'},
-    {value:'mythic',label:'Mythic'}, {value:'chroma',label:'Chroma'}, {value:'unbelievable',label:'Unbelievable'}
+    {value:'mythic',label:'Mythic'}, {value:'chroma',label:'Chroma'}, {value:'unbelievable',label:'Unbelievable'}, {value:'unique',label:'Unique'}
   ];
 
   var ICONS = {
@@ -1508,9 +1549,10 @@
     }
   }
 
-  var RARITY_RANK = ['common','uncommon','rare','epic','legendary','mythic','chroma','unbelievable'];
-  var RARITY_LABEL = {common:'Common',uncommon:'Uncommon',rare:'Rare',epic:'Epic',legendary:'Legendary',mythic:'Mythic',chroma:'Chroma',unbelievable:'Unbelievable'};
+  var RARITY_RANK = ['common','uncommon','rare','epic','legendary','mythic','chroma','unbelievable','unique'];
+  var RARITY_LABEL = {common:'Common',uncommon:'Uncommon',rare:'Rare',epic:'Epic',legendary:'Legendary',mythic:'Mythic',chroma:'Chroma',unbelievable:'Unbelievable',unique:'Unique'};
   function tierRankForRoll(ep, badgeTopRank){
+    if (ep >= 500000) return 8;
     if (ep >= 300000) return 7;
     if (ep >= 100000) return 6;
     if (ep >= 60000) return 5;
@@ -1525,7 +1567,7 @@
     return x.points - y.points;
   }
   var PERCENTILE_BY_TIER = {
-    common:'Bottom 45%', uncommon:'Top 35%', rare:'Top 12%', epic:'Top 3%', legendary:'Top 1%', mythic:'Top 0.1%', chroma:'Top 0.01%', unbelievable:'Top 0.001%'
+    common:'Bottom 45%', uncommon:'Top 35%', rare:'Top 12%', epic:'Top 3%', legendary:'Top 1%', mythic:'Top 0.1%', chroma:'Top 0.01%', unbelievable:'Top 0.001%', unique:'Top 0.0001%'
   };
 
   function hasStraight(nums, len){
@@ -2852,7 +2894,8 @@
     {label:'Legendary', fn:playLegendary, tier:'legendary'},
     {label:'Mythic', fn:playMythic, tier:'mythic'},
     {label:'Chroma', fn:playChroma, tier:'chroma'},
-    {label:'Unbelievable', fn:playUnbelievable, tier:'unbelievable'}
+    {label:'Unbelievable', fn:playUnbelievable, tier:'unbelievable'},
+    {label:'Unique', fn:playUnique, tier:'unique'}
   ].forEach(function(s){
     var b = document.createElement('button');
     b.type = 'button';
@@ -2892,7 +2935,8 @@
     {label:'Legendary intro', rank:4, tier:'legendary'},
     {label:'Mythic intro', rank:5, tier:'mythic'},
     {label:'Chroma intro', rank:6, tier:'chroma'},
-    {label:'Unbelievable intro', rank:7, tier:'unbelievable'}
+    {label:'Unbelievable intro', rank:7, tier:'unbelievable'},
+    {label:'Unique intro', rank:8, tier:'unique'}
   ].forEach(function(s){
     var b = document.createElement('button');
     b.type = 'button';

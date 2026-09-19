@@ -19,6 +19,7 @@
     --legendary-bg:#fdf1dc; --legendary-ink:#b8791a;
     --mythic-bg:#fde3e8; --mythic-ink:#c21856;
     --chroma-bg:#d9f2fc; --chroma-ink:#0a86b8;
+    --unbelievable-bg:#0c1a45; --unbelievable-ink:#7db0ff;
     --chip-bg:#eceef4; --chip-ink:#aeb4c2;
     --chip-active-bg:#4a4ff0; --chip-active-ink:#ffffff;
     --glow-a:#ee49d0; --glow-b:#3fd6e8;
@@ -43,6 +44,7 @@
       --legendary-bg:#3a2c12; --legendary-ink:#f0b84f;
       --mythic-bg:#3a1420; --mythic-ink:#f45f8c;
       --chroma-bg:#12303d; --chroma-ink:#7fdcf7;
+    --unbelievable-bg:#0a1538; --unbelievable-ink:#6ea8ff;
       --chip-bg:#262a38; --chip-ink:#565d70;
       --chip-active-bg:#7b7fff; --chip-active-ink:#12141c;
       --glow-a:#f45fda; --glow-b:#4fe4f4;
@@ -67,6 +69,7 @@
     --legendary-bg:#3a2c12; --legendary-ink:#f0b84f;
     --mythic-bg:#3a1420; --mythic-ink:#f45f8c;
     --chroma-bg:#12303d; --chroma-ink:#7fdcf7;
+    --unbelievable-bg:#0a1538; --unbelievable-ink:#6ea8ff;
     --chip-bg:#262a38; --chip-ink:#565d70;
     --chip-active-bg:#7b7fff; --chip-active-ink:#12141c;
     --glow-a:#f45fda; --glow-b:#4fe4f4;
@@ -209,6 +212,7 @@
   .pill-legendary{background:var(--legendary-bg);color:var(--legendary-ink);}
   .pill-mythic{background:var(--mythic-bg);color:var(--mythic-ink);}
   .pill-chroma{background:linear-gradient(90deg,var(--chroma-bg),color-mix(in srgb,var(--chroma-ink) 22%,var(--chroma-bg)),var(--chroma-bg));color:var(--chroma-ink);box-shadow:0 0 0 1px color-mix(in srgb,var(--chroma-ink) 45%,transparent);}
+  .pill-unbelievable{background:linear-gradient(90deg,#08122f,#152a63,#08122f);color:var(--unbelievable-ink);box-shadow:0 0 0 1px color-mix(in srgb,var(--unbelievable-ink) 55%,transparent),0 0 10px -2px color-mix(in srgb,var(--unbelievable-ink) 70%,transparent);}
   .pill-new{background:var(--accent);color:var(--accent-ink);}
   .pill-owned{background:var(--surface-2);color:var(--muted);}
   .percentile{font-size:12.5px;color:var(--muted);font-weight:600;}
@@ -396,6 +400,10 @@
   .intro-legendary{--ic:var(--legendary-ink);}
   .intro-mythic{--ic:var(--mythic-ink);}
   .intro-chroma{--ic:var(--chroma-ink);}
+  .intro-unbelievable{--ic:var(--unbelievable-ink);}
+  .intro.show.intro-unbelievable{animation:introDim var(--hit) ease-in forwards, introDimOut var(--burst) var(--hit) ease-out forwards;}
+  @keyframes introDim{0%{background:rgba(3,8,30,0)}100%{background:rgba(3,8,30,.7)}}
+  @keyframes introDimOut{0%{background:rgba(3,8,30,.7)}100%{background:rgba(3,8,30,0)}}
   .intro-flash{position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 50%, color-mix(in srgb,var(--ic) 55%,transparent) 0%, color-mix(in srgb,var(--ic) 20%,transparent) 38%, transparent 72%);}
   .intro.show .intro-flash{animation:introBuild var(--hit) ease-in forwards, introBurst var(--burst) var(--hit) ease-out forwards;}
   @keyframes introBuild{0%{opacity:0;transform:scale(.35)}100%{opacity:.75;transform:scale(1)}}
@@ -413,6 +421,7 @@
   .sfxbtn.pill-epic{background:var(--epic-bg);color:var(--epic-ink);}
   .sfxbtn.pill-legendary{background:var(--legendary-bg);color:var(--legendary-ink);}
   .sfxbtn.pill-mythic{background:var(--mythic-bg);color:var(--mythic-ink);}
+  .sfxbtn.pill-unbelievable{background:linear-gradient(90deg,#08122f,#152a63,#08122f);color:var(--unbelievable-ink);text-transform:uppercase;letter-spacing:.04em;font-size:12px;border-color:transparent;}
   .sfxbtn.pill-chroma{background:linear-gradient(90deg,var(--chroma-bg),color-mix(in srgb,var(--chroma-ink) 22%,var(--chroma-bg)),var(--chroma-bg));color:var(--chroma-ink);}
   .catrow{
     display:flex;align-items:center;gap:10px;
@@ -787,11 +796,27 @@
     for (var i=0; i<24; i++) note(1500 + i*110, 0.2 + 2.9*Math.pow(i/24, 0.75), 0.1, 'sine', 0.05);
     [0,0.6,1.2,1.7,2.2,2.6,2.9,3.1].forEach(function(t){ note(80, t, 0.16, 'sine', 0.08); });
   }
+  function riserUnbelievable(){
+    note(45, 0, 4.2, 'sawtooth', 0.07, 180);
+    note(90, 0.3, 3.9, 'sawtooth', 0.05, 360);
+    note(55, 0, 4.2, 'square', 0.04, 220);
+    note(600, 0.5, 3.6, 'sine', 0.04, 5200);
+    [0,0.7,1.4,2.0,2.5,2.9,3.2,3.4,3.6,3.75,3.9,4.0,4.1].forEach(function(t){ note(70, t, 0.18, 'sine', 0.1); });
+  }
+  function playUnbelievable(){
+    note(140, 0, 1.6, 'sine', 0.22, 35);
+    note(70, 0, 2.4, 'sine', 0.16);
+    [110,165,220,262,330].forEach(function(f){ note(f, 0.05, 1.6, 'triangle', 0.08); });
+    [110,139,165,220,277,330].forEach(function(f){ note(f, 1.6, 3.0, 'triangle', 0.07); });
+    [1760,2093,2637,3136,2637,2093,1760,1319,1760,2349,3520].forEach(function(f, i){ note(f, 0.6 + i*0.32, 0.8, 'sine', 0.045); });
+    note(55, 3.5, 3.5, 'sine', 0.14);
+  }
   var INTROS = {
     3: {tier:'epic',      hit:600,  hold:1000, burst:700,  riser:riserEpic},
     4: {tier:'legendary', hit:900,  hold:1200, burst:900,  riser:riserLegendary},
     5: {tier:'mythic',    hit:1300, hold:1300, burst:900,  riser:riserMythic},
-    6: {tier:'chroma',    hit:3200, hold:2800, burst:1600, riser:riserChroma}
+    6: {tier:'chroma',    hit:3200, hold:2800, burst:1600, riser:riserChroma},
+    7: {tier:'unbelievable', hit:4200, hold:3400, burst:2000, riser:riserUnbelievable}
   };
   var introEl = null, introLabel = null, introSub = null, introTimer = null, introSfxTimer = null, introBus = null;
   function skipIntro(){
@@ -851,7 +876,7 @@
     return true;
   }
   function playTierSfx(rank){
-    var fn = {3:playEpic, 4:playLegendary, 5:playMythic, 6:playChroma}[rank];
+    var fn = {3:playEpic, 4:playLegendary, 5:playMythic, 6:playChroma, 7:playUnbelievable}[rank];
     if (!fn) return false;
     fn();
     return true;
@@ -910,7 +935,7 @@
   var RARITY_OPTIONS = [
     {value:'common',label:'Common'}, {value:'uncommon',label:'Uncommon'},
     {value:'rare',label:'Rare'}, {value:'epic',label:'Epic'}, {value:'legendary',label:'Legendary'},
-    {value:'mythic',label:'Mythic'}, {value:'chroma',label:'Chroma'}
+    {value:'mythic',label:'Mythic'}, {value:'chroma',label:'Chroma'}, {value:'unbelievable',label:'Unbelievable'}
   ];
 
   var ICONS = {
@@ -1077,9 +1102,10 @@
     }
   }
 
-  var RARITY_RANK = ['common','uncommon','rare','epic','legendary','mythic','chroma'];
-  var RARITY_LABEL = {common:'Common',uncommon:'Uncommon',rare:'Rare',epic:'Epic',legendary:'Legendary',mythic:'Mythic',chroma:'Chroma'};
+  var RARITY_RANK = ['common','uncommon','rare','epic','legendary','mythic','chroma','unbelievable'];
+  var RARITY_LABEL = {common:'Common',uncommon:'Uncommon',rare:'Rare',epic:'Epic',legendary:'Legendary',mythic:'Mythic',chroma:'Chroma',unbelievable:'Unbelievable'};
   function tierRankForRoll(ep, badgeTopRank){
+    if (ep >= 300000) return 7;
     if (ep >= 100000) return 6;
     if (ep >= 60000) return 5;
     if (ep >= 30000) return 4;
@@ -1093,7 +1119,7 @@
     return x.points - y.points;
   }
   var PERCENTILE_BY_TIER = {
-    common:'Bottom 45%', uncommon:'Top 35%', rare:'Top 12%', epic:'Top 3%', legendary:'Top 1%', mythic:'Top 0.1%', chroma:'Top 0.01%'
+    common:'Bottom 45%', uncommon:'Top 35%', rare:'Top 12%', epic:'Top 3%', legendary:'Top 1%', mythic:'Top 0.1%', chroma:'Top 0.01%', unbelievable:'Top 0.001%'
   };
 
   function hasStraight(nums, len){
@@ -2406,7 +2432,8 @@
     {label:'Epic', fn:playEpic, tier:'epic'},
     {label:'Legendary', fn:playLegendary, tier:'legendary'},
     {label:'Mythic', fn:playMythic, tier:'mythic'},
-    {label:'Chroma', fn:playChroma, tier:'chroma'}
+    {label:'Chroma', fn:playChroma, tier:'chroma'},
+    {label:'Unbelievable', fn:playUnbelievable, tier:'unbelievable'}
   ].forEach(function(s){
     var b = document.createElement('button');
     b.type = 'button';
@@ -2445,7 +2472,8 @@
     {label:'Epic intro', rank:3, tier:'epic'},
     {label:'Legendary intro', rank:4, tier:'legendary'},
     {label:'Mythic intro', rank:5, tier:'mythic'},
-    {label:'Chroma intro', rank:6, tier:'chroma'}
+    {label:'Chroma intro', rank:6, tier:'chroma'},
+    {label:'Unbelievable intro', rank:7, tier:'unbelievable'}
   ].forEach(function(s){
     var b = document.createElement('button');
     b.type = 'button';

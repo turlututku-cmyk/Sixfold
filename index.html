@@ -836,8 +836,11 @@
     beep(scale[idx % scale.length], 0.12, 'sine', 0.1);
   }
 
+  var noteScale = 1;
   function note(freq, at, dur, type, peak, endFreq){
     if ((!soundOn && !previewing) || !audioCtx) return;
+    at = (at || 0) * noteScale;
+    dur = dur * noteScale;
     try{
       var osc = audioCtx.createOscillator();
       var gain = audioCtx.createGain();
@@ -924,11 +927,11 @@
     note(55, 3.5, 3.5, 'sine', 0.14);
   }
   var INTROS = {
-    3: {tier:'epic',      hit:600,  hold:1000, burst:700,  riser:riserEpic},
-    4: {tier:'legendary', hit:900,  hold:1200, burst:900,  riser:riserLegendary},
-    5: {tier:'mythic',    hit:1300, hold:1300, burst:900,  riser:riserMythic},
-    6: {tier:'chroma',    hit:3200, hold:2800, burst:1600, riser:riserChroma},
-    7: {tier:'unbelievable', hit:4200, hold:3400, burst:2000, riser:riserUnbelievable}
+    3: {tier:'epic',      hit:1000, hold:1800, burst:900,  rs:1.67, ss:1.6, riser:riserEpic},
+    4: {tier:'legendary', hit:1600, hold:2400, burst:1100, rs:1.78, ss:1.6, riser:riserLegendary},
+    5: {tier:'mythic',    hit:2400, hold:3000, burst:1100, rs:1.85, ss:1.4, riser:riserMythic},
+    6: {tier:'chroma',    hit:4600, hold:5200, burst:1600, rs:1.44, ss:1,   riser:riserChroma},
+    7: {tier:'unbelievable', hit:6000, hold:6000, burst:2000, rs:1.43, ss:1, riser:riserUnbelievable}
   };
   var introEl = null, introLabel = null, introSub = null, introTimer = null, introSfxTimer = null, introBus = null;
   function skipIntro(){
@@ -1228,8 +1231,14 @@
         currentBus = introBus;
       }catch(e){ introBus = null; currentBus = null; }
     }
+    noteScale = cfg.rs || 1;
     cfg.riser();
-    introSfxTimer = setTimeout(function(){ playTierSfx(rank); }, cfg.hit);
+    noteScale = 1;
+    introSfxTimer = setTimeout(function(){
+      noteScale = cfg.ss || 1;
+      playTierSfx(rank);
+      noteScale = 1;
+    }, cfg.hit);
     var reduce = false;
     try{ reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
     if (reduce){
@@ -2831,7 +2840,7 @@
     ensureAudio();
     fn();
     clearTimeout(previewTimer);
-    previewTimer = setTimeout(function(){ previewing = false; }, 7000);
+    previewTimer = setTimeout(function(){ previewing = false; }, 13000);
     btn.classList.add('playing');
     setTimeout(function(){ btn.classList.remove('playing'); }, 400);
   }
@@ -2870,7 +2879,7 @@
     ensureAudio();
     playSettle(2);
     clearTimeout(previewTimer);
-    previewTimer = setTimeout(function(){ previewing = false; }, 7000);
+    previewTimer = setTimeout(function(){ previewing = false; }, 13000);
   }
   showVolume(Math.round(volume * 100));
   [volSlider, topVol].forEach(function(el){

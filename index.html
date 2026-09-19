@@ -898,7 +898,7 @@
   var RARITY_OPTIONS = [
     {value:'common',label:'Common'}, {value:'uncommon',label:'Uncommon'},
     {value:'rare',label:'Rare'}, {value:'epic',label:'Epic'}, {value:'legendary',label:'Legendary'},
-    {value:'mythic',label:'Mythic'}
+    {value:'mythic',label:'Mythic'}, {value:'chroma',label:'Chroma'}
   ];
 
   var ICONS = {
@@ -1565,16 +1565,16 @@
       {key:'pi-3', id:uid(), name:'3.14', type:'piDigits', params:{n:3}, points:7000, rarity:'rare', icon:'🥧', discovered:false, desc:'The roll contains the first 3 digits of pi (3.14)'},
       {key:'pi-4', id:uid(), name:'3.141', type:'piDigits', params:{n:4, match:'includes'}, points:10000, rarity:'epic', icon:'🥧', discovered:false, desc:'The roll contains the first 4 digits of pi (3.141)'},
       {key:'pi-5', id:uid(), name:'3.1415', type:'piDigits', params:{n:5}, points:40000, rarity:'legendary', icon:'🥧', discovered:false, desc:'The roll contains the first 5 digits of pi (3.1415)'},
-      {key:'six-seven', id:uid(), name:'SIX SEVEN', type:'exactNumber', params:{value:'676767'}, points:125000, rarity:'mythic', icon:'💯', discovered:false, desc:'The roll is exactly the number 676767'},
-      {key:'pi-exact-3', id:uid(), name:'Exactly 3.14', type:'piDigits', params:{n:3, match:'exact'}, points:150000, rarity:'mythic', icon:'🥧', discovered:false, desc:'The roll is exactly the first 3 digits of pi (3.14), padded with leading zeros like 000314'},
-      {key:'pi-6', id:uid(), name:'Pi', type:'piDigits', params:{n:6}, points:100000, rarity:'mythic', icon:'🥧', discovered:false, desc:'The roll includes the first 6 digits of pi (3.14159)'},
+      {key:'six-seven', id:uid(), name:'SIX SEVEN', type:'exactNumber', params:{value:'676767'}, points:125000, rarity:'chroma', icon:'💯', discovered:false, desc:'The roll is exactly the number 676767'},
+      {key:'pi-exact-3', id:uid(), name:'Exactly 3.14', type:'piDigits', params:{n:3, match:'exact'}, points:150000, rarity:'chroma', icon:'🥧', discovered:false, desc:'The roll is exactly the first 3 digits of pi (3.14), padded with leading zeros like 000314'},
+      {key:'pi-6', id:uid(), name:'Pi', type:'piDigits', params:{n:6}, points:100000, rarity:'chroma', icon:'🥧', discovered:false, desc:'The roll includes the first 6 digits of pi (3.14159)'},
       {key:'straight-6', id:uid(), name:'Gay', type:'straightRange', params:{start:-1,length:6}, points:50000, rarity:'legendary', icon:'🔥', discovered:false, desc:'6 consecutive values in a row, starting anywhere'},
       {key:'pattern-3', id:uid(), name:'3 Pattern Repeater', type:'customRepeatingPattern', params:{blockLength:3}, points:50000, rarity:'legendary', icon:'♻️', discovered:false, desc:'The roll is a short pattern repeated to fill all the digits (like 123123)'},
       {key:'two-digits', id:uid(), name:'Two Digits', type:'digitCount', params:{n:2}, points:85000, rarity:'legendary', icon:'🎲', discovered:false, desc:'The roll has exactly 2 digits'},
-      {key:'one-digit', id:uid(), name:'Single Digit', type:'digitCount', params:{n:1}, points:120000, rarity:'mythic', icon:'🎲', discovered:false, desc:'The roll has exactly single digit'},
-      {key:'exact-1', id:uid(), name:'ONE.', type:'exactNumber', params:{value:'000001'}, points:100000, rarity:'mythic', icon:'💯', discovered:false, desc:'The roll is exactly the number 000001'},
+      {key:'one-digit', id:uid(), name:'Single Digit', type:'digitCount', params:{n:1}, points:120000, rarity:'chroma', icon:'🎲', discovered:false, desc:'The roll has exactly single digit'},
+      {key:'exact-1', id:uid(), name:'ONE.', type:'exactNumber', params:{value:'000001'}, points:100000, rarity:'chroma', icon:'💯', discovered:false, desc:'The roll is exactly the number 000001'},
       {key:'div-999-mythic', id:uid(), name:'Everything Aligns', type:'divisibleBy', params:{n:999}, points:65000, rarity:'mythic', icon:'🏅', discovered:false, desc:'The roll, read as a number, is divisible by 999'},
-      {key:'six-of-a-kind', id:uid(), name:'6 of a Kind', type:'allSame', params:{}, points:120000, rarity:'mythic', icon:'🌟', discovered:false}
+      {key:'six-of-a-kind', id:uid(), name:'6 of a Kind', type:'allSame', params:{}, points:120000, rarity:'chroma', icon:'🌟', discovered:false}
     ];
   }
 
@@ -1874,7 +1874,8 @@
     {name:'986574', user:'poncik', score:60800},
     {name:'400422', user:'Samixton', score:30500},
     {name:'877870', user:'Oznameowl', score:25800},
-    {name:'549117', user:'Oznameowl', score:32150}
+    {name:'549117', user:'Oznameowl', score:32150},
+    {name:'919994', user:'Samixton', score:64650}
   ];
 
   var addBadgeDetails = document.getElementById('addBadgeDetails');

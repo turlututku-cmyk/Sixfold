@@ -500,6 +500,71 @@
     .toast{animation:none;}
     .badge.enter, .badge.enter.show{opacity:1;transform:none;transition:none;}
   }
+  /* ---- visual polish ---- */
+  *{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent;}
+  ::-webkit-scrollbar{width:8px;height:8px;}
+  ::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--muted) 40%,transparent);border-radius:8px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  body::before{
+    content:'';position:fixed;inset:-20%;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(40% 35% at 18% 12%, color-mix(in srgb,var(--glow-a) 16%,transparent), transparent 70%),
+      radial-gradient(38% 32% at 85% 22%, color-mix(in srgb,var(--glow-b) 14%,transparent), transparent 70%),
+      radial-gradient(45% 40% at 60% 92%, color-mix(in srgb,var(--accent) 12%,transparent), transparent 70%);
+    animation:bgdrift 28s ease-in-out infinite alternate;
+  }
+  @keyframes bgdrift{0%{transform:translate3d(0,0,0) scale(1);}100%{transform:translate3d(3%,-2%,0) scale(1.08);}}
+  .brand{
+    background:linear-gradient(90deg,var(--ink),var(--accent) 45%,var(--glow-a) 75%,var(--glow-b));
+    background-size:200% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:brandshift 8s ease-in-out infinite alternate;
+  }
+  @keyframes brandshift{to{background-position:100% 0;}}
+  .rollcard,.panel{animation:riseIn .5s ease both;}
+  @keyframes riseIn{0%{opacity:0;transform:translateY(8px);}100%{opacity:1;transform:none;}}
+  .numberbox{position:relative;}
+  .numberbox::after{
+    content:'';position:absolute;inset:-6px;border-radius:22px;pointer-events:none;
+    box-shadow:0 0 34px 2px color-mix(in srgb,var(--glow-a) 70%,transparent),0 0 56px 4px color-mix(in srgb,var(--glow-b) 55%,transparent);
+    opacity:.18;animation:nbHalo 5s ease-in-out infinite;
+  }
+  @keyframes nbHalo{0%,100%{opacity:.14;}50%{opacity:.5;}}
+  .numberbox[data-tier="epic"]{--glow-a:#b26cf0;--glow-b:#7a4ff0;}
+  .numberbox[data-tier="legendary"]{--glow-a:#f0b84f;--glow-b:#ff8a3d;}
+  .numberbox[data-tier="mythic"]{--glow-a:#f45f8c;--glow-b:#ff3d6e;}
+  .numberbox[data-tier="chroma"]{--glow-a:#5fdcf7;--glow-b:#9af0ff;}
+  .numberbox[data-tier="unbelievable"]{--glow-a:#3d7bff;--glow-b:#1a3fa8;}
+  .catrow{transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease;}
+  .catrow:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--accent) 45%,var(--border));}
+  #rollBtn{
+    position:relative;overflow:hidden;
+    transition:transform .12s ease,box-shadow .2s ease;
+    box-shadow:0 0 0 1.5px color-mix(in srgb,var(--glow-a) 60%,transparent),0 6px 22px -6px color-mix(in srgb,var(--glow-a) 70%,transparent);
+  }
+  #rollBtn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 0 0 1.5px color-mix(in srgb,var(--glow-a) 80%,transparent),0 10px 28px -6px color-mix(in srgb,var(--glow-a) 85%,transparent);}
+  #rollBtn:active:not(:disabled){transform:scale(.98);}
+  #rollBtn::after{
+    content:'';position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);
+    transform:translateX(-120%);animation:rollShine 4.5s ease-in-out infinite;
+  }
+  @keyframes rollShine{0%,70%{transform:translateX(-120%);}100%{transform:translateX(120%);}}
+  #leaderboardList{counter-reset:lbrank;}
+  #leaderboardList .catrow::before{
+    counter-increment:lbrank;content:counter(lbrank);flex:none;
+    width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:700;background:var(--surface);color:var(--muted);border:1px solid var(--border);
+  }
+  #leaderboardList .catrow:nth-child(1)::before{content:'\1F947';background:transparent;border:none;font-size:17px;}
+  #leaderboardList .catrow:nth-child(2)::before{content:'\1F948';background:transparent;border:none;font-size:17px;}
+  #leaderboardList .catrow:nth-child(3)::before{content:'\1F949';background:transparent;border:none;font-size:17px;}
+  #leaderboardList .catrow:nth-child(1){border-color:color-mix(in srgb,#f0b84f 55%,var(--border));box-shadow:0 0 16px -8px #f0b84f;}
+  #leaderboardList .catrow:nth-child(2){border-color:color-mix(in srgb,#aab2c5 55%,var(--border));}
+  #leaderboardList .catrow:nth-child(3){border-color:color-mix(in srgb,#d08a5a 55%,var(--border));}
+  @media (prefers-reduced-motion: reduce){
+    body::before,.brand,#rollBtn::after,.numberbox::after,.rollcard,.panel{animation:none!important;}
+  }
 </style>
 
 <div class="toasts" id="toasts"></div>
@@ -1833,6 +1898,7 @@
       rarityPillEl.textContent = RARITY_LABEL[tier];
       percentileTextEl.textContent = PERCENTILE_BY_TIER[tier];
     }
+    numberBoxEl.setAttribute('data-tier', (everRolled && lastRollTierRank >= 3) ? RARITY_RANK[lastRollTierRank] : '');
     var discoveredCount = achievements.filter(function(a){return a.discovered;}).length;
     discoveredLineEl.textContent = discoveredCount + ' / ' + achievements.length + ' badges discovered';
     rollBtn.disabled = isSpinning;

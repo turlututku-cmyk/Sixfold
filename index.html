@@ -565,6 +565,42 @@
   @media (prefers-reduced-motion: reduce){
     body::before,.brand,#rollBtn::after,.numberbox::after,.rollcard,.panel{animation:none!important;}
   }
+  /* ---- cutscene upgrade ---- */
+  .intro-bar{display:none;position:absolute;left:0;right:0;height:0;background:#000;}
+  .intro-bar-top{top:0;}
+  .intro-bar-bottom{bottom:0;}
+  .intro.cinema .intro-bar{display:block;}
+  .intro.show.cinema .intro-bar{animation:barIn .6s cubic-bezier(.2,.8,.2,1) forwards, barOut .6s ease calc(var(--hit) + var(--hold) - 200ms) forwards;}
+  @keyframes barIn{to{height:11vh;}}
+  @keyframes barOut{from{height:11vh;}to{height:0;}}
+  .intro-rays{
+    position:absolute;left:50%;top:50%;width:170vmax;height:170vmax;margin:-85vmax 0 0 -85vmax;pointer-events:none;opacity:0;
+    background:repeating-conic-gradient(from 0deg, color-mix(in srgb,var(--ic) 34%,transparent) 0 5deg, transparent 5deg 15deg);
+    -webkit-mask-image:radial-gradient(circle,#000 0,transparent 45%);mask-image:radial-gradient(circle,#000 0,transparent 45%);
+  }
+  .intro.show .intro-rays{animation:raysGo var(--hold) ease-out var(--hit) both;}
+  @keyframes raysGo{0%{opacity:0;transform:rotate(0deg) scale(.6);}20%{opacity:.85;}100%{opacity:0;transform:rotate(50deg) scale(1.1);}}
+  .intro-sparks{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;}
+  .spark{
+    position:absolute;left:0;top:0;width:var(--s,6px);height:var(--s,6px);
+    margin:calc(var(--s,6px) / -2) 0 0 calc(var(--s,6px) / -2);border-radius:50%;
+    background:var(--ic);box-shadow:0 0 10px var(--ic);opacity:0;
+  }
+  .intro.show .spark{animation:sparkFly var(--sd,1.3s) cubic-bezier(.1,.75,.25,1) calc(var(--hit) + var(--sdelay,0ms)) both;}
+  @keyframes sparkFly{0%{opacity:1;transform:translate(0,0) scale(1);}70%{opacity:.9;}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.15);}}
+  .intro-label .ch{display:inline-block;opacity:0;}
+  .intro.show .intro-label .ch{animation:letterIn .6s cubic-bezier(.2,1.5,.3,1) calc(var(--hit) + var(--i) * 60ms) both;}
+  @keyframes letterIn{0%{opacity:0;transform:translateY(28px) scale(.5) rotate(-6deg);}100%{opacity:1;transform:none;}}
+  .intro-roll{
+    position:relative;opacity:0;font-family:'IBM Plex Mono',monospace;font-weight:700;
+    font-size:clamp(20px,5vw,34px);letter-spacing:.35em;padding-left:.35em;color:var(--ic);margin-top:4px;
+    text-shadow:0 0 18px color-mix(in srgb,var(--ic) 60%,transparent);
+  }
+  .intro.show .intro-roll{animation:introFade calc(var(--hold) - 200ms) ease calc(var(--hit) + 300ms) both;}
+  @keyframes introFade{0%{opacity:0;transform:translateY(10px);}25%{opacity:1;transform:none;}75%{opacity:1;}100%{opacity:0;}}
+  body.shake .wrap{animation:shakeIt .6s cubic-bezier(.36,.07,.19,.97) both;}
+  @keyframes shakeIt{10%,90%{transform:translate3d(-2px,0,0);}20%,80%{transform:translate3d(4px,2px,0);}30%,50%,70%{transform:translate3d(-7px,-2px,0);}40%,60%{transform:translate3d(7px,2px,0);}}
+  @media (prefers-reduced-motion: reduce){ body.shake .wrap{animation:none!important;} }
 </style>
 
 <div class="toasts" id="toasts"></div>
@@ -634,9 +670,14 @@
 </div>
 
 <div class="intro" id="introOverlay" hidden aria-hidden="true">
+  <div class="intro-bar intro-bar-top"></div>
+  <div class="intro-bar intro-bar-bottom"></div>
   <div class="intro-flash"></div>
+  <div class="intro-rays"></div>
+  <div class="intro-sparks" id="introSparks"></div>
   <div class="intro-label" id="introLabel"></div>
   <div class="intro-sub" id="introSub"></div>
+  <div class="intro-roll" id="introRoll"></div>
   <div class="intro-skip">Tap anywhere to skip</div>
 </div>
 
@@ -891,11 +932,43 @@
     introBus = null; currentBus = null;
     var el = document.getElementById('introOverlay');
     if (el){ el.classList.remove('show'); el.hidden = true; }
+    clearTimeout(shakeTimer);
+    document.body.classList.remove('shake');
   }
   document.getElementById('introOverlay').addEventListener('click', function(){
     if (settings.clickSkip) skipIntro();
   });
-  function playIntro(rank, subText){
+
+  var SPARK_COUNT = {3:14, 4:26, 5:38, 6:56, 7:72};
+  function buildIntroExtras(rank, label, text, rollText){
+    label.textContent = '';
+    Array.from(text).forEach(function(chr, i){
+      var s = document.createElement('span');
+      s.className = 'ch';
+      s.style.setProperty('--i', String(i));
+      s.textContent = chr;
+      label.appendChild(s);
+    });
+    document.getElementById('introRoll').textContent = rollText || '';
+    var box = document.getElementById('introSparks');
+    box.innerHTML = '';
+    var n = SPARK_COUNT[rank] || 14;
+    for (var k = 0; k < n; k++){
+      var sp = document.createElement('span');
+      sp.className = 'spark';
+      var ang = Math.random() * Math.PI * 2;
+      var dist = (120 + Math.random() * 260) * (1 + (rank - 3) * 0.18);
+      sp.style.setProperty('--dx', Math.round(Math.cos(ang) * dist) + 'px');
+      sp.style.setProperty('--dy', Math.round(Math.sin(ang) * dist) + 'px');
+      sp.style.setProperty('--s', (3 + Math.random() * 6).toFixed(1) + 'px');
+      sp.style.setProperty('--sd', Math.round(1000 + Math.random() * 900) + 'ms');
+      sp.style.setProperty('--sdelay', Math.floor(Math.random() * 180) + 'ms');
+      box.appendChild(sp);
+    }
+  }
+  var shakeTimer = null;
+
+  function playIntro(rank, subText, rollText){
     var cfg = INTROS[rank];
     if (!cfg) return false;
     clearTimeout(introSfxTimer);
@@ -925,14 +998,22 @@
     clearTimeout(introTimer);
     introEl.classList.remove('show');
     introEl.hidden = false;
-    introEl.className = 'intro intro-' + cfg.tier + (settings.clickSkip ? ' skippable' : '');
+    introEl.className = 'intro intro-' + cfg.tier + (settings.clickSkip ? ' skippable' : '') + (rank >= 4 ? ' cinema' : '');
     introEl.style.setProperty('--hit', cfg.hit + 'ms');
     introEl.style.setProperty('--hold', cfg.hold + 'ms');
     introEl.style.setProperty('--burst', cfg.burst + 'ms');
-    introLabel.textContent = RARITY_LABEL[cfg.tier];
+    buildIntroExtras(rank, introLabel, RARITY_LABEL[cfg.tier], rollText);
     introSub.textContent = subText || PERCENTILE_BY_TIER[cfg.tier];
     void introEl.offsetWidth;
     introEl.classList.add('show');
+    clearTimeout(shakeTimer);
+    document.body.classList.remove('shake');
+    if (rank >= 5){
+      shakeTimer = setTimeout(function(){
+        document.body.classList.add('shake');
+        setTimeout(function(){ document.body.classList.remove('shake'); }, 700);
+      }, cfg.hit);
+    }
     introTimer = setTimeout(function(){
       introEl.classList.remove('show');
       introEl.hidden = true;
@@ -2638,7 +2719,7 @@
     var result = scoreAgainstCurrentRoll();
     recordRollStats();
     var rk = lastRollTierRank;
-    var handledSfx = rk >= 3 ? playIntro(rk) : playTierSfx(rk);
+    var handledSfx = rk >= 3 ? playIntro(rk, null, nums.join('')) : playTierSfx(rk);
     if (!handledSfx && result.newlyDiscovered.length) playFanfare();
     renderTopStats();
     saveLocal();

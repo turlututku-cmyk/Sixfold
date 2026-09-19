@@ -1950,7 +1950,8 @@
     {name:'666546', user:'Cduking', score:30150},
     {name:'747777', user:'Cduking', score:119950},
     {name:'909291', user:'Oznameowl', score:30000},
-    {name:'399979', user:'Oznameowl', score:70980}
+    {name:'399979', user:'Oznameowl', score:70980},
+    {name:'205555', user:'Oznameowl', score:42300}
   ];
 
   var addBadgeDetails = document.getElementById('addBadgeDetails');
@@ -2018,8 +2019,10 @@
       leaderboardStatus.textContent = 'No entries yet.';
       return;
     }
-    var sorted = LEADERBOARD.slice().sort(function(a,b){ return b.score - a.score; });
-    leaderboardStatus.textContent = sorted.length + (sorted.length === 1 ? ' entry' : ' entries');
+    var LB_LIMIT = 50;
+    var total = LEADERBOARD.length;
+    var sorted = LEADERBOARD.slice().sort(function(a,b){ return b.score - a.score; }).slice(0, LB_LIMIT);
+    leaderboardStatus.textContent = total > LB_LIMIT ? 'Top ' + LB_LIMIT : total + (total === 1 ? ' entry' : ' entries');
     sorted.forEach(function(entry){
       leaderboardList.appendChild(renderLeaderboardRow(entry.name, entry.score, entry.user));
     });

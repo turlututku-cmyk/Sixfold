@@ -1938,8 +1938,8 @@
       leaderboardStatus.textContent = 'No entries yet.';
       return;
     }
-    var sorted = LEADERBOARD.slice().sort(function(a,b){ return b.score - a.score; }).slice(0,25);
-    leaderboardStatus.textContent = 'Top ' + sorted.length;
+    var sorted = LEADERBOARD.slice().sort(function(a,b){ return b.score - a.score; });
+    leaderboardStatus.textContent = sorted.length + (sorted.length === 1 ? ' entry' : ' entries');
     sorted.forEach(function(entry){
       leaderboardList.appendChild(renderLeaderboardRow(entry.name, entry.score, entry.user));
     });

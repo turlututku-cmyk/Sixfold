@@ -910,7 +910,7 @@
     {id:'continuousChunks', label:'Continuous (split into numbers that are consecutive, any order)', params:[{key:'chunk',label:'Digits per number',type:'select',options:[{value:'2',label:'2 digits (like 34 36 35)'},{value:'3',label:'3 digits (like 124 123)'}],def:'2'}]},
     {id:'piDigits', label:'Pi (first N digits: 3.14, 3.1415...)', params:[{key:'n',label:'Digits of pi',type:'number',min:2,max:NUM_DIGITS,def:3},{key:'match',label:'Match',type:'select',options:[{value:'includes',label:'Includes (anywhere in the roll)'},{value:'exact',label:'Exactly (whole roll, zero-padded like 000314)'}],def:'includes'}]},
     {id:'halfAndHalf', label:'Half and half (one half even digits, the other half odd)', params:[{key:'order',label:'Order',type:'select',options:[{value:'either',label:'Either way'},{value:'evenOdd',label:'Even first, then odd'},{value:'oddEven',label:'Odd first, then even'}],def:'either'}]},
-    {id:'powerOf', label:'Power of N (N, N×N, N×N×N...)', params:[{key:'base',label:'Base N',type:'number',min:2,max:99,def:2}]},
+    {id:'powerOf', label:'Power of N (1, N, N×N, N×N×N...)', params:[{key:'base',label:'Base N (0 and 1 allowed)',type:'number',min:0,max:99,def:2}]},
     {id:'anagramOf', label:'Same digits as a special number (any order)', params:[{key:'value',label:'Special number',type:'text',def:'316769'}]},
     {id:'parityAll', label:'All digits even / all digits odd', params:[{key:'parity',label:'Parity',type:'select',options:[{value:'even',label:'All even'},{value:'odd',label:'All odd'}],def:'even'}]},
     {id:'alternatingParity', label:'Odd and even alternate', params:[]},
@@ -979,7 +979,9 @@
       case 'customRepeatingPattern': return 'A ' + a.params.blockLength + '-digit block repeats back-to-back somewhere in the roll (like 1212)';
       case 'nAdjacentPairs': return 'At least ' + a.params.count + ' pairs of neighboring digits match';
       case 'justNOfAKind': return 'Exactly one digit appears ' + a.params.count + ' times (anywhere) and every other digit is different';
-      case 'powerOf': return 'The roll, read as a number, is a power of ' + a.params.base + ' (' + a.params.base + ', ' + (a.params.base * a.params.base) + ', ' + Math.pow(a.params.base, 3) + '...)';
+      case 'powerOf': if (parseInt(a.params.base,10) === 0) return 'The roll, read as a number, is a power of 0 (0 to any positive power is 0)';
+        if (parseInt(a.params.base,10) === 1) return 'The roll, read as a number, is a power of 1 (1 to any power is 1)';
+        return 'The roll, read as a number, is a power of ' + a.params.base + ' (1, ' + a.params.base + ', ' + (a.params.base * a.params.base) + ', ' + Math.pow(a.params.base, 3) + '...)';
       case 'anagramOf': return 'The roll uses exactly the same digits as ' + a.params.value + ', in any order';
       case 'parityAll': return a.params.parity === 'odd' ? 'Every digit in the roll is odd' : 'Every digit in the roll is even (0 counts as even)';
       case 'alternatingParity': return 'The digits alternate between odd and even all the way through (like 214365)';
@@ -1290,7 +1292,11 @@
       case 'powerOf': {
         var pwBase = parseInt(a.params.base, 10);
         var pwVal = parseInt(nums.join(''), 10);
-        if (!(pwBase >= 2) || pwVal < pwBase) return false;
+        if (isNaN(pwBase) || pwBase < 0) return false;
+        if (pwBase === 0) return pwVal === 0;
+        if (pwBase === 1) return pwVal === 1;
+        if (pwVal === 1) return true;
+        if (pwVal < pwBase) return false;
         var pwCur = pwBase;
         while (pwCur < pwVal) pwCur *= pwBase;
         return pwCur === pwVal;
@@ -1607,13 +1613,13 @@
       {key:'full-house', id:uid(), name:'Full House', type:'fullHouse', params:{}, points:6700, rarity:'rare', icon:'🏠', discovered:false},
       {key:'num-000', id:uid(), name:'Nothingness..', type:'containsSequence', params:{value:'000'}, points:7680, rarity:'rare', icon:'👀', discovered:false, desc:'The roll contains the number 000'},
       {key:'gt-990000', id:uid(), name:'Bigger and Bigger!', type:'numberGreaterThan', params:{n:990000}, points:8750, rarity:'rare', icon:'📊', discovered:false, desc:'The roll, read as a number, is greater than 990000'},
-      {key:'pow-2', id:uid(), name:'2nd Power', type:'powerOf', params:{base:2}, points:9500, rarity:'epic', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 2 (2, 4, 8...)'},
-      {key:'pow-3', id:uid(), name:'3rd Power', type:'powerOf', params:{base:3}, points:19500, rarity:'legendary', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 3 (3, 9, 27)'},
-      {key:'pow-4', id:uid(), name:'4th Power', type:'powerOf', params:{base:4}, points:35000, rarity:'legendary', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 4 (4, 16, 64)'},
-      {key:'pow-5', id:uid(), name:'5th Power', type:'powerOf', params:{base:5}, points:75000, rarity:'legendary', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 5 (5, 25, 125)'},
-      {key:'pow-6', id:uid(), name:'6th Power', type:'powerOf', params:{base:6}, points:145000, rarity:'mythic', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 6 (6, 36, 216)'},
-      {key:'pow-7', id:uid(), name:'7th Power', type:'powerOf', params:{base:7}, points:175000, rarity:'chroma', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 7 (7, 49, 343)'},
-      {key:'pow-8', id:uid(), name:'8th Power', type:'powerOf', params:{base:8}, points:300000, rarity:'unbelievable', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 8 (8, 64, 512)'},
+      {key:'pow-2', id:uid(), name:'2nd Power', type:'powerOf', params:{base:2}, points:9500, rarity:'epic', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 2 (1, 2, 4, 8...)'},
+      {key:'pow-3', id:uid(), name:'3rd Power', type:'powerOf', params:{base:3}, points:19500, rarity:'legendary', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 3 (1, 3, 9, 27)'},
+      {key:'pow-4', id:uid(), name:'4th Power', type:'powerOf', params:{base:4}, points:35000, rarity:'legendary', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 4 (1, 4, 16, 64)'},
+      {key:'pow-5', id:uid(), name:'5th Power', type:'powerOf', params:{base:5}, points:75000, rarity:'legendary', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 5 (1, 5, 25, 125)'},
+      {key:'pow-6', id:uid(), name:'6th Power', type:'powerOf', params:{base:6}, points:145000, rarity:'mythic', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 6 (1, 6, 36, 216)'},
+      {key:'pow-7', id:uid(), name:'7th Power', type:'powerOf', params:{base:7}, points:175000, rarity:'chroma', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 7 (1, 7, 49, 343)'},
+      {key:'pow-8', id:uid(), name:'8th Power', type:'powerOf', params:{base:8}, points:300000, rarity:'unbelievable', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 8 (1, 8, 64, 512)'},
       {key:'pattern-2', id:uid(), name:'2 Pattern Repeater', type:'customRepeatingPattern', params:{blockLength:2}, points:10000, rarity:'epic', icon:'♻️', discovered:false, desc:'The roll is a short pattern repeated to fill all the digits (like 1212)'},
       {key:'div-32', id:uid(), name:'Divisible by 32', type:'divisibleBy', params:{n:32}, points:10000, rarity:'epic', icon:'➗', discovered:false, desc:'The roll, read as a number, is divisible by 32'},
       {key:'palindrome', id:uid(), name:'Palindrome', type:'isPalindrome', params:{}, points:10000, rarity:'epic', icon:'🪞', discovered:false},
@@ -1634,7 +1640,7 @@
       {key:'pi-4', id:uid(), name:'3.141', type:'piDigits', params:{n:4, match:'includes'}, points:10000, rarity:'epic', icon:'🥧', discovered:false, desc:'The roll contains the first 4 digits of pi (3.141)'},
       {key:'pi-5', id:uid(), name:'3.1415', type:'piDigits', params:{n:5}, points:40000, rarity:'legendary', icon:'🥧', discovered:false, desc:'The roll contains the first 5 digits of pi (3.1415)'},
       {key:'six-seven', id:uid(), name:'SIX SEVEN', type:'exactNumber', params:{value:'676767'}, points:125000, rarity:'mythic', icon:'💯', discovered:false, desc:'The roll is exactly the number 676767'},
-      {key:'power-2', id:uid(), name:'Power of Two', type:'powerOf', params:{base:2}, points:100000, rarity:'mythic', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 2 (like 000064 or 065536)'},
+      {key:'power-2', id:uid(), name:'Power of Two', type:'powerOf', params:{base:2}, points:100000, rarity:'mythic', icon:'⚛️', discovered:false, desc:'The roll, read as a number, is a power of 2 (like 000001, 000064 or 065536)'},
       {key:'special-316769', id:uid(), name:'Special Scramble', type:'anagramOf', params:{value:'316769'}, points:75000, rarity:'mythic', icon:'✨', discovered:false, desc:'The roll uses exactly the same digits as 316769, in any order'},
       {key:'specific-67', id:uid(), name:'SPECIFIC SIX SEVEN', type:'exactNumber', params:{value:'000067'}, points:150000, rarity:'chroma', icon:'🌟', discovered:false, desc:'67'},
       {key:'apollo', id:uid(), name:'APOLLO', type:'exactNumber', params:{value:'111020'}, points:150000, rarity:'chroma', icon:'🌟', discovered:false, desc:'Geyler Beyler Apollo 111020'},
